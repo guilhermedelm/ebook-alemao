@@ -152,7 +152,7 @@
             }
 
             /* Numeração de Páginas Limpa (A capa não ganha número visível) */
-            body { counter-reset: page_counter; }
+            /* body { counter-reset: page_counter; }
             .recipe-card:nth-of-type(2n)::after {
                 counter-increment: page_counter;
                 content: "Seite " counter(page_counter);
@@ -162,7 +162,7 @@
                 color: #888888;
                 font-size: 12px;
                 font-weight: bold;
-            }
+            } */
         }
 
         /* ==========================================================================
@@ -259,9 +259,27 @@
             }
 
             /* Numeração de Páginas Limpa (A capa não ganha número visível) */
-            body { counter-reset: page_counter; }
-            .recipe-card:nth-of-type(2n)::after {
-                counter-increment: page_counter;
+            body { 
+                counter-reset: page_counter; 
+            }
+
+            /* 1. FORÇA que as receitas não somem nada por padrão (Corrige o pulo de 2 em 2) */
+            .recipe-card {
+                counter-increment: none;
+            }
+
+            /* 2. Conta a capa como 1 página (número invisível) */
+            section.chapter-cover {
+                counter-increment: page_counter 1;
+            }
+
+            /* 3. Conta APENAS a receita da direita (pares) como 1 página */
+            .recipe-card:nth-of-type(even) {
+                counter-increment: page_counter 1;
+            }
+
+            /* 4. Mostra o texto "Seite X" APENAS na receita da direita */
+            .recipe-card:nth-of-type(even)::after {
                 content: "Seite " counter(page_counter);
                 position: absolute;
                 bottom: 15mm;
@@ -282,12 +300,61 @@
             <i class="fa-solid fa-file-pdf"></i> Als PDF speichern
         </button>
     </header>
-    <div class="chapter-cover">
+
+    <div class="recipe-card" style="padding: 30px 35px !important;">
+                <div class="recipe-title" style="font-size: 22px !important; margin-bottom: 15px !important;"><i class="fa-solid fa-list" style="margin-right: 10px; color: #C97A53;"></i> Inhaltsverzeichnis</div>
+                <div class="recipe-meta" style="margin-bottom: 20px !important;">
+                    <div class="meta-box">Übersicht</div>
+                </div>
+                
+                <div class="steps-list" style="margin-top: 5px;">
+                    <h3 style="font-family: 'Merriweather', serif; font-size: 15px; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid var(--border-dark); padding-bottom: 5px; margin-bottom: 12px; color: #C97A53;">Kapitel 1</h3>
+                    <ul style="list-style: none; padding: 0; margin-bottom: 25px; font-size: 14px;">
+                        <li style="display: flex; justify-content: space-between; margin-bottom: 6px;"><span>☕ Frühstück</span><span style="font-weight: bold;">3</span></li>
+                        <li style="display: flex; justify-content: space-between; margin-bottom: 6px;"><span>🥗 Mittagessen</span><span style="font-weight: bold;">32</span></li>
+                        <li style="display: flex; justify-content: space-between; margin-bottom: 6px;"><span>🍎 Snacks & Zwischenmahlzeiten</span><span style="font-weight: bold;">63</span></li>
+                        <li style="display: flex; justify-content: space-between; margin-bottom: 6px;"><span>🌙 Abendessen</span><span style="font-weight: bold;">94</span></li>
+                    </ul>
+
+                    <h3 style="font-family: 'Merriweather', serif; font-size: 15px; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid var(--border-dark); padding-bottom: 5px; margin-bottom: 12px; color: #C97A53;">Kapitel 2</h3>
+                    <ul style="list-style: none; padding: 0; margin-bottom: 5px; font-size: 14px;">
+                        <li style="display: flex; justify-content: space-between; margin-bottom: 6px;"><span>☕ Frühstück</span><span style="font-weight: bold;">125</span></li>
+                        <li style="display: flex; justify-content: space-between; margin-bottom: 6px;"><span>🥗 Mittagessen</span><span style="font-weight: bold;">156</span></li>
+                        <li style="display: flex; justify-content: space-between; margin-bottom: 6px;"><span>🍎 Snacks & Zwischenmahlzeiten</span><span style="font-weight: bold;">187</span></li>
+                        <li style="display: flex; justify-content: space-between; margin-bottom: 6px;"><span>🌙 Abendessen</span><span style="font-weight: bold;">218</span></li>
+                    </ul>
+                    <h3 style="font-family: 'Merriweather', serif; font-size: 15px; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid var(--border-light); padding-bottom: 5px; margin-bottom: 12px; color: #C97A53;">Kapitel 3</h3>
+                    <ul style="list-style: none; padding: 0; margin-bottom: 25px; font-size: 14px;">
+                        <li style="display: flex; justify-content: space-between; margin-bottom: 6px;"><span>☕ Frühstück</span><span style="font-weight: bold;">249</span></li>
+                        <li style="display: flex; justify-content: space-between; margin-bottom: 6px;"><span>🥗 Mittagessen</span><span style="font-weight: bold;">xx</span></li>
+                        <li style="display: flex; justify-content: space-between; margin-bottom: 6px;"><span>🍎 Snacks & Zwischenmahlzeiten</span><span style="font-weight: bold;">xx</span></li>
+                        <li style="display: flex; justify-content: space-between; margin-bottom: 6px;"><span>🌙 Abendessen</span><span style="font-weight: bold;">xx</span></li>
+                    </ul>
+
+                    <h3 style="font-family: 'Merriweather', serif; font-size: 15px; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid var(--border-light); padding-bottom: 5px; margin-bottom: 12px; color: #C97A53;">Kapitel 4</h3>
+                    <ul style="list-style: none; padding: 0; margin-bottom: 25px; font-size: 14px;">
+                        <li style="display: flex; justify-content: space-between; margin-bottom: 6px;"><span>☕ Frühstück</span><span style="font-weight: bold;">xx</span></li>
+                        <li style="display: flex; justify-content: space-between; margin-bottom: 6px;"><span>🥗 Mittagessen</span><span style="font-weight: bold;">xx</span></li>
+                        <li style="display: flex; justify-content: space-between; margin-bottom: 6px;"><span>🍎 Snacks & Zwischenmahlzeiten</span><span style="font-weight: bold;">xx</span></li>
+                        <li style="display: flex; justify-content: space-between; margin-bottom: 6px;"><span>🌙 Abendessen</span><span style="font-weight: bold;">xx</span></li>
+                    </ul>
+                </div>
+            </div>
+
+    <section class="chapter-cover" style="background: linear-gradient(135deg, #2a1a17 0%, var(--gamma-dark) 100%);">
+                <div class="chapter-icon"><i class="fa-solid fa-weight-scale"></i></div>
+                <div class="chapter-number">Kapitel 1</div>
+                <h2 class="chapter-title" style="font-size: 48px; margin-bottom: 20px;">Gewichtsmanagement</h2>
+                <p class="chapter-subtitle" style="font-size: 18px; max-width: 600px; opacity: 0.85; line-height: 1.6;">Effektive Rezepte zur Förderung des Stoffwechsels und zur nachhaltigen Fettverbrennung ohne Hungergefühl. Der Fokus liegt auf einer hohen Nährstoffdichte und anhaltender Sättigung.</p>
+    </section>
+
+
+    <section class="chapter-cover">
                 <div class="chapter-icon"><i class="fa-solid fa-mug-saucer"></i></div>
-                <div class="chapter-number">KAPITEL 1</div>
+                <div class="chapter-number">Kapitel 1</div>
                 <h2 class="chapter-title">Frühstück</h2>
                 <p class="chapter-subtitle">Starten Sie Ihren Tag mit einem proteinreichen und ballaststoffhaltigen Frühstück. Das stabilisiert den Blutzucker und hält Sie bis zum Mittagessen angenehm satt.</p>
-            </div>
+    </section>
     <div class="ebook-container">
         <div class="recipe-grid">
 
@@ -1943,12 +2010,12 @@
                     </ol>
                 </div>
             </div>
-            <div class="chapter-cover">
+            <section class="chapter-cover">
                 <div class="chapter-icon"><i class="fa-solid fa-utensils"></i></div>
-                <div class="chapter-number">KAPITEL 2</div>
+                <div class="chapter-number">KAPITEL 1</div>
                 <h2 class="chapter-title">Mittagessen</h2>
                 <p class="chapter-subtitle">Proteinreiche Mittagsmahlzeiten halten lange satt, schützen die Muskelmasse und unterstützen die aktive Fettverbrennung durch einen hohen thermogenen Effekt.</p>
-            </div>
+            </section>
             <!-- Receita 61 -->
             <div class="recipe-card">
                 <div class="recipe-title">61. Hähnchen aus der Edelstahl-Heißluftfritteuse</div>
@@ -3567,12 +3634,12 @@
                     </ol>
                 </div>
             </div>
-            <div class="chapter-cover">
+            <section class="chapter-cover">
                 <div class="chapter-icon"><i class="fa-solid fa-apple-whole"></i></div>
-                <div class="chapter-number">KAPITEL 3</div>
+                <div class="chapter-number">KAPITEL 1</div>
                 <h2 class="chapter-title">Snacks & Zwischenmahlzeiten</h2>
                 <p class="chapter-subtitle">Clevere Snacks verhindern Heißhungerattacken, liefern schnelle Energie für das Gehirn und halten den Stoffwechsel zwischen den Hauptmahlzeiten aktiv.</p>
-            </div>
+            </section>
             <!-- Receita 121 -->
             <div class="recipe-card">
                 <div class="recipe-title">121. Gurken-Lachs-Röllchen</div>
@@ -5158,12 +5225,12 @@
                     </ol>
                 </div>
             </div>
-            <div class="chapter-cover">
+            <section class="chapter-cover">
                 <div class="chapter-icon"><i class="fa-solid fa-moon"></i></div>
-                <div class="chapter-number">KAPITEL 4</div>
+                <div class="chapter-number">KAPITEL 1</div>
                 <h2 class="chapter-title">Abendessen</h2>
                 <p class="chapter-subtitle">Leichte, kohlenhydratarme Gerichte am Abend entlasten die Verdauung, fördern einen tiefen und erholsamen Schlaf und maximieren die nächtliche Fettverbrennung.</p>
-            </div>
+            </section>
             <!-- Receita 181 -->
             <div class="recipe-card">
                 <div class="recipe-title">181. Tomatensuppe mit Hähnchenstreifen</div>
@@ -6783,12 +6850,21 @@
                 </div>
             </div>
             <!-- CAPA: CAFÉ DA MANHÄ (DIABETES) -->
-            <div class="chapter-cover">
+
+            <section class="chapter-cover" style="background: linear-gradient(135deg, #2a1a17 0%, var(--gamma-dark) 100%);">
+                <div class="chapter-icon"><i class="fa-solid fa-droplet"></i></div>
+                <div class="chapter-number">Kapitel 2</div>
+                <h2 class="chapter-title" style="font-size: 48px; margin-bottom: 20px;">Blutzucker-Balance</h2>
+                <p class="chapter-subtitle" style="font-size: 18px; max-width: 600px; opacity: 0.85; line-height: 1.6;">Gezielte Ernährung zur Stabilisierung des Insulinspiegels ehemals hohem Glykämischen Index. Diese Gerichte schützen die Gefäße und verhindern gefährliche Blutzuckerschwankungen.</p>
+            </section>
+
+
+            <section class="chapter-cover">
                 <div class="chapter-icon"><i class="fa-solid fa-mug-saucer"></i></div>
-                <div class="chapter-number">KAPITEL 1</div>
+                <div class="chapter-number">Kapitel 2</div>
                 <h2 class="chapter-title">Blutzuckerfreundliches Frühstück</h2>
                 <p class="chapter-subtitle">Ein stabiler Blutzucker beginnt am Morgen. Diese 30 Rezepte verzichten auf Haushaltszucker und schnelle Kohlenhydrate, liefern dafür aber wertvolle Proteine und gesunde Fette für langanhaltende Energie.</p>
-            </div>
+            </section>
 
             <!-- Receita 1 -->
             <div class="recipe-card">
@@ -8395,12 +8471,12 @@
                 </div>
             </div>
             <!-- CAPA: ALMOÇO (DIABETES) -->
-            <div class="chapter-cover">
+            <section class="chapter-cover">
                 <div class="chapter-icon"><i class="fa-solid fa-utensils"></i></div>
-                <div class="chapter-number">KAPITEL 2</div>
+                <div class="chapter-number">Kapitel 2</div>
                 <h2 class="chapter-title">Mittagessen für Diabetiker</h2>
                 <p class="chapter-subtitle">Diese 30 Hauptmahlzeiten kombinieren komplexe Kohlenhydrate, reichlich Ballaststoffe und hochwertige Proteine. Sie sorgen für eine langsame Verdauung, vermeiden Insulinspitzen und halten stundenlang satt.</p>
-            </div>
+            </section>
 
             <!-- Receita 1 -->
             <div class="recipe-card">
@@ -10021,12 +10097,12 @@
                 </div>
             </div>
             <!-- CAPA: LANCHES (DIABETES) -->
-            <div class="chapter-cover">
+            <section class="chapter-cover">
                 <div class="chapter-icon"><i class="fa-solid fa-apple-whole"></i></div>
-                <div class="chapter-number">KAPITEL 3</div>
+                <div class="chapter-number">Kapitel 2</div>
                 <h2 class="chapter-title">Blutzuckerfreundliche Snacks</h2>
                 <p class="chapter-subtitle">Clevere Zwischenmahlzeiten sind entscheidend, um den Blutzuckerspiegel stabil zu halten. Diese Snacks kombinieren wertvolle Proteine, gesunde Fette und Ballaststoffe, um Heißhunger zu stoppen, ohne Insulinspitzen auszulösen.</p>
-            </div>
+            </section>
 
             <!-- Receita 1 -->
             <div class="recipe-card">
@@ -11610,12 +11686,12 @@
                 </div>
             </div>
 
-            <div class="chapter-cover">
+            <section class="chapter-cover">
                 <div class="chapter-icon"><i class="fa-solid fa-moon"></i></div>
-                <div class="chapter-number">KAPITEL 4</div>
+                <div class="chapter-number">KAPITEL 2</div>
                 <h2 class="chapter-title">Blutzuckerfreundliches Abendessen</h2>
                 <p class="chapter-subtitle">Ein leichtes, kohlenhydratarmes Abendessen ist der Schlüssel zu einem stabilen Nüchternblutzucker am nächsten Morgen. Diese 30 Rezepte entlasten die Bauchspeicheldrüse, fördern die nächtliche Fettverbrennung und sorgen für einen tiefen Schlaf.</p>
-            </div>
+            </section>
 
                         <!-- Receita 1 -->
             <div class="recipe-card">
@@ -13235,6 +13311,24 @@
                     </ol>
                 </div>
             </div>
+
+
+            <section class="chapter-cover" style="background: linear-gradient(135deg, #2a1a17 0%, var(--gamma-dark) 100%);">
+                <div class="chapter-icon"><i class="fa-solid fa-heart-pulse"></i></div>
+                <div class="chapter-number">Kapitel 3</div>
+                <h2 class="chapter-title" style="font-size: 48px; margin-bottom: 20px;">Herz-Kreislauf-Vitalität</h2>
+                <p class="chapter-subtitle" style="font-size: 18px; max-width: 600px; opacity: 0.85; line-height: 1.6;">Schutz für Herz und Gefäße durch den gezielten Einsatz von gesunden Omega-3-Fettsäuren, Antioxidantien ehemals pflanzlichen Proteinen für einen optimalen Blutdruck.</p>
+            </section>
+
+
+
+            <section class="chapter-cover">
+                <div class="chapter-icon"><i class="fa-solid fa-mug-saucer"></i></div>
+                <div class="chapter-number">Kapitel 3</div>
+                <h2 class="chapter-title">Frühstück</h2>
+                <p class="chapter-subtitle">Starten Sie Ihren Tag mit einem proteinreichen und ballaststoffhaltigen Frühstück. Das stabilisiert den Blutzucker und hält Sie bis zum Mittagessen angenehm satt.</p>
+            </section>
+
             
 
             <!-- Colocar aqui capa de coração -->
@@ -14830,6 +14924,15 @@
                     </ol>
                 </div>
             </div>
+
+            <section class="chapter-cover">
+                <div class="chapter-icon"><i class="fa-solid fa-utensils"></i></div>
+                <div class="chapter-number">Kapitel 3</div>
+                <h2 class="chapter-title">Mittagessen</h2>
+                <p class="chapter-subtitle">Proteinreiche Mittagsmahlzeiten halten lange satt, schützen die Muskelmasse und unterstützen die aktive Fettverbrennung durch einen hohen thermogenen Effekt.</p>
+            </section>
+
+
             <!-- Receita 1 -->
             <div class="recipe-card">
                 <div class="recipe-title">1. Gebackener Lachs mit Quinoa und Brokkoli</div>
@@ -16446,6 +16549,13 @@
                     </ol>
                 </div>
             </div>
+            <section class="chapter-cover">
+                <div class="chapter-icon"><i class="fa-solid fa-apple-whole"></i></div>
+                <div class="chapter-number">Kapitel 3</div>
+                <h2 class="chapter-title">Snacks & Zwischenmahlzeiten</h2>
+                <p class="chapter-subtitle">Clevere Snacks verhindern Heißhungerattacken, liefern schnelle Energie für das Gehirn und halten den Stoffwechsel zwischen den Hauptmahlzeiten aktiv.</p>
+            </section>
+
             <!-- Receita 1 -->
             <div class="recipe-card">
                 <div class="recipe-title">1. Apfelspalten mit Mandelmus</div>
@@ -17984,6 +18094,18 @@
                     </ol>
                 </div>
             </div>
+            
+            <section class="chapter-cover">
+                <div class="chapter-icon"><i class="fa-solid fa-moon"></i></div>
+                <div class="chapter-number">Kapitel 3</div>
+                <h2 class="chapter-title">Abendessen</h2>
+                <p class="chapter-subtitle">Leichte, kohlenhydratarme Gerichte am Abend entlasten die Verdauung, fördern einen tiefen und erholsamen Schlaf und maximieren die nächtliche Fettverbrennung.</p>
+            </section>
+
+
+
+
+
             <!-- Receita 1 -->
             <div class="recipe-card">
                 <div class="recipe-title">1. Lachs aus dem Ofen mit grünem Spargel</div>
@@ -19596,6 +19718,25 @@
                     </ol>
                 </div>
             </div>
+
+
+            <section class="chapter-cover" style="background: linear-gradient(135deg, #2a1a17 0%, var(--gamma-dark) 100%);">
+                <div class="chapter-icon"><i class="fa-solid fa-leaf"></i></div>
+                <div class="chapter-number">Kapitel 4</div>
+                <h2 class="chapter-title" style="font-size: 48px; margin-bottom: 20px;">Darm-Harmonie</h2>
+                <p class="chapter-subtitle" style="font-size: 18px; max-width: 600px; opacity: 0.85; line-height: 1.6;">Natürliche Entzündungshemmung und Mikrobiom-Pflege. Ballaststoffreiche Rezepte, die die Darmflora unterstützen, Entzündungsprozesse im Körper reduzieren und das Immunsystem stärken.</p>
+            </section>
+
+            <section class="chapter-cover">
+                <div class="chapter-icon"><i class="fa-solid fa-mug-saucer"></i></div>
+                <div class="chapter-number">Kapitel 4</div>
+                <h2 class="chapter-title">Frühstück</h2>
+                <p class="chapter-subtitle">Starten Sie Ihren Tag mit einem proteinreichen und ballaststoffhaltigen Frühstück. Das stabilisiert den Blutzucker und hält Sie bis zum Mittagessen angenehm satt.</p>
+            </section>
+
+
+
+
             <!-- Receita 1 -->
             <div class="recipe-card">
                 <div class="recipe-title">1. Glutenfreier Kurkuma-Haferbrei</div>
@@ -21161,6 +21302,17 @@
                     </ol>
                 </div>
             </div>
+
+             <section class="chapter-cover">
+                <div class="chapter-icon"><i class="fa-solid fa-utensils"></i></div>
+                <div class="chapter-number">KAPITEL 4</div>
+                <h2 class="chapter-title">Mittagessen</h2>
+                <p class="chapter-subtitle">Proteinreiche Mittagsmahlzeiten halten lange satt, schützen die Muskelmasse und unterstützen die aktive Fettverbrennung durch einen hohen thermogenen Effekt.</p>
+            </section>
+
+
+
+
             <!-- Receita 1 -->
             <div class="recipe-card">
                 <div class="recipe-title">1. Lachs mit Süßkartoffelpüree und Spinat</div>
@@ -22772,6 +22924,16 @@
                     </ol>
                 </div>
             </div>
+
+            <section class="chapter-cover">
+                <div class="chapter-icon"><i class="fa-solid fa-apple-whole"></i></div>
+                <div class="chapter-number">Kapitel 4</div>
+                <h2 class="chapter-title">Snacks & Zwischenmahlzeiten</h2>
+                <p class="chapter-subtitle">Clevere Snacks verhindern Heißhungerattacken, liefern schnelle Energie für das Gehirn und halten den Stoffwechsel zwischen den Hauptmahlzeiten aktiv.</p>
+            </section>
+
+
+
             <!-- Receita 1 -->
             <div class="recipe-card">
                 <div class="recipe-title">1. Chia-Pudding mit Kurkuma und Kokosmilch</div>
@@ -24305,6 +24467,18 @@
                     </ol>
                 </div>
             </div>
+
+
+            <section class="chapter-cover">
+                <div class="chapter-icon"><i class="fa-solid fa-moon"></i></div>
+                <div class="chapter-number">KAPITEL 4</div>
+                <h2 class="chapter-title">Abendessen</h2>
+                <p class="chapter-subtitle">Leichte, kohlenhydratarme Gerichte am Abend entlasten die Verdauung, fördern einen tiefen und erholsamen Schlaf und maximieren die nächtliche Fettverbrennung.</p>
+            </section>
+
+
+
+
             <!-- Receita 1 -->
             <div class="recipe-card">
                 <div class="recipe-title">1. Gedünsteter Lachs auf Fenchelgemüse</div>
