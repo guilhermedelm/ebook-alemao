@@ -221,6 +221,17 @@
         }
         .steps-list li::marker { font-weight: 700; font-size: 16px; }
 
+        .main-book-cover {
+            grid-column: 1 / -1; /* Ocupa as duas colunas */
+            width: 100%;
+            height: auto;
+            background-color: #000;
+        }
+        .main-book-cover img {
+            width: 100%;
+            display: block;
+        }
+
 /* ==========================================================================
            MODO IMPRESSÃO (A4)
            ========================================================================== */
@@ -288,6 +299,31 @@
                 font-size: 12px;
                 font-weight: bold;
             }
+            .main-book-cover {
+                height: 297mm !important; /* Força altura A4 */
+                width: 210mm !important;
+                grid-column: 1 / -1;
+                break-after: page; /* Pula para a próxima página após a capa */
+                margin: 0;
+                padding: 0;
+            }
+
+            .main-book-cover img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover; /* Faz a foto preencher a folha sem distorcer */
+            }
+
+            /* GARANTE QUE A CONTAGEM COMECE APÓS A CAPA */
+            body { 
+                counter-reset: page_counter 0; 
+            }
+            
+            /* Esta regra garante que a seção da capa NÃO incremente o contador */
+            section.main-book-cover {
+                counter-increment: none !important;
+            }
+
         }
     </style>
 </head>
@@ -301,6 +337,14 @@
         </button>
     </header>
 
+
+
+
+
+    <section class="main-book-cover">
+        <img src="capa.png" alt="Gesunde & Eiweißreiche Rezepte">
+    </section>
+
     <div class="recipe-card" style="padding: 30px 35px !important;">
                 <div class="recipe-title" style="font-size: 22px !important; margin-bottom: 15px !important;"><i class="fa-solid fa-list" style="margin-right: 10px; color: #C97A53;"></i> Inhaltsverzeichnis</div>
                 <div class="recipe-meta" style="margin-bottom: 20px !important;">
@@ -308,35 +352,35 @@
                 </div>
                 
                 <div class="steps-list" style="margin-top: 5px;">
-                    <h3 style="font-family: 'Merriweather', serif; font-size: 15px; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid var(--border-dark); padding-bottom: 5px; margin-bottom: 12px; color: #C97A53;">Kapitel 1</h3>
+                    <h3 style="font-family: 'Merriweather', serif; font-size: 15px; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid var(--border-dark); padding-bottom: 5px; margin-bottom: 12px; color: #C97A53;display: flex; justify-content: space-between"><span>Kapitel 1 </span><span>Gewichtsmanagement</span>                      </h3>
                     <ul style="list-style: none; padding: 0; margin-bottom: 25px; font-size: 14px;">
                         <li style="display: flex; justify-content: space-between; margin-bottom: 6px;"><span>☕ Frühstück</span><span style="font-weight: bold;">3</span></li>
-                        <li style="display: flex; justify-content: space-between; margin-bottom: 6px;"><span>🥗 Mittagessen</span><span style="font-weight: bold;">32</span></li>
-                        <li style="display: flex; justify-content: space-between; margin-bottom: 6px;"><span>🍎 Snacks & Zwischenmahlzeiten</span><span style="font-weight: bold;">63</span></li>
-                        <li style="display: flex; justify-content: space-between; margin-bottom: 6px;"><span>🌙 Abendessen</span><span style="font-weight: bold;">94</span></li>
+                        <li style="display: flex; justify-content: space-between; margin-bottom: 6px;"><span>🥗 Mittagessen</span><span style="font-weight: bold;">33</span></li>
+                        <li style="display: flex; justify-content: space-between; margin-bottom: 6px;"><span>🍎 Snacks & Zwischenmahlzeiten</span><span style="font-weight: bold;">64</span></li>
+                        <li style="display: flex; justify-content: space-between; margin-bottom: 6px;"><span>🌙 Abendessen</span><span style="font-weight: bold;">95</span></li>
                     </ul>
 
-                    <h3 style="font-family: 'Merriweather', serif; font-size: 15px; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid var(--border-dark); padding-bottom: 5px; margin-bottom: 12px; color: #C97A53;">Kapitel 2</h3>
+                    <h3 style="font-family: 'Merriweather', serif; font-size: 15px; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid var(--border-dark); padding-bottom: 5px; margin-bottom: 12px; color: #C97A53;display: flex; justify-content: space-between"><span>Kapitel 2 </span><span>Blutzucker-Balance</span></h3>
                     <ul style="list-style: none; padding: 0; margin-bottom: 5px; font-size: 14px;">
-                        <li style="display: flex; justify-content: space-between; margin-bottom: 6px;"><span>☕ Frühstück</span><span style="font-weight: bold;">125</span></li>
-                        <li style="display: flex; justify-content: space-between; margin-bottom: 6px;"><span>🥗 Mittagessen</span><span style="font-weight: bold;">156</span></li>
-                        <li style="display: flex; justify-content: space-between; margin-bottom: 6px;"><span>🍎 Snacks & Zwischenmahlzeiten</span><span style="font-weight: bold;">187</span></li>
-                        <li style="display: flex; justify-content: space-between; margin-bottom: 6px;"><span>🌙 Abendessen</span><span style="font-weight: bold;">218</span></li>
+                        <li style="display: flex; justify-content: space-between; margin-bottom: 6px;"><span>☕ Frühstück</span><span style="font-weight: bold;">126</span></li>
+                        <li style="display: flex; justify-content: space-between; margin-bottom: 6px;"><span>🥗 Mittagessen</span><span style="font-weight: bold;">158</span></li>
+                        <li style="display: flex; justify-content: space-between; margin-bottom: 6px;"><span>🍎 Snacks & Zwischenmahlzeiten</span><span style="font-weight: bold;">189</span></li>
+                        <li style="display: flex; justify-content: space-between; margin-bottom: 6px;"><span>🌙 Abendessen</span><span style="font-weight: bold;">220</span></li>
                     </ul>
-                    <h3 style="font-family: 'Merriweather', serif; font-size: 15px; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid var(--border-light); padding-bottom: 5px; margin-bottom: 12px; color: #C97A53;">Kapitel 3</h3>
+                    <h3 style="font-family: 'Merriweather', serif; font-size: 15px; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid var(--border-light); padding-bottom: 5px; margin-bottom: 12px; color: #C97A53;display: flex; justify-content: space-between"><span>Kapitel 3 </span><span>Herz-Kreislauf-Vitalität</span></h3>
                     <ul style="list-style: none; padding: 0; margin-bottom: 25px; font-size: 14px;">
-                        <li style="display: flex; justify-content: space-between; margin-bottom: 6px;"><span>☕ Frühstück</span><span style="font-weight: bold;">249</span></li>
-                        <li style="display: flex; justify-content: space-between; margin-bottom: 6px;"><span>🥗 Mittagessen</span><span style="font-weight: bold;">xx</span></li>
-                        <li style="display: flex; justify-content: space-between; margin-bottom: 6px;"><span>🍎 Snacks & Zwischenmahlzeiten</span><span style="font-weight: bold;">xx</span></li>
-                        <li style="display: flex; justify-content: space-between; margin-bottom: 6px;"><span>🌙 Abendessen</span><span style="font-weight: bold;">xx</span></li>
+                        <li style="display: flex; justify-content: space-between; margin-bottom: 6px;"><span>☕ Frühstück</span><span style="font-weight: bold;">250</span></li>
+                        <li style="display: flex; justify-content: space-between; margin-bottom: 6px;"><span>🥗 Mittagessen</span><span style="font-weight: bold;">283</span></li>
+                        <li style="display: flex; justify-content: space-between; margin-bottom: 6px;"><span>🍎 Snacks & Zwischenmahlzeiten</span><span style="font-weight: bold;">314</span></li>
+                        <li style="display: flex; justify-content: space-between; margin-bottom: 6px;"><span>🌙 Abendessen</span><span style="font-weight: bold;">345</span></li>
                     </ul>
 
-                    <h3 style="font-family: 'Merriweather', serif; font-size: 15px; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid var(--border-light); padding-bottom: 5px; margin-bottom: 12px; color: #C97A53;">Kapitel 4</h3>
+                    <h3 style="font-family: 'Merriweather', serif; font-size: 15px; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid var(--border-light); padding-bottom: 5px; margin-bottom: 12px; color: #C97A53;display: flex; justify-content: space-between"><span>Kapitel 4 </span><span>Darm-Harmonie</span></h3>
                     <ul style="list-style: none; padding: 0; margin-bottom: 25px; font-size: 14px;">
-                        <li style="display: flex; justify-content: space-between; margin-bottom: 6px;"><span>☕ Frühstück</span><span style="font-weight: bold;">xx</span></li>
-                        <li style="display: flex; justify-content: space-between; margin-bottom: 6px;"><span>🥗 Mittagessen</span><span style="font-weight: bold;">xx</span></li>
-                        <li style="display: flex; justify-content: space-between; margin-bottom: 6px;"><span>🍎 Snacks & Zwischenmahlzeiten</span><span style="font-weight: bold;">xx</span></li>
-                        <li style="display: flex; justify-content: space-between; margin-bottom: 6px;"><span>🌙 Abendessen</span><span style="font-weight: bold;">xx</span></li>
+                        <li style="display: flex; justify-content: space-between; margin-bottom: 6px;"><span>☕ Frühstück</span><span style="font-weight: bold;">376</span></li>
+                        <li style="display: flex; justify-content: space-between; margin-bottom: 6px;"><span>🥗 Mittagessen</span><span style="font-weight: bold;">408</span></li>
+                        <li style="display: flex; justify-content: space-between; margin-bottom: 6px;"><span>🍎 Snacks & Zwischenmahlzeiten</span><span style="font-weight: bold;">439</span></li>
+                        <li style="display: flex; justify-content: space-between; margin-bottom: 6px;"><span>🌙 Abendessen</span><span style="font-weight: bold;">470</span></li>
                     </ul>
                 </div>
             </div>
@@ -2012,7 +2056,7 @@
             </div>
             <section class="chapter-cover">
                 <div class="chapter-icon"><i class="fa-solid fa-utensils"></i></div>
-                <div class="chapter-number">KAPITEL 1</div>
+                <div class="chapter-number">Kapitel 1</div>
                 <h2 class="chapter-title">Mittagessen</h2>
                 <p class="chapter-subtitle">Proteinreiche Mittagsmahlzeiten halten lange satt, schützen die Muskelmasse und unterstützen die aktive Fettverbrennung durch einen hohen thermogenen Effekt.</p>
             </section>
@@ -2024,7 +2068,7 @@
 
             <!-- Receita 61 -->
             <div class="recipe-card">
-                <div class="recipe-title">61. Hähnchen aus der Edelstahl-Heißluftfritteuse</div>
+                <div class="recipe-title">1. Hähnchen aus der Edelstahl-Heißluftfritteuse</div>
                 <div class="recipe-meta">
                     <div class="meta-box">20 MIN</div>
                     <div class="meta-box">280 KCAL</div>
@@ -2051,7 +2095,7 @@
 
             <!-- Receita 62 -->
             <div class="recipe-card">
-                <div class="recipe-title">62. Quinoa-Salat mit Thunfisch</div>
+                <div class="recipe-title">2. Quinoa-Salat mit Thunfisch</div>
                 <div class="recipe-meta">
                     <div class="meta-box">15 MIN</div>
                     <div class="meta-box">320 KCAL</div>
@@ -2078,7 +2122,7 @@
 
             <!-- Receita 63 -->
             <div class="recipe-card">
-                <div class="recipe-title">63. Zucchini-Nudeln mit Puten-Bolognese</div>
+                <div class="recipe-title">3. Zucchini-Nudeln mit Puten-Bolognese</div>
                 <div class="recipe-meta">
                     <div class="meta-box">20 MIN</div>
                     <div class="meta-box">250 KCAL</div>
@@ -2105,7 +2149,7 @@
 
             <!-- Receita 64 -->
             <div class="recipe-card">
-                <div class="recipe-title">64. Gegrilltes Lachsfilet mit Spargel</div>
+                <div class="recipe-title">4. Gegrilltes Lachsfilet mit Spargel</div>
                 <div class="recipe-meta">
                     <div class="meta-box">15 MIN</div>
                     <div class="meta-box">340 KCAL</div>
@@ -2132,7 +2176,7 @@
 
             <!-- Receita 65 -->
             <div class="recipe-card">
-                <div class="recipe-title">65. Kichererbsen-Spinat-Pfanne</div>
+                <div class="recipe-title">5. Kichererbsen-Spinat-Pfanne</div>
                 <div class="recipe-meta">
                     <div class="meta-box">15 MIN</div>
                     <div class="meta-box">280 KCAL</div>
@@ -2159,7 +2203,7 @@
 
             <!-- Receita 66 -->
             <div class="recipe-card">
-                <div class="recipe-title">66. Tofu-Brokkoli-Bowl</div>
+                <div class="recipe-title">6. Tofu-Brokkoli-Bowl</div>
                 <div class="recipe-meta">
                     <div class="meta-box">20 MIN</div>
                     <div class="meta-box">260 KCAL</div>
@@ -2186,7 +2230,7 @@
 
             <!-- Receita 67 -->
             <div class="recipe-card">
-                <div class="recipe-title">67. Vollkorn-Wrap mit Pute</div>
+                <div class="recipe-title">7. Vollkorn-Wrap mit Pute</div>
                 <div class="recipe-meta">
                     <div class="meta-box">10 MIN</div>
                     <div class="meta-box">310 KCAL</div>
@@ -2213,7 +2257,7 @@
 
             <!-- Receita 68 -->
             <div class="recipe-card">
-                <div class="recipe-title">68. Rote-Linsen-Eintopf</div>
+                <div class="recipe-title">8. Rote-Linsen-Eintopf</div>
                 <div class="recipe-meta">
                     <div class="meta-box">25 MIN</div>
                     <div class="meta-box">290 KCAL</div>
@@ -2240,7 +2284,7 @@
 
             <!-- Receita 69 -->
             <div class="recipe-card">
-                <div class="recipe-title">69. Kabeljau auf Blumenkohlpüree</div>
+                <div class="recipe-title">9. Kabeljau auf Blumenkohlpüree</div>
                 <div class="recipe-meta">
                     <div class="meta-box">25 MIN</div>
                     <div class="meta-box">220 KCAL</div>
@@ -2267,7 +2311,7 @@
 
             <!-- Receita 70 -->
             <div class="recipe-card">
-                <div class="recipe-title">70. Rindersteak-Streifen für Kraftsportler</div>
+                <div class="recipe-title">10. Rindersteak-Streifen für Kraftsportler</div>
                 <div class="recipe-meta">
                     <div class="meta-box">15 MIN</div>
                     <div class="meta-box">310 KCAL</div>
@@ -2294,7 +2338,7 @@
 
             <!-- Receita 71 -->
             <div class="recipe-card">
-                <div class="recipe-title">71. Gefüllte Süßkartoffel</div>
+                <div class="recipe-title">11. Gefüllte Süßkartoffel</div>
                 <div class="recipe-meta">
                     <div class="meta-box">45 MIN</div>
                     <div class="meta-box">330 KCAL</div>
@@ -2321,7 +2365,7 @@
 
             <!-- Receita 72 -->
             <div class="recipe-card">
-                <div class="recipe-title">72. Edamame-Salat mit Garnelen</div>
+                <div class="recipe-title">12. Edamame-Salat mit Garnelen</div>
                 <div class="recipe-meta">
                     <div class="meta-box">10 MIN</div>
                     <div class="meta-box">240 KCAL</div>
@@ -2348,7 +2392,7 @@
 
             <!-- Receita 73 -->
             <div class="recipe-card">
-                <div class="recipe-title">73. Hähnchen-Zucchini-Spieße</div>
+                <div class="recipe-title">13. Hähnchen-Zucchini-Spieße</div>
                 <div class="recipe-meta">
                     <div class="meta-box">20 MIN</div>
                     <div class="meta-box">210 KCAL</div>
@@ -2375,7 +2419,7 @@
 
             <!-- Receita 74 -->
             <div class="recipe-card">
-                <div class="recipe-title">74. Rote Bete-Salat mit Feta</div>
+                <div class="recipe-title">14. Rote Bete-Salat mit Feta</div>
                 <div class="recipe-meta">
                     <div class="meta-box">10 MIN</div>
                     <div class="meta-box">220 KCAL</div>
@@ -2402,7 +2446,7 @@
 
             <!-- Receita 75 -->
             <div class="recipe-card">
-                <div class="recipe-title">75. Putenbrust mit grünen Bohnen</div>
+                <div class="recipe-title">15. Putenbrust mit grünen Bohnen</div>
                 <div class="recipe-meta">
                     <div class="meta-box">15 MIN</div>
                     <div class="meta-box">230 KCAL</div>
@@ -2429,7 +2473,7 @@
 
             <!-- Receita 76 -->
             <div class="recipe-card">
-                <div class="recipe-title">76. Blumenkohl-Reis mit Rindfleisch</div>
+                <div class="recipe-title">16. Blumenkohl-Reis mit Rindfleisch</div>
                 <div class="recipe-meta">
                     <div class="meta-box">15 MIN</div>
                     <div class="meta-box">280 KCAL</div>
@@ -2456,7 +2500,7 @@
 
             <!-- Receita 77 -->
             <div class="recipe-card">
-                <div class="recipe-title">77. Thunfisch-Frikadellen mit Salat</div>
+                <div class="recipe-title">17. Thunfisch-Frikadellen mit Salat</div>
                 <div class="recipe-meta">
                     <div class="meta-box">20 MIN</div>
                     <div class="meta-box">290 KCAL</div>
@@ -2483,7 +2527,7 @@
 
             <!-- Receita 78 -->
             <div class="recipe-card">
-                <div class="recipe-title">78. Schwarze Bohnen-Quinoa-Bowl</div>
+                <div class="recipe-title">18. Schwarze Bohnen-Quinoa-Bowl</div>
                 <div class="recipe-meta">
                     <div class="meta-box">15 MIN</div>
                     <div class="meta-box">310 KCAL</div>
@@ -2510,7 +2554,7 @@
 
             <!-- Receita 79 -->
             <div class="recipe-card">
-                <div class="recipe-title">79. Champignon-Tomaten-Omelett</div>
+                <div class="recipe-title">19. Champignon-Tomaten-Omelett</div>
                 <div class="recipe-meta">
                     <div class="meta-box">15 MIN</div>
                     <div class="meta-box">210 KCAL</div>
@@ -2537,7 +2581,7 @@
 
             <!-- Receita 80 -->
             <div class="recipe-card">
-                <div class="recipe-title">80. Lachs-Frischkäse-Rolle</div>
+                <div class="recipe-title">20. Lachs-Frischkäse-Rolle</div>
                 <div class="recipe-meta">
                     <div class="meta-box">10 MIN</div>
                     <div class="meta-box">270 KCAL</div>
@@ -2564,7 +2608,7 @@
 
             <!-- Receita 81 -->
             <div class="recipe-card">
-                <div class="recipe-title">81. Hähnchen-Pfanne mit Champignons</div>
+                <div class="recipe-title">21. Hähnchen-Pfanne mit Champignons</div>
                 <div class="recipe-meta">
                     <div class="meta-box">20 MIN</div>
                     <div class="meta-box">250 KCAL</div>
@@ -2591,7 +2635,7 @@
 
             <!-- Receita 82 -->
             <div class="recipe-card">
-                <div class="recipe-title">82. Veganer Linsensalat mit Tofu</div>
+                <div class="recipe-title">22. Veganer Linsensalat mit Tofu</div>
                 <div class="recipe-meta">
                     <div class="meta-box">15 MIN</div>
                     <div class="meta-box">330 KCAL</div>
@@ -2618,7 +2662,7 @@
 
             <!-- Receita 83 -->
             <div class="recipe-card">
-                <div class="recipe-title">83. Zanderfilet mit Tomaten-Salsa</div>
+                <div class="recipe-title">23. Zanderfilet mit Tomaten-Salsa</div>
                 <div class="recipe-meta">
                     <div class="meta-box">20 MIN</div>
                     <div class="meta-box">210 KCAL</div>
@@ -2645,7 +2689,7 @@
 
             <!-- Receita 84 -->
             <div class="recipe-card">
-                <div class="recipe-title">84. Rindfleisch-Salat mit Rucola</div>
+                <div class="recipe-title">24. Rindfleisch-Salat mit Rucola</div>
                 <div class="recipe-meta">
                     <div class="meta-box">15 MIN</div>
                     <div class="meta-box">260 KCAL</div>
@@ -2672,7 +2716,7 @@
 
             <!-- Receita 85 -->
             <div class="recipe-card">
-                <div class="recipe-title">85. Schnelles Kichererbsen-Curry</div>
+                <div class="recipe-title">25. Schnelles Kichererbsen-Curry</div>
                 <div class="recipe-meta">
                     <div class="meta-box">20 MIN</div>
                     <div class="meta-box">340 KCAL</div>
@@ -2699,7 +2743,7 @@
 
             <!-- Receita 86 -->
             <div class="recipe-card">
-                <div class="recipe-title">86. Puten-Geschnetzeltes mit Zucchini</div>
+                <div class="recipe-title">26. Puten-Geschnetzeltes mit Zucchini</div>
                 <div class="recipe-meta">
                     <div class="meta-box">20 MIN</div>
                     <div class="meta-box">230 KCAL</div>
@@ -2726,7 +2770,7 @@
 
             <!-- Receita 87 -->
             <div class="recipe-card">
-                <div class="recipe-title">87. Garnelen-Pfanne mit Knoblauch</div>
+                <div class="recipe-title">27. Garnelen-Pfanne mit Knoblauch</div>
                 <div class="recipe-meta">
                     <div class="meta-box">15 MIN</div>
                     <div class="meta-box">210 KCAL</div>
@@ -2753,7 +2797,7 @@
 
             <!-- Receita 88 -->
             <div class="recipe-card">
-                <div class="recipe-title">88. Süßkartoffel-Pommes mit Quark-Dip</div>
+                <div class="recipe-title">28. Süßkartoffel-Pommes mit Quark-Dip</div>
                 <div class="recipe-meta">
                     <div class="meta-box">30 MIN</div>
                     <div class="meta-box">310 KCAL</div>
@@ -2780,7 +2824,7 @@
 
             <!-- Receita 89 -->
             <div class="recipe-card">
-                <div class="recipe-title">89. Brokkoli-Auflauf mit Hähnchen</div>
+                <div class="recipe-title">29. Brokkoli-Auflauf mit Hähnchen</div>
                 <div class="recipe-meta">
                     <div class="meta-box">35 MIN</div>
                     <div class="meta-box">320 KCAL</div>
@@ -2807,7 +2851,7 @@
 
             <!-- Receita 90 -->
             <div class="recipe-card">
-                <div class="recipe-title">90. Thunfisch-Steak mit Sesam</div>
+                <div class="recipe-title">30. Thunfisch-Steak mit Sesam</div>
                 <div class="recipe-meta">
                     <div class="meta-box">10 MIN</div>
                     <div class="meta-box">260 KCAL</div>
@@ -2833,7 +2877,7 @@
             </div>
             <!-- Receita 91 -->
             <div class="recipe-card">
-                <div class="recipe-title">91. Putenbrust mit Blumenkohlpüree</div>
+                <div class="recipe-title">31. Putenbrust mit Blumenkohlpüree</div>
                 <div class="recipe-meta">
                     <div class="meta-box">25 MIN</div>
                     <div class="meta-box">260 KCAL</div>
@@ -2860,7 +2904,7 @@
 
             <!-- Receita 92 -->
             <div class="recipe-card">
-                <div class="recipe-title">92. Zucchini-Nudeln mit Garnelen</div>
+                <div class="recipe-title">32. Zucchini-Nudeln mit Garnelen</div>
                 <div class="recipe-meta">
                     <div class="meta-box">15 MIN</div>
                     <div class="meta-box">220 KCAL</div>
@@ -2887,7 +2931,7 @@
 
             <!-- Receita 93 -->
             <div class="recipe-card">
-                <div class="recipe-title">93. Rindfleisch-Brokkoli-Pfanne</div>
+                <div class="recipe-title">33. Rindfleisch-Brokkoli-Pfanne</div>
                 <div class="recipe-meta">
                     <div class="meta-box">20 MIN</div>
                     <div class="meta-box">290 KCAL</div>
@@ -2914,7 +2958,7 @@
 
             <!-- Receita 94 -->
             <div class="recipe-card">
-                <div class="recipe-title">94. Linsensalat mit Hähnchen</div>
+                <div class="recipe-title">34. Linsensalat mit Hähnchen</div>
                 <div class="recipe-meta">
                     <div class="meta-box">15 MIN</div>
                     <div class="meta-box">310 KCAL</div>
@@ -2941,7 +2985,7 @@
 
             <!-- Receita 95 -->
             <div class="recipe-card">
-                <div class="recipe-title">95. Gebackener Kabeljau mit Tomaten</div>
+                <div class="recipe-title">35. Gebackener Kabeljau mit Tomaten</div>
                 <div class="recipe-meta">
                     <div class="meta-box">25 MIN</div>
                     <div class="meta-box">210 KCAL</div>
@@ -2968,7 +3012,7 @@
 
             <!-- Receita 96 -->
             <div class="recipe-card">
-                <div class="recipe-title">96. Veganes Tofu-Rührei mit Gemüse</div>
+                <div class="recipe-title">36. Veganes Tofu-Rührei mit Gemüse</div>
                 <div class="recipe-meta">
                     <div class="meta-box">15 MIN</div>
                     <div class="meta-box">240 KCAL</div>
@@ -2995,7 +3039,7 @@
 
             <!-- Receita 97 -->
             <div class="recipe-card">
-                <div class="recipe-title">97. Gefüllte Paprika mit Putenhack</div>
+                <div class="recipe-title">37. Gefüllte Paprika mit Putenhack</div>
                 <div class="recipe-meta">
                     <div class="meta-box">35 MIN</div>
                     <div class="meta-box">280 KCAL</div>
@@ -3022,7 +3066,7 @@
 
             <!-- Receita 98 -->
             <div class="recipe-card">
-                <div class="recipe-title">98. Gegrillter Hähnchensalat</div>
+                <div class="recipe-title">38. Gegrillter Hähnchensalat</div>
                 <div class="recipe-meta">
                     <div class="meta-box">10 MIN</div>
                     <div class="meta-box">250 KCAL</div>
@@ -3049,7 +3093,7 @@
 
             <!-- Receita 99 -->
             <div class="recipe-card">
-                <div class="recipe-title">99. Lachs-Spinat-Auflauf</div>
+                <div class="recipe-title">39. Lachs-Spinat-Auflauf</div>
                 <div class="recipe-meta">
                     <div class="meta-box">25 MIN</div>
                     <div class="meta-box">330 KCAL</div>
@@ -3076,7 +3120,7 @@
 
             <!-- Receita 100 -->
             <div class="recipe-card">
-                <div class="recipe-title">100. Auberginen-Mini-Pizzen</div>
+                <div class="recipe-title">40. Auberginen-Mini-Pizzen</div>
                 <div class="recipe-meta">
                     <div class="meta-box">20 MIN</div>
                     <div class="meta-box">190 KCAL</div>
@@ -3103,7 +3147,7 @@
 
             <!-- Receita 101 -->
             <div class="recipe-card">
-                <div class="recipe-title">101. Quinoa-Schwarzbohnen-Salat</div>
+                <div class="recipe-title">41. Quinoa-Schwarzbohnen-Salat</div>
                 <div class="recipe-meta">
                     <div class="meta-box">15 MIN</div>
                     <div class="meta-box">310 KCAL</div>
@@ -3130,7 +3174,7 @@
 
             <!-- Receita 102 -->
             <div class="recipe-card">
-                <div class="recipe-title">102. Hähnchen-Paprika-Spieße</div>
+                <div class="recipe-title">42. Hähnchen-Paprika-Spieße</div>
                 <div class="recipe-meta">
                     <div class="meta-box">20 MIN</div>
                     <div class="meta-box">230 KCAL</div>
@@ -3157,7 +3201,7 @@
 
             <!-- Receita 103 -->
             <div class="recipe-card">
-                <div class="recipe-title">103. Pilz-Puten-Pfanne</div>
+                <div class="recipe-title">43. Pilz-Puten-Pfanne</div>
                 <div class="recipe-meta">
                     <div class="meta-box">15 MIN</div>
                     <div class="meta-box">240 KCAL</div>
@@ -3184,7 +3228,7 @@
 
             <!-- Receita 104 -->
             <div class="recipe-card">
-                <div class="recipe-title">104. Spinatsalat mit gekochten Eiern</div>
+                <div class="recipe-title">44. Spinatsalat mit gekochten Eiern</div>
                 <div class="recipe-meta">
                     <div class="meta-box">10 MIN</div>
                     <div class="meta-box">210 KCAL</div>
@@ -3211,7 +3255,7 @@
 
             <!-- Receita 105 -->
             <div class="recipe-card">
-                <div class="recipe-title">105. Blumenkohlreis mit Lachs</div>
+                <div class="recipe-title">45. Blumenkohlreis mit Lachs</div>
                 <div class="recipe-meta">
                     <div class="meta-box">20 MIN</div>
                     <div class="meta-box">320 KCAL</div>
@@ -3238,7 +3282,7 @@
 
             <!-- Receita 106 -->
             <div class="recipe-card">
-                <div class="recipe-title">106. Magerer Rindfleisch-Burger-Bowl</div>
+                <div class="recipe-title">46. Magerer Rindfleisch-Burger-Bowl</div>
                 <div class="recipe-meta">
                     <div class="meta-box">15 MIN</div>
                     <div class="meta-box">290 KCAL</div>
@@ -3265,7 +3309,7 @@
 
             <!-- Receita 107 -->
             <div class="recipe-card">
-                <div class="recipe-title">107. Garnelen-Avocado-Salat</div>
+                <div class="recipe-title">47. Garnelen-Avocado-Salat</div>
                 <div class="recipe-meta">
                     <div class="meta-box">10 MIN</div>
                     <div class="meta-box">270 KCAL</div>
@@ -3292,7 +3336,7 @@
 
             <!-- Receita 108 -->
             <div class="recipe-card">
-                <div class="recipe-title">108. Hähnchenbrust mit Spargel</div>
+                <div class="recipe-title">48. Hähnchenbrust mit Spargel</div>
                 <div class="recipe-meta">
                     <div class="meta-box">20 MIN</div>
                     <div class="meta-box">240 KCAL</div>
@@ -3319,7 +3363,7 @@
 
             <!-- Receita 109 -->
             <div class="recipe-card">
-                <div class="recipe-title">109. Vegane Kichererbsen-Bowl</div>
+                <div class="recipe-title">49. Vegane Kichererbsen-Bowl</div>
                 <div class="recipe-meta">
                     <div class="meta-box">15 MIN</div>
                     <div class="meta-box">320 KCAL</div>
@@ -3346,7 +3390,7 @@
 
             <!-- Receita 110 -->
             <div class="recipe-card">
-                <div class="recipe-title">110. Puten-Frikadellen mit Zucchini</div>
+                <div class="recipe-title">50. Puten-Frikadellen mit Zucchini</div>
                 <div class="recipe-meta">
                     <div class="meta-box">25 MIN</div>
                     <div class="meta-box">260 KCAL</div>
@@ -3373,7 +3417,7 @@
 
             <!-- Receita 111 -->
             <div class="recipe-card">
-                <div class="recipe-title">111. Räucherlachs-Wrap</div>
+                <div class="recipe-title">51. Räucherlachs-Wrap</div>
                 <div class="recipe-meta">
                     <div class="meta-box">5 MIN</div>
                     <div class="meta-box">280 KCAL</div>
@@ -3400,7 +3444,7 @@
 
             <!-- Receita 112 -->
             <div class="recipe-card">
-                <div class="recipe-title">112. Gefüllte Tomaten mit Thunfisch</div>
+                <div class="recipe-title">52. Gefüllte Tomaten mit Thunfisch</div>
                 <div class="recipe-meta">
                     <div class="meta-box">10 MIN</div>
                     <div class="meta-box">190 KCAL</div>
@@ -3427,7 +3471,7 @@
 
             <!-- Receita 113 -->
             <div class="recipe-card">
-                <div class="recipe-title">113. Zitronen-Kräuter-Hähnchen</div>
+                <div class="recipe-title">53. Zitronen-Kräuter-Hähnchen</div>
                 <div class="recipe-meta">
                     <div class="meta-box">20 MIN</div>
                     <div class="meta-box">220 KCAL</div>
@@ -3454,7 +3498,7 @@
 
             <!-- Receita 114 -->
             <div class="recipe-card">
-                <div class="recipe-title">114. Brokkoli-Feta-Frittata</div>
+                <div class="recipe-title">54. Brokkoli-Feta-Frittata</div>
                 <div class="recipe-meta">
                     <div class="meta-box">20 MIN</div>
                     <div class="meta-box">240 KCAL</div>
@@ -3481,7 +3525,7 @@
 
             <!-- Receita 115 -->
             <div class="recipe-card">
-                <div class="recipe-title">115. Edamame-Quinoa-Bowl</div>
+                <div class="recipe-title">55. Edamame-Quinoa-Bowl</div>
                 <div class="recipe-meta">
                     <div class="meta-box">15 MIN</div>
                     <div class="meta-box">310 KCAL</div>
@@ -3508,7 +3552,7 @@
 
             <!-- Receita 116 -->
             <div class="recipe-card">
-                <div class="recipe-title">116. Weißfisch mit grünem Salat</div>
+                <div class="recipe-title">56. Weißfisch mit grünem Salat</div>
                 <div class="recipe-meta">
                     <div class="meta-box">15 MIN</div>
                     <div class="meta-box">200 KCAL</div>
@@ -3535,7 +3579,7 @@
 
             <!-- Receita 117 -->
             <div class="recipe-card">
-                <div class="recipe-title">117. Rinderstreifen mit Paprika</div>
+                <div class="recipe-title">57. Rinderstreifen mit Paprika</div>
                 <div class="recipe-meta">
                     <div class="meta-box">15 MIN</div>
                     <div class="meta-box">280 KCAL</div>
@@ -3562,7 +3606,7 @@
 
             <!-- Receita 118 -->
             <div class="recipe-card">
-                <div class="recipe-title">118. Zucchini-Schiffchen mit Thunfisch</div>
+                <div class="recipe-title">58. Zucchini-Schiffchen mit Thunfisch</div>
                 <div class="recipe-meta">
                     <div class="meta-box">25 MIN</div>
                     <div class="meta-box">210 KCAL</div>
@@ -3589,7 +3633,7 @@
 
             <!-- Receita 119 -->
             <div class="recipe-card">
-                <div class="recipe-title">119. Hähnchen-Grüne-Bohnen-Pfanne</div>
+                <div class="recipe-title">59. Hähnchen-Grüne-Bohnen-Pfanne</div>
                 <div class="recipe-meta">
                     <div class="meta-box">20 MIN</div>
                     <div class="meta-box">250 KCAL</div>
@@ -3616,7 +3660,7 @@
 
             <!-- Receita 120 -->
             <div class="recipe-card">
-                <div class="recipe-title">120. Tomaten-Mozzarella mit Hähnchen</div>
+                <div class="recipe-title">60. Tomaten-Mozzarella mit Hähnchen</div>
                 <div class="recipe-meta">
                     <div class="meta-box">10 MIN</div>
                     <div class="meta-box">290 KCAL</div>
@@ -3642,13 +3686,17 @@
             </div>
             <section class="chapter-cover">
                 <div class="chapter-icon"><i class="fa-solid fa-apple-whole"></i></div>
-                <div class="chapter-number">KAPITEL 1</div>
+                <div class="chapter-number">Kapitel 1</div>
                 <h2 class="chapter-title">Snacks & Zwischenmahlzeiten</h2>
                 <p class="chapter-subtitle">Clevere Snacks verhindern Heißhungerattacken, liefern schnelle Energie für das Gehirn und halten den Stoffwechsel zwischen den Hauptmahlzeiten aktiv.</p>
             </section>
+            <style>
+                    .recipe-card:nth-child(odd) .recipe-title { color: #ffffff; }
+                    .recipe-card:nth-child(even) .recipe-title { color: #111111; }
+            </style>
             <!-- Receita 121 -->
             <div class="recipe-card">
-                <div class="recipe-title">121. Gurken-Lachs-Röllchen</div>
+                <div class="recipe-title">1. Gurken-Lachs-Röllchen</div>
                 <div class="recipe-meta">
                     <div class="meta-box">10 MIN</div>
                     <div class="meta-box">150 KCAL</div>
@@ -3675,7 +3723,7 @@
 
             <!-- Receita 122 -->
             <div class="recipe-card">
-                <div class="recipe-title">122. Apfelspalten mit Erdnussmus</div>
+                <div class="recipe-title">2. Apfelspalten mit Erdnussmus</div>
                 <div class="recipe-meta">
                     <div class="meta-box">5 MIN</div>
                     <div class="meta-box">190 KCAL</div>
@@ -3701,7 +3749,7 @@
 
             <!-- Receita 123 -->
             <div class="recipe-card">
-                <div class="recipe-title">123. Paprika-Sticks mit Hummus</div>
+                <div class="recipe-title">3. Paprika-Sticks mit Hummus</div>
                 <div class="recipe-meta">
                     <div class="meta-box">5 MIN</div>
                     <div class="meta-box">140 KCAL</div>
@@ -3727,7 +3775,7 @@
 
             <!-- Receita 124 -->
             <div class="recipe-card">
-                <div class="recipe-title">124. Magerquark mit frischen Beeren</div>
+                <div class="recipe-title">4. Magerquark mit frischen Beeren</div>
                 <div class="recipe-meta">
                     <div class="meta-box">5 MIN</div>
                     <div class="meta-box">160 KCAL</div>
@@ -3754,7 +3802,7 @@
 
             <!-- Receita 125 -->
             <div class="recipe-card">
-                <div class="recipe-title">125. Geröstete Gewürz-Kichererbsen</div>
+                <div class="recipe-title">5. Geröstete Gewürz-Kichererbsen</div>
                 <div class="recipe-meta">
                     <div class="meta-box">30 MIN</div>
                     <div class="meta-box">180 KCAL</div>
@@ -3780,7 +3828,7 @@
 
             <!-- Receita 126 -->
             <div class="recipe-card">
-                <div class="recipe-title">126. Harzer Käse mit Kirschtomaten</div>
+                <div class="recipe-title">6. Harzer Käse mit Kirschtomaten</div>
                 <div class="recipe-meta">
                     <div class="meta-box">5 MIN</div>
                     <div class="meta-box">120 KCAL</div>
@@ -3806,7 +3854,7 @@
 
             <!-- Receita 127 -->
             <div class="recipe-card">
-                <div class="recipe-title">127. Tomaten-Mozzarella-Spieße</div>
+                <div class="recipe-title">7. Tomaten-Mozzarella-Spieße</div>
                 <div class="recipe-meta">
                     <div class="meta-box">5 MIN</div>
                     <div class="meta-box">170 KCAL</div>
@@ -3833,7 +3881,7 @@
 
             <!-- Receita 128 -->
             <div class="recipe-card">
-                <div class="recipe-title">128. Sellerie mit leichtem Frischkäse</div>
+                <div class="recipe-title">8. Sellerie mit leichtem Frischkäse</div>
                 <div class="recipe-meta">
                     <div class="meta-box">5 MIN</div>
                     <div class="meta-box">90 KCAL</div>
@@ -3859,7 +3907,7 @@
 
             <!-- Receita 129 -->
             <div class="recipe-card">
-                <div class="recipe-title">129. Avocado auf Reiswaffeln</div>
+                <div class="recipe-title">9. Avocado auf Reiswaffeln</div>
                 <div class="recipe-meta">
                     <div class="meta-box">5 MIN</div>
                     <div class="meta-box">150 KCAL</div>
@@ -3885,7 +3933,7 @@
 
             <!-- Receita 130 -->
             <div class="recipe-card">
-                <div class="recipe-title">130. Schneller Protein-Shake</div>
+                <div class="recipe-title">10. Schneller Protein-Shake</div>
                 <div class="recipe-meta">
                     <div class="meta-box">2 MIN</div>
                     <div class="meta-box">130 KCAL</div>
@@ -3911,7 +3959,7 @@
 
             <!-- Receita 131 -->
             <div class="recipe-card">
-                <div class="recipe-title">131. Edamame mit Meersalz</div>
+                <div class="recipe-title">11. Edamame mit Meersalz</div>
                 <div class="recipe-meta">
                     <div class="meta-box">5 MIN</div>
                     <div class="meta-box">120 KCAL</div>
@@ -3936,7 +3984,7 @@
 
             <!-- Receita 132 -->
             <div class="recipe-card">
-                <div class="recipe-title">132. Thunfisch-Dip mit Karotten</div>
+                <div class="recipe-title">12. Thunfisch-Dip mit Karotten</div>
                 <div class="recipe-meta">
                     <div class="meta-box">10 MIN</div>
                     <div class="meta-box">170 KCAL</div>
@@ -3963,7 +4011,7 @@
 
             <!-- Receita 133 -->
             <div class="recipe-card">
-                <div class="recipe-title">133. Putenbrust-Frischkäse-Röllchen</div>
+                <div class="recipe-title">13. Putenbrust-Frischkäse-Röllchen</div>
                 <div class="recipe-meta">
                     <div class="meta-box">5 MIN</div>
                     <div class="meta-box">140 KCAL</div>
@@ -3989,7 +4037,7 @@
 
             <!-- Receita 134 -->
             <div class="recipe-card">
-                <div class="recipe-title">134. Gekochtes Ei mit Mandeln</div>
+                <div class="recipe-title">14. Gekochtes Ei mit Mandeln</div>
                 <div class="recipe-meta">
                     <div class="meta-box">10 MIN</div>
                     <div class="meta-box">150 KCAL</div>
@@ -4015,7 +4063,7 @@
 
             <!-- Receita 135 -->
             <div class="recipe-card">
-                <div class="recipe-title">135. Chia-Pudding mit Vanille</div>
+                <div class="recipe-title">15. Chia-Pudding mit Vanille</div>
                 <div class="recipe-meta">
                     <div class="meta-box">5 MIN</div>
                     <div class="meta-box">160 KCAL</div>
@@ -4042,7 +4090,7 @@
 
             <!-- Receita 136 -->
             <div class="recipe-card">
-                <div class="recipe-title">136. Wassermelone mit Feta</div>
+                <div class="recipe-title">16. Wassermelone mit Feta</div>
                 <div class="recipe-meta">
                     <div class="meta-box">5 MIN</div>
                     <div class="meta-box">130 KCAL</div>
@@ -4068,7 +4116,7 @@
 
             <!-- Receita 137 -->
             <div class="recipe-card">
-                <div class="recipe-title">137. Zucchini-Röllchen mit Ricotta</div>
+                <div class="recipe-title">17. Zucchini-Röllchen mit Ricotta</div>
                 <div class="recipe-meta">
                     <div class="meta-box">15 MIN</div>
                     <div class="meta-box">140 KCAL</div>
@@ -4095,7 +4143,7 @@
 
             <!-- Receita 138 -->
             <div class="recipe-card">
-                <div class="recipe-title">138. Körniger Frischkäse mit Schnittlauch</div>
+                <div class="recipe-title">18. Körniger Frischkäse mit Schnittlauch</div>
                 <div class="recipe-meta">
                     <div class="meta-box">2 MIN</div>
                     <div class="meta-box">120 KCAL</div>
@@ -4121,7 +4169,7 @@
 
             <!-- Receita 139 -->
             <div class="recipe-card">
-                <div class="recipe-title">139. Nüsse-Beeren-Mix</div>
+                <div class="recipe-title">19. Nüsse-Beeren-Mix</div>
                 <div class="recipe-meta">
                     <div class="meta-box">2 MIN</div>
                     <div class="meta-box">190 KCAL</div>
@@ -4146,7 +4194,7 @@
 
             <!-- Receita 140 -->
             <div class="recipe-card">
-                <div class="recipe-title">140. Eiweißbrot mit Kräuterquark</div>
+                <div class="recipe-title">20. Eiweißbrot mit Kräuterquark</div>
                 <div class="recipe-meta">
                     <div class="meta-box">5 MIN</div>
                     <div class="meta-box">170 KCAL</div>
@@ -4173,7 +4221,7 @@
 
             <!-- Receita 141 -->
             <div class="recipe-card">
-                <div class="recipe-title">141. Rucola-Smoothie mit Apfel</div>
+                <div class="recipe-title">21. Rucola-Smoothie mit Apfel</div>
                 <div class="recipe-meta">
                     <div class="meta-box">5 MIN</div>
                     <div class="meta-box">110 KCAL</div>
@@ -4200,7 +4248,7 @@
 
             <!-- Receita 142 -->
             <div class="recipe-card">
-                <div class="recipe-title">142. Räucherlachs auf Gurkenscheiben</div>
+                <div class="recipe-title">22. Räucherlachs auf Gurkenscheiben</div>
                 <div class="recipe-meta">
                     <div class="meta-box">5 MIN</div>
                     <div class="meta-box">130 KCAL</div>
@@ -4227,7 +4275,7 @@
 
             <!-- Receita 143 -->
             <div class="recipe-card">
-                <div class="recipe-title">143. Mini-Protein-Pancakes</div>
+                <div class="recipe-title">23. Mini-Protein-Pancakes</div>
                 <div class="recipe-meta">
                     <div class="meta-box">15 MIN</div>
                     <div class="meta-box">180 KCAL</div>
@@ -4254,7 +4302,7 @@
 
             <!-- Receita 144 -->
             <div class="recipe-card">
-                <div class="recipe-title">144. Karotten-Apfel-Rohkost</div>
+                <div class="recipe-title">24. Karotten-Apfel-Rohkost</div>
                 <div class="recipe-meta">
                     <div class="meta-box">5 MIN</div>
                     <div class="meta-box">100 KCAL</div>
@@ -4281,7 +4329,7 @@
 
             <!-- Receita 145 -->
             <div class="recipe-card">
-                <div class="recipe-title">145. Oliven mit Schafskäse</div>
+                <div class="recipe-title">25. Oliven mit Schafskäse</div>
                 <div class="recipe-meta">
                     <div class="meta-box">2 MIN</div>
                     <div class="meta-box">180 KCAL</div>
@@ -4307,7 +4355,7 @@
 
             <!-- Receita 146 -->
             <div class="recipe-card">
-                <div class="recipe-title">146. Magerquark mit Zimt und Mandeln</div>
+                <div class="recipe-title">26. Magerquark mit Zimt und Mandeln</div>
                 <div class="recipe-meta">
                     <div class="meta-box">3 MIN</div>
                     <div class="meta-box">190 KCAL</div>
@@ -4334,7 +4382,7 @@
 
             <!-- Receita 147 -->
             <div class="recipe-card">
-                <div class="recipe-title">147. Matcha-Protein-Shake</div>
+                <div class="recipe-title">27. Matcha-Protein-Shake</div>
                 <div class="recipe-meta">
                     <div class="meta-box">5 MIN</div>
                     <div class="meta-box">140 KCAL</div>
@@ -4361,7 +4409,7 @@
 
             <!-- Receita 148 -->
             <div class="recipe-card">
-                <div class="recipe-title">148. Radieschen mit Quark-Dip</div>
+                <div class="recipe-title">28. Radieschen mit Quark-Dip</div>
                 <div class="recipe-meta">
                     <div class="meta-box">5 MIN</div>
                     <div class="meta-box">90 KCAL</div>
@@ -4388,7 +4436,7 @@
 
             <!-- Receita 149 -->
             <div class="recipe-card">
-                <div class="recipe-title">149. Gefüllte Champignons mit Frischkäse</div>
+                <div class="recipe-title">29. Gefüllte Champignons mit Frischkäse</div>
                 <div class="recipe-meta">
                     <div class="meta-box">15 MIN</div>
                     <div class="meta-box">120 KCAL</div>
@@ -4414,7 +4462,7 @@
 
             <!-- Receita 150 -->
             <div class="recipe-card">
-                <div class="recipe-title">150. Joghurt mit Leinsamen</div>
+                <div class="recipe-title">30. Joghurt mit Leinsamen</div>
                 <div class="recipe-meta">
                     <div class="meta-box">2 MIN</div>
                     <div class="meta-box">140 KCAL</div>
@@ -4439,7 +4487,7 @@
             </div>
             <!-- Receita 151 -->
             <div class="recipe-card">
-                <div class="recipe-title">151. Gurken-Sticks mit Hummus</div>
+                <div class="recipe-title">31. Gurken-Sticks mit Hummus</div>
                 <div class="recipe-meta">
                     <div class="meta-box">5 MIN</div>
                     <div class="meta-box">120 KCAL</div>
@@ -4465,7 +4513,7 @@
 
             <!-- Receita 152 -->
             <div class="recipe-card">
-                <div class="recipe-title">152. Tomaten mit körnigem Frischkäse</div>
+                <div class="recipe-title">32. Tomaten mit körnigem Frischkäse</div>
                 <div class="recipe-meta">
                     <div class="meta-box">5 MIN</div>
                     <div class="meta-box">150 KCAL</div>
@@ -4492,7 +4540,7 @@
 
             <!-- Receita 153 -->
             <div class="recipe-card">
-                <div class="recipe-title">153. Protein-Eiskaffee (Pre-Workout)</div>
+                <div class="recipe-title">33. Protein-Eiskaffee (Pre-Workout)</div>
                 <div class="recipe-meta">
                     <div class="meta-box">3 MIN</div>
                     <div class="meta-box">110 KCAL</div>
@@ -4519,7 +4567,7 @@
 
             <!-- Receita 154 -->
             <div class="recipe-card">
-                <div class="recipe-title">154. Geröstete Kürbiskerne (pur)</div>
+                <div class="recipe-title">34. Geröstete Kürbiskerne (pur)</div>
                 <div class="recipe-meta">
                     <div class="meta-box">15 MIN</div>
                     <div class="meta-box">180 KCAL</div>
@@ -4545,7 +4593,7 @@
 
             <!-- Receita 155 -->
             <div class="recipe-card">
-                <div class="recipe-title">155. Sellerie mit Erdnussmus</div>
+                <div class="recipe-title">35. Sellerie mit Erdnussmus</div>
                 <div class="recipe-meta">
                     <div class="meta-box">5 MIN</div>
                     <div class="meta-box">160 KCAL</div>
@@ -4570,7 +4618,7 @@
 
             <!-- Receita 156 -->
             <div class="recipe-card">
-                <div class="recipe-title">156. Magerquark mit frischer Kiwi</div>
+                <div class="recipe-title">36. Magerquark mit frischer Kiwi</div>
                 <div class="recipe-meta">
                     <div class="meta-box">5 MIN</div>
                     <div class="meta-box">140 KCAL</div>
@@ -4597,7 +4645,7 @@
 
             <!-- Receita 157 -->
             <div class="recipe-card">
-                <div class="recipe-title">157. Thunfisch-Cracker aus Gurke</div>
+                <div class="recipe-title">37. Thunfisch-Cracker aus Gurke</div>
                 <div class="recipe-meta">
                     <div class="meta-box">10 MIN</div>
                     <div class="meta-box">130 KCAL</div>
@@ -4624,7 +4672,7 @@
 
             <!-- Receita 158 -->
             <div class="recipe-card">
-                <div class="recipe-title">158. Ei mit Avocado-Topping</div>
+                <div class="recipe-title">38. Ei mit Avocado-Topping</div>
                 <div class="recipe-meta">
                     <div class="meta-box">10 MIN</div>
                     <div class="meta-box">190 KCAL</div>
@@ -4651,7 +4699,7 @@
 
             <!-- Receita 159 -->
             <div class="recipe-card">
-                <div class="recipe-title">159. Chia-Pudding mit Himbeeren</div>
+                <div class="recipe-title">39. Chia-Pudding mit Himbeeren</div>
                 <div class="recipe-meta">
                     <div class="meta-box">5 MIN</div>
                     <div class="meta-box">170 KCAL</div>
@@ -4678,7 +4726,7 @@
 
             <!-- Receita 160 -->
             <div class="recipe-card">
-                <div class="recipe-title">160. Feurige Chili-Edamame</div>
+                <div class="recipe-title">40. Feurige Chili-Edamame</div>
                 <div class="recipe-meta">
                     <div class="meta-box">5 MIN</div>
                     <div class="meta-box">125 KCAL</div>
@@ -4705,7 +4753,7 @@
 
             <!-- Receita 161 -->
             <div class="recipe-card">
-                <div class="recipe-title">161. Gefüllte Mini-Paprika mit Quark</div>
+                <div class="recipe-title">41. Gefüllte Mini-Paprika mit Quark</div>
                 <div class="recipe-meta">
                     <div class="meta-box">10 MIN</div>
                     <div class="meta-box">110 KCAL</div>
@@ -4731,7 +4779,7 @@
 
             <!-- Receita 162 -->
             <div class="recipe-card">
-                <div class="recipe-title">162. Apfelringe mit Mandelmus</div>
+                <div class="recipe-title">42. Apfelringe mit Mandelmus</div>
                 <div class="recipe-meta">
                     <div class="meta-box">5 MIN</div>
                     <div class="meta-box">185 KCAL</div>
@@ -4757,7 +4805,7 @@
 
             <!-- Receita 163 -->
             <div class="recipe-card">
-                <div class="recipe-title">163. Frozen Joghurt-Beeren-Bites</div>
+                <div class="recipe-title">43. Frozen Joghurt-Beeren-Bites</div>
                 <div class="recipe-meta">
                     <div class="meta-box">10 MIN</div>
                     <div class="meta-box">130 KCAL</div>
@@ -4783,7 +4831,7 @@
 
             <!-- Receita 164 -->
             <div class="recipe-card">
-                <div class="recipe-title">164. Puten-Spargel-Röllchen</div>
+                <div class="recipe-title">44. Puten-Spargel-Röllchen</div>
                 <div class="recipe-meta">
                     <div class="meta-box">15 MIN</div>
                     <div class="meta-box">145 KCAL</div>
@@ -4810,7 +4858,7 @@
 
             <!-- Receita 165 -->
             <div class="recipe-card">
-                <div class="recipe-title">165. Gurken-Schiffchen mit Kräuterquark</div>
+                <div class="recipe-title">45. Gurken-Schiffchen mit Kräuterquark</div>
                 <div class="recipe-meta">
                     <div class="meta-box">5 MIN</div>
                     <div class="meta-box">90 KCAL</div>
@@ -4837,7 +4885,7 @@
 
             <!-- Receita 166 -->
             <div class="recipe-card">
-                <div class="recipe-title">166. Veganer Beeren-Protein-Shake</div>
+                <div class="recipe-title">46. Veganer Beeren-Protein-Shake</div>
                 <div class="recipe-meta">
                     <div class="meta-box">3 MIN</div>
                     <div class="meta-box">150 KCAL</div>
@@ -4863,7 +4911,7 @@
 
             <!-- Receita 167 -->
             <div class="recipe-card">
-                <div class="recipe-title">167. Rote Bete mit Walnüssen</div>
+                <div class="recipe-title">47. Rote Bete mit Walnüssen</div>
                 <div class="recipe-meta">
                     <div class="meta-box">5 MIN</div>
                     <div class="meta-box">160 KCAL</div>
@@ -4890,7 +4938,7 @@
 
             <!-- Receita 168 -->
             <div class="recipe-card">
-                <div class="recipe-title">168. Lachs-Spinat-Häppchen</div>
+                <div class="recipe-title">48. Lachs-Spinat-Häppchen</div>
                 <div class="recipe-meta">
                     <div class="meta-box">5 MIN</div>
                     <div class="meta-box">155 KCAL</div>
@@ -4917,7 +4965,7 @@
 
             <!-- Receita 169 -->
             <div class="recipe-card">
-                <div class="recipe-title">169. Joghurt mit Zimt und Chiasamen</div>
+                <div class="recipe-title">49. Joghurt mit Zimt und Chiasamen</div>
                 <div class="recipe-meta">
                     <div class="meta-box">3 MIN</div>
                     <div class="meta-box">140 KCAL</div>
@@ -4944,7 +4992,7 @@
 
             <!-- Receita 170 -->
             <div class="recipe-card">
-                <div class="recipe-title">170. Möhren mit Kräuter-Dip</div>
+                <div class="recipe-title">50. Möhren mit Kräuter-Dip</div>
                 <div class="recipe-meta">
                     <div class="meta-box">5 MIN</div>
                     <div class="meta-box">100 KCAL</div>
@@ -4971,7 +5019,7 @@
 
             <!-- Receita 171 -->
             <div class="recipe-card">
-                <div class="recipe-title">171. Harzer Käse-Chips (aus dem Ofen)</div>
+                <div class="recipe-title">51. Harzer Käse-Chips (aus dem Ofen)</div>
                 <div class="recipe-meta">
                     <div class="meta-box">15 MIN</div>
                     <div class="meta-box">115 KCAL</div>
@@ -4997,7 +5045,7 @@
 
             <!-- Receita 172 -->
             <div class="recipe-card">
-                <div class="recipe-title">172. Gekochtes Ei mit leichtem Senf-Dip</div>
+                <div class="recipe-title">52. Gekochtes Ei mit leichtem Senf-Dip</div>
                 <div class="recipe-meta">
                     <div class="meta-box">10 MIN</div>
                     <div class="meta-box">110 KCAL</div>
@@ -5024,7 +5072,7 @@
 
             <!-- Receita 173 -->
             <div class="recipe-card">
-                <div class="recipe-title">173. Tomaten-Avocado-Spieße</div>
+                <div class="recipe-title">53. Tomaten-Avocado-Spieße</div>
                 <div class="recipe-meta">
                     <div class="meta-box">5 MIN</div>
                     <div class="meta-box">160 KCAL</div>
@@ -5051,7 +5099,7 @@
 
             <!-- Receita 174 -->
             <div class="recipe-card">
-                <div class="recipe-title">174. Magerquark mit Brombeeren</div>
+                <div class="recipe-title">54. Magerquark mit Brombeeren</div>
                 <div class="recipe-meta">
                     <div class="meta-box">3 MIN</div>
                     <div class="meta-box">135 KCAL</div>
@@ -5078,7 +5126,7 @@
 
             <!-- Receita 175 -->
             <div class="recipe-card">
-                <div class="recipe-title">175. Pistazien-Heidelbeer-Mix</div>
+                <div class="recipe-title">55. Pistazien-Heidelbeer-Mix</div>
                 <div class="recipe-meta">
                     <div class="meta-box">2 MIN</div>
                     <div class="meta-box">175 KCAL</div>
@@ -5103,7 +5151,7 @@
 
             <!-- Receita 176 -->
             <div class="recipe-card">
-                <div class="recipe-title">176. Putenbrust mit Honigmelone</div>
+                <div class="recipe-title">56. Putenbrust mit Honigmelone</div>
                 <div class="recipe-meta">
                     <div class="meta-box">5 MIN</div>
                     <div class="meta-box">140 KCAL</div>
@@ -5129,7 +5177,7 @@
 
             <!-- Receita 177 -->
             <div class="recipe-card">
-                <div class="recipe-title">177. Sättigender Chia-Zitronen-Drink</div>
+                <div class="recipe-title">57. Sättigender Chia-Zitronen-Drink</div>
                 <div class="recipe-meta">
                     <div class="meta-box">5 MIN</div>
                     <div class="meta-box">90 KCAL</div>
@@ -5156,7 +5204,7 @@
 
             <!-- Receita 178 -->
             <div class="recipe-card">
-                <div class="recipe-title">178. Brokkoli-Röschen mit Hummus</div>
+                <div class="recipe-title">58. Brokkoli-Röschen mit Hummus</div>
                 <div class="recipe-meta">
                     <div class="meta-box">10 MIN</div>
                     <div class="meta-box">130 KCAL</div>
@@ -5182,7 +5230,7 @@
 
             <!-- Receita 179 -->
             <div class="recipe-card">
-                <div class="recipe-title">179. Harzer Käse mit Apfelscheiben</div>
+                <div class="recipe-title">59. Harzer Käse mit Apfelscheiben</div>
                 <div class="recipe-meta">
                     <div class="meta-box">5 MIN</div>
                     <div class="meta-box">150 KCAL</div>
@@ -5207,7 +5255,7 @@
 
             <!-- Receita 180 -->
             <div class="recipe-card">
-                <div class="recipe-title">180. Mikrowellen-Protein-Brownie</div>
+                <div class="recipe-title">60. Mikrowellen-Protein-Brownie</div>
                 <div class="recipe-meta">
                     <div class="meta-box">5 MIN</div>
                     <div class="meta-box">190 KCAL</div>
@@ -5233,13 +5281,17 @@
             </div>
             <section class="chapter-cover">
                 <div class="chapter-icon"><i class="fa-solid fa-moon"></i></div>
-                <div class="chapter-number">KAPITEL 1</div>
+                <div class="chapter-number">Kapitel 1</div>
                 <h2 class="chapter-title">Abendessen</h2>
                 <p class="chapter-subtitle">Leichte, kohlenhydratarme Gerichte am Abend entlasten die Verdauung, fördern einen tiefen und erholsamen Schlaf und maximieren die nächtliche Fettverbrennung.</p>
             </section>
+            <style>
+                    .recipe-card:nth-child(odd) .recipe-title { color: #ffffff; }
+                    .recipe-card:nth-child(even) .recipe-title { color: #111111; }
+            </style>
             <!-- Receita 181 -->
             <div class="recipe-card">
-                <div class="recipe-title">181. Tomatensuppe mit Hähnchenstreifen</div>
+                <div class="recipe-title">1. Tomatensuppe mit Hähnchenstreifen</div>
                 <div class="recipe-meta">
                     <div class="meta-box">25 MIN</div>
                     <div class="meta-box">210 KCAL</div>
@@ -5266,7 +5318,7 @@
 
             <!-- Receita 182 -->
             <div class="recipe-card">
-                <div class="recipe-title">182. Low-Carb Zucchini-Puffer</div>
+                <div class="recipe-title">2. Low-Carb Zucchini-Puffer</div>
                 <div class="recipe-meta">
                     <div class="meta-box">20 MIN</div>
                     <div class="meta-box">190 KCAL</div>
@@ -5293,7 +5345,7 @@
 
             <!-- Receita 183 -->
             <div class="recipe-card">
-                <div class="recipe-title">183. Garnelen in Knoblauch-Tomaten-Sud</div>
+                <div class="recipe-title">3. Garnelen in Knoblauch-Tomaten-Sud</div>
                 <div class="recipe-meta">
                     <div class="meta-box">15 MIN</div>
                     <div class="meta-box">220 KCAL</div>
@@ -5320,7 +5372,7 @@
 
             <!-- Receita 184 -->
             <div class="recipe-card">
-                <div class="recipe-title">184. Gebackener Feta mit Ofengemüse</div>
+                <div class="recipe-title">4. Gebackener Feta mit Ofengemüse</div>
                 <div class="recipe-meta">
                     <div class="meta-box">30 MIN</div>
                     <div class="meta-box">280 KCAL</div>
@@ -5347,7 +5399,7 @@
 
             <!-- Receita 185 -->
             <div class="recipe-card">
-                <div class="recipe-title">185. Putensteak mit leichter Pilzrahmsoße</div>
+                <div class="recipe-title">5. Putensteak mit leichter Pilzrahmsoße</div>
                 <div class="recipe-meta">
                     <div class="meta-box">20 MIN</div>
                     <div class="meta-box">250 KCAL</div>
@@ -5374,7 +5426,7 @@
 
             <!-- Receita 186 -->
             <div class="recipe-card">
-                <div class="recipe-title">186. Blumenkohl-Schinken-Auflauf</div>
+                <div class="recipe-title">6. Blumenkohl-Schinken-Auflauf</div>
                 <div class="recipe-meta">
                     <div class="meta-box">35 MIN</div>
                     <div class="meta-box">270 KCAL</div>
@@ -5401,7 +5453,7 @@
 
             <!-- Receita 187 -->
             <div class="recipe-card">
-                <div class="recipe-title">187. Lachsforelle auf Rahmspinat</div>
+                <div class="recipe-title">7. Lachsforelle auf Rahmspinat</div>
                 <div class="recipe-meta">
                     <div class="meta-box">20 MIN</div>
                     <div class="meta-box">310 KCAL</div>
@@ -5428,7 +5480,7 @@
 
             <!-- Receita 188 -->
             <div class="recipe-card">
-                <div class="recipe-title">188. Rinder-Carpaccio mit Rucola</div>
+                <div class="recipe-title">8. Rinder-Carpaccio mit Rucola</div>
                 <div class="recipe-meta">
                     <div class="meta-box">10 MIN</div>
                     <div class="meta-box">200 KCAL</div>
@@ -5455,7 +5507,7 @@
 
             <!-- Receita 189 -->
             <div class="recipe-card">
-                <div class="recipe-title">189. Leichte Spargelcremesuppe</div>
+                <div class="recipe-title">9. Leichte Spargelcremesuppe</div>
                 <div class="recipe-meta">
                     <div class="meta-box">25 MIN</div>
                     <div class="meta-box">150 KCAL</div>
@@ -5482,7 +5534,7 @@
 
             <!-- Receita 190 -->
             <div class="recipe-card">
-                <div class="recipe-title">190. Hähnchen-Brokkoli-Gratin (Low-Carb)</div>
+                <div class="recipe-title">10. Hähnchen-Brokkoli-Gratin (Low-Carb)</div>
                 <div class="recipe-meta">
                     <div class="meta-box">35 MIN</div>
                     <div class="meta-box">320 KCAL</div>
@@ -5509,7 +5561,7 @@
 
             <!-- Receita 191 -->
             <div class="recipe-card">
-                <div class="recipe-title">191. Paprika-Omelett mit Hüttenkäse</div>
+                <div class="recipe-title">11. Paprika-Omelett mit Hüttenkäse</div>
                 <div class="recipe-meta">
                     <div class="meta-box">15 MIN</div>
                     <div class="meta-box">210 KCAL</div>
@@ -5536,7 +5588,7 @@
 
             <!-- Receita 192 -->
             <div class="recipe-card">
-                <div class="recipe-title">192. Asiatische Tofu-Wok-Pfanne</div>
+                <div class="recipe-title">12. Asiatische Tofu-Wok-Pfanne</div>
                 <div class="recipe-meta">
                     <div class="meta-box">15 MIN</div>
                     <div class="meta-box">240 KCAL</div>
@@ -5563,7 +5615,7 @@
 
             <!-- Receita 193 -->
             <div class="recipe-card">
-                <div class="recipe-title">193. Thunfisch-Avocado-Salat (ohne Mayo)</div>
+                <div class="recipe-title">13. Thunfisch-Avocado-Salat (ohne Mayo)</div>
                 <div class="recipe-meta">
                     <div class="meta-box">10 MIN</div>
                     <div class="meta-box">310 KCAL</div>
@@ -5590,7 +5642,7 @@
 
             <!-- Receita 194 -->
             <div class="recipe-card">
-                <div class="recipe-title">194. Bunte Gemüsepfanne mit Spiegelei</div>
+                <div class="recipe-title">14. Bunte Gemüsepfanne mit Spiegelei</div>
                 <div class="recipe-meta">
                     <div class="meta-box">20 MIN</div>
                     <div class="meta-box">220 KCAL</div>
@@ -5617,7 +5669,7 @@
 
             <!-- Receita 195 -->
             <div class="recipe-card">
-                <div class="recipe-title">195. Kabeljau-Päckchen aus dem Ofen</div>
+                <div class="recipe-title">15. Kabeljau-Päckchen aus dem Ofen</div>
                 <div class="recipe-meta">
                     <div class="meta-box">25 MIN</div>
                     <div class="meta-box">190 KCAL</div>
@@ -5644,7 +5696,7 @@
 
             <!-- Receita 196 -->
             <div class="recipe-card">
-                <div class="recipe-title">196. Puten-Hackbällchen in Tomatensoße</div>
+                <div class="recipe-title">16. Puten-Hackbällchen in Tomatensoße</div>
                 <div class="recipe-meta">
                     <div class="meta-box">30 MIN</div>
                     <div class="meta-box">270 KCAL</div>
@@ -5671,7 +5723,7 @@
 
             <!-- Receita 197 -->
             <div class="recipe-card">
-                <div class="recipe-title">197. Gefüllte Champignons mit Rinderhack</div>
+                <div class="recipe-title">17. Gefüllte Champignons mit Rinderhack</div>
                 <div class="recipe-meta">
                     <div class="meta-box">25 MIN</div>
                     <div class="meta-box">250 KCAL</div>
@@ -5698,7 +5750,7 @@
 
             <!-- Receita 198 -->
             <div class="recipe-card">
-                <div class="recipe-title">198. Kürbis-Süßkartoffel-Ingwer-Suppe</div>
+                <div class="recipe-title">18. Kürbis-Süßkartoffel-Ingwer-Suppe</div>
                 <div class="recipe-meta">
                     <div class="meta-box">30 MIN</div>
                     <div class="meta-box">180 KCAL</div>
@@ -5725,7 +5777,7 @@
 
             <!-- Receita 199 -->
             <div class="recipe-card">
-                <div class="recipe-title">199. Rindersteak mit grünem Spargel</div>
+                <div class="recipe-title">19. Rindersteak mit grünem Spargel</div>
                 <div class="recipe-meta">
                     <div class="meta-box">15 MIN</div>
                     <div class="meta-box">290 KCAL</div>
@@ -5752,7 +5804,7 @@
 
             <!-- Receita 200 -->
             <div class="recipe-card">
-                <div class="recipe-title">200. Bodenlose Lachs-Spinat-Quiche</div>
+                <div class="recipe-title">20. Bodenlose Lachs-Spinat-Quiche</div>
                 <div class="recipe-meta">
                     <div class="meta-box">40 MIN</div>
                     <div class="meta-box">280 KCAL</div>
@@ -5779,7 +5831,7 @@
 
             <!-- Receita 201 -->
             <div class="recipe-card">
-                <div class="recipe-title">201. Zanderfilet auf Lauchgemüse</div>
+                <div class="recipe-title">21. Zanderfilet auf Lauchgemüse</div>
                 <div class="recipe-meta">
                     <div class="meta-box">20 MIN</div>
                     <div class="meta-box">220 KCAL</div>
@@ -5806,7 +5858,7 @@
 
             <!-- Receita 202 -->
             <div class="recipe-card">
-                <div class="recipe-title">202. Blumenkohl-Pizza (Margherita)</div>
+                <div class="recipe-title">22. Blumenkohl-Pizza (Margherita)</div>
                 <div class="recipe-meta">
                     <div class="meta-box">40 MIN</div>
                     <div class="meta-box">310 KCAL</div>
@@ -5833,7 +5885,7 @@
 
             <!-- Receita 203 -->
             <div class="recipe-card">
-                <div class="recipe-title">203. Hähnchen-Curry mit Kokosmilch (light)</div>
+                <div class="recipe-title">23. Hähnchen-Curry mit Kokosmilch (light)</div>
                 <div class="recipe-meta">
                     <div class="meta-box">25 MIN</div>
                     <div class="meta-box">280 KCAL</div>
@@ -5860,7 +5912,7 @@
 
             <!-- Receita 204 -->
             <div class="recipe-card">
-                <div class="recipe-title">204. Spinat-Feta-Frittata</div>
+                <div class="recipe-title">24. Spinat-Feta-Frittata</div>
                 <div class="recipe-meta">
                     <div class="meta-box">20 MIN</div>
                     <div class="meta-box">240 KCAL</div>
@@ -5887,7 +5939,7 @@
 
             <!-- Receita 205 -->
             <div class="recipe-card">
-                <div class="recipe-title">205. Gegrillte Auberginen-Türmchen</div>
+                <div class="recipe-title">25. Gegrillte Auberginen-Türmchen</div>
                 <div class="recipe-meta">
                     <div class="meta-box">20 MIN</div>
                     <div class="meta-box">180 KCAL</div>
@@ -5914,7 +5966,7 @@
 
             <!-- Receita 206 -->
             <div class="recipe-card">
-                <div class="recipe-title">206. Putenbrust auf Ratatouille-Gemüse</div>
+                <div class="recipe-title">26. Putenbrust auf Ratatouille-Gemüse</div>
                 <div class="recipe-meta">
                     <div class="meta-box">35 MIN</div>
                     <div class="meta-box">260 KCAL</div>
@@ -5941,7 +5993,7 @@
 
             <!-- Receita 207 -->
             <div class="recipe-card">
-                <div class="recipe-title">207. Hüttenkäse-Taler (Herzhaft gebacken)</div>
+                <div class="recipe-title">27. Hüttenkäse-Taler (Herzhaft gebacken)</div>
                 <div class="recipe-meta">
                     <div class="meta-box">25 MIN</div>
                     <div class="meta-box">200 KCAL</div>
@@ -5968,7 +6020,7 @@
 
             <!-- Receita 208 -->
             <div class="recipe-card">
-                <div class="recipe-title">208. Klare Rinderbrühe mit Gemüseeinlage</div>
+                <div class="recipe-title">28. Klare Rinderbrühe mit Gemüseeinlage</div>
                 <div class="recipe-meta">
                     <div class="meta-box">20 MIN</div>
                     <div class="meta-box">120 KCAL</div>
@@ -5995,7 +6047,7 @@
 
             <!-- Receita 209 -->
             <div class="recipe-card">
-                <div class="recipe-title">209. Pangasius mit Kräuterkruste</div>
+                <div class="recipe-title">29. Pangasius mit Kräuterkruste</div>
                 <div class="recipe-meta">
                     <div class="meta-box">25 MIN</div>
                     <div class="meta-box">210 KCAL</div>
@@ -6022,7 +6074,7 @@
 
             <!-- Receita 210 -->
             <div class="recipe-card">
-                <div class="recipe-title">210. Low-Carb Flammkuchen (mit Schinken)</div>
+                <div class="recipe-title">30. Low-Carb Flammkuchen (mit Schinken)</div>
                 <div class="recipe-meta">
                     <div class="meta-box">30 MIN</div>
                     <div class="meta-box">330 KCAL</div>
@@ -6048,7 +6100,7 @@
             </div>
             <!-- Receita 211 -->
             <div class="recipe-card">
-                <div class="recipe-title">211. Zucchini-Lasagne (Low-Carb)</div>
+                <div class="recipe-title">31. Zucchini-Lasagne (Low-Carb)</div>
                 <div class="recipe-meta">
                     <div class="meta-box">35 MIN</div>
                     <div class="meta-box">280 KCAL</div>
@@ -6075,7 +6127,7 @@
 
             <!-- Receita 212 -->
             <div class="recipe-card">
-                <div class="recipe-title">212. Hähnchen-Geschnetzeltes mit Pilzen</div>
+                <div class="recipe-title">32. Hähnchen-Geschnetzeltes mit Pilzen</div>
                 <div class="recipe-meta">
                     <div class="meta-box">20 MIN</div>
                     <div class="meta-box">240 KCAL</div>
@@ -6102,7 +6154,7 @@
 
             <!-- Receita 213 -->
             <div class="recipe-card">
-                <div class="recipe-title">213. Thunfisch-Omelett mit frischen Kräutern</div>
+                <div class="recipe-title">33. Thunfisch-Omelett mit frischen Kräutern</div>
                 <div class="recipe-meta">
                     <div class="meta-box">15 MIN</div>
                     <div class="meta-box">260 KCAL</div>
@@ -6129,7 +6181,7 @@
 
             <!-- Receita 214 -->
             <div class="recipe-card">
-                <div class="recipe-title">214. Spargel-Pfanne mit Räuchertofu</div>
+                <div class="recipe-title">34. Spargel-Pfanne mit Räuchertofu</div>
                 <div class="recipe-meta">
                     <div class="meta-box">15 MIN</div>
                     <div class="meta-box">220 KCAL</div>
@@ -6156,7 +6208,7 @@
 
             <!-- Receita 215 -->
             <div class="recipe-card">
-                <div class="recipe-title">215. Rindersteak auf Rucola-Salat</div>
+                <div class="recipe-title">35. Rindersteak auf Rucola-Salat</div>
                 <div class="recipe-meta">
                     <div class="meta-box">15 MIN</div>
                     <div class="meta-box">280 KCAL</div>
@@ -6183,7 +6235,7 @@
 
             <!-- Receita 216 -->
             <div class="recipe-card">
-                <div class="recipe-title">216. Lachsfilet auf Zucchininudeln</div>
+                <div class="recipe-title">36. Lachsfilet auf Zucchininudeln</div>
                 <div class="recipe-meta">
                     <div class="meta-box">20 MIN</div>
                     <div class="meta-box">310 KCAL</div>
@@ -6210,7 +6262,7 @@
 
             <!-- Receita 217 -->
             <div class="recipe-card">
-                <div class="recipe-title">217. Brokkolisuppe mit Mandelsplittern</div>
+                <div class="recipe-title">37. Brokkolisuppe mit Mandelsplittern</div>
                 <div class="recipe-meta">
                     <div class="meta-box">25 MIN</div>
                     <div class="meta-box">190 KCAL</div>
@@ -6237,7 +6289,7 @@
 
             <!-- Receita 218 -->
             <div class="recipe-card">
-                <div class="recipe-title">218. Putenbrust aus dem Ofen mit Paprika</div>
+                <div class="recipe-title">38. Putenbrust aus dem Ofen mit Paprika</div>
                 <div class="recipe-meta">
                     <div class="meta-box">30 MIN</div>
                     <div class="meta-box">250 KCAL</div>
@@ -6264,7 +6316,7 @@
 
             <!-- Receita 219 -->
             <div class="recipe-card">
-                <div class="recipe-title">219. Blumenkohl-Risotto mit Garnelen</div>
+                <div class="recipe-title">39. Blumenkohl-Risotto mit Garnelen</div>
                 <div class="recipe-meta">
                     <div class="meta-box">20 MIN</div>
                     <div class="meta-box">270 KCAL</div>
@@ -6291,7 +6343,7 @@
 
             <!-- Receita 220 -->
             <div class="recipe-card">
-                <div class="recipe-title">220. Mediterrane Gemüse-Pfanne mit Feta</div>
+                <div class="recipe-title">40. Mediterrane Gemüse-Pfanne mit Feta</div>
                 <div class="recipe-meta">
                     <div class="meta-box">15 MIN</div>
                     <div class="meta-box">210 KCAL</div>
@@ -6318,7 +6370,7 @@
 
             <!-- Receita 221 -->
             <div class="recipe-card">
-                <div class="recipe-title">221. Schweinefilet mit grünen Bohnen</div>
+                <div class="recipe-title">41. Schweinefilet mit grünen Bohnen</div>
                 <div class="recipe-meta">
                     <div class="meta-box">20 MIN</div>
                     <div class="meta-box">280 KCAL</div>
@@ -6345,7 +6397,7 @@
 
             <!-- Receita 222 -->
             <div class="recipe-card">
-                <div class="recipe-title">222. Kabeljau in Senf-Dill-Sauce</div>
+                <div class="recipe-title">42. Kabeljau in Senf-Dill-Sauce</div>
                 <div class="recipe-meta">
                     <div class="meta-box">20 MIN</div>
                     <div class="meta-box">230 KCAL</div>
@@ -6372,7 +6424,7 @@
 
             <!-- Receita 223 -->
             <div class="recipe-card">
-                <div class="recipe-title">223. Gefüllte Portobello-Pilze mit Hüttenkäse</div>
+                <div class="recipe-title">43. Gefüllte Portobello-Pilze mit Hüttenkäse</div>
                 <div class="recipe-meta">
                     <div class="meta-box">25 MIN</div>
                     <div class="meta-box">190 KCAL</div>
@@ -6399,7 +6451,7 @@
 
             <!-- Receita 224 -->
             <div class="recipe-card">
-                <div class="recipe-title">224. Tomaten-Ei-Pfanne (Shakshuka Art)</div>
+                <div class="recipe-title">44. Tomaten-Ei-Pfanne (Shakshuka Art)</div>
                 <div class="recipe-meta">
                     <div class="meta-box">20 MIN</div>
                     <div class="meta-box">230 KCAL</div>
@@ -6426,7 +6478,7 @@
 
             <!-- Receita 225 -->
             <div class="recipe-card">
-                <div class="recipe-title">225. Hähnchen-Brokkoli-Auflauf</div>
+                <div class="recipe-title">45. Hähnchen-Brokkoli-Auflauf</div>
                 <div class="recipe-meta">
                     <div class="meta-box">35 MIN</div>
                     <div class="meta-box">310 KCAL</div>
@@ -6453,7 +6505,7 @@
 
             <!-- Receita 226 -->
             <div class="recipe-card">
-                <div class="recipe-title">226. Rinderhackfleisch mit Chinakohl</div>
+                <div class="recipe-title">46. Rinderhackfleisch mit Chinakohl</div>
                 <div class="recipe-meta">
                     <div class="meta-box">20 MIN</div>
                     <div class="meta-box">270 KCAL</div>
@@ -6480,7 +6532,7 @@
 
             <!-- Receita 227 -->
             <div class="recipe-card">
-                <div class="recipe-title">227. Spinat-Feta-Omelett</div>
+                <div class="recipe-title">47. Spinat-Feta-Omelett</div>
                 <div class="recipe-meta">
                     <div class="meta-box">15 MIN</div>
                     <div class="meta-box">240 KCAL</div>
@@ -6507,7 +6559,7 @@
 
             <!-- Receita 228 -->
             <div class="recipe-card">
-                <div class="recipe-title">228. Gedämpfter Lachs mit Pak Choi</div>
+                <div class="recipe-title">48. Gedämpfter Lachs mit Pak Choi</div>
                 <div class="recipe-meta">
                     <div class="meta-box">20 MIN</div>
                     <div class="meta-box">320 KCAL</div>
@@ -6534,7 +6586,7 @@
 
             <!-- Receita 229 -->
             <div class="recipe-card">
-                <div class="recipe-title">229. Tofu-Curry mit grünen Bohnen</div>
+                <div class="recipe-title">49. Tofu-Curry mit grünen Bohnen</div>
                 <div class="recipe-meta">
                     <div class="meta-box">20 MIN</div>
                     <div class="meta-box">280 KCAL</div>
@@ -6561,7 +6613,7 @@
 
             <!-- Receita 230 -->
             <div class="recipe-card">
-                <div class="recipe-title">230. Auberginen-Röllchen mit Putenhack</div>
+                <div class="recipe-title">50. Auberginen-Röllchen mit Putenhack</div>
                 <div class="recipe-meta">
                     <div class="meta-box">35 MIN</div>
                     <div class="meta-box">260 KCAL</div>
@@ -6588,7 +6640,7 @@
 
             <!-- Receita 231 -->
             <div class="recipe-card">
-                <div class="recipe-title">231. Kohlrabi-Püree mit Hähnchensteak</div>
+                <div class="recipe-title">51. Kohlrabi-Püree mit Hähnchensteak</div>
                 <div class="recipe-meta">
                     <div class="meta-box">25 MIN</div>
                     <div class="meta-box">250 KCAL</div>
@@ -6615,7 +6667,7 @@
 
             <!-- Receita 232 -->
             <div class="recipe-card">
-                <div class="recipe-title">232. Bunte Paprika-Pfanne mit Ei</div>
+                <div class="recipe-title">52. Bunte Paprika-Pfanne mit Ei</div>
                 <div class="recipe-meta">
                     <div class="meta-box">15 MIN</div>
                     <div class="meta-box">210 KCAL</div>
@@ -6642,7 +6694,7 @@
 
             <!-- Receita 233 -->
             <div class="recipe-card">
-                <div class="recipe-title">233. Weißfisch mit Tomaten-Kapern-Salsa</div>
+                <div class="recipe-title">53. Weißfisch mit Tomaten-Kapern-Salsa</div>
                 <div class="recipe-meta">
                     <div class="meta-box">15 MIN</div>
                     <div class="meta-box">190 KCAL</div>
@@ -6669,7 +6721,7 @@
 
             <!-- Receita 234 -->
             <div class="recipe-card">
-                <div class="recipe-title">234. Linsen-Tomaten-Suppe mit Ingwer</div>
+                <div class="recipe-title">54. Linsen-Tomaten-Suppe mit Ingwer</div>
                 <div class="recipe-meta">
                     <div class="meta-box">25 MIN</div>
                     <div class="meta-box">260 KCAL</div>
@@ -6696,7 +6748,7 @@
 
             <!-- Receita 235 -->
             <div class="recipe-card">
-                <div class="recipe-title">235. Zanderfilet auf Spinatbett</div>
+                <div class="recipe-title">55. Zanderfilet auf Spinatbett</div>
                 <div class="recipe-meta">
                     <div class="meta-box">15 MIN</div>
                     <div class="meta-box">220 KCAL</div>
@@ -6723,7 +6775,7 @@
 
             <!-- Receita 236 -->
             <div class="recipe-card">
-                <div class="recipe-title">236. Rindfleischpfanne mit Zucchini</div>
+                <div class="recipe-title">56. Rindfleischpfanne mit Zucchini</div>
                 <div class="recipe-meta">
                     <div class="meta-box">15 MIN</div>
                     <div class="meta-box">270 KCAL</div>
@@ -6750,7 +6802,7 @@
 
             <!-- Receita 237 -->
             <div class="recipe-card">
-                <div class="recipe-title">237. Hähnchen in Parmaschinken</div>
+                <div class="recipe-title">57. Hähnchen in Parmaschinken</div>
                 <div class="recipe-meta">
                     <div class="meta-box">25 MIN</div>
                     <div class="meta-box">290 KCAL</div>
@@ -6777,7 +6829,7 @@
 
             <!-- Receita 238 -->
             <div class="recipe-card">
-                <div class="recipe-title">238. Tofu-Paprika-Spieße vom Grill</div>
+                <div class="recipe-title">58. Tofu-Paprika-Spieße vom Grill</div>
                 <div class="recipe-meta">
                     <div class="meta-box">20 MIN</div>
                     <div class="meta-box">230 KCAL</div>
@@ -6804,7 +6856,7 @@
 
             <!-- Receita 239 -->
             <div class="recipe-card">
-                <div class="recipe-title">239. Gebackener Feta auf Tomaten</div>
+                <div class="recipe-title">59. Gebackener Feta auf Tomaten</div>
                 <div class="recipe-meta">
                     <div class="meta-box">25 MIN</div>
                     <div class="meta-box">250 KCAL</div>
@@ -6831,7 +6883,7 @@
 
             <!-- Receita 240 -->
             <div class="recipe-card">
-                <div class="recipe-title">240. Brokkoli-Käse-Puffer</div>
+                <div class="recipe-title">60. Brokkoli-Käse-Puffer</div>
                 <div class="recipe-meta">
                     <div class="meta-box">25 MIN</div>
                     <div class="meta-box">210 KCAL</div>
@@ -8483,6 +8535,10 @@
                 <h2 class="chapter-title">Mittagessen für Diabetiker</h2>
                 <p class="chapter-subtitle">Diese 30 Hauptmahlzeiten kombinieren komplexe Kohlenhydrate, reichlich Ballaststoffe und hochwertige Proteine. Sie sorgen für eine langsame Verdauung, vermeiden Insulinspitzen und halten stundenlang satt.</p>
             </section>
+            <style>
+                    .recipe-card:nth-child(odd) .recipe-title { color: #ffffff; }
+                    .recipe-card:nth-child(even) .recipe-title { color: #111111; }
+            </style>
 
             <!-- Receita 1 -->
             <div class="recipe-card">
@@ -10109,6 +10165,10 @@
                 <h2 class="chapter-title">Blutzuckerfreundliche Snacks</h2>
                 <p class="chapter-subtitle">Clevere Zwischenmahlzeiten sind entscheidend, um den Blutzuckerspiegel stabil zu halten. Diese Snacks kombinieren wertvolle Proteine, gesunde Fette und Ballaststoffe, um Heißhunger zu stoppen, ohne Insulinspitzen auszulösen.</p>
             </section>
+            <style>
+                    .recipe-card:nth-child(odd) .recipe-title { color: #ffffff; }
+                    .recipe-card:nth-child(even) .recipe-title { color: #111111; }
+            </style>
 
             <!-- Receita 1 -->
             <div class="recipe-card">
@@ -11694,10 +11754,14 @@
 
             <section class="chapter-cover">
                 <div class="chapter-icon"><i class="fa-solid fa-moon"></i></div>
-                <div class="chapter-number">KAPITEL 2</div>
+                <div class="chapter-number">Kapitel 2</div>
                 <h2 class="chapter-title">Blutzuckerfreundliches Abendessen</h2>
                 <p class="chapter-subtitle">Ein leichtes, kohlenhydratarmes Abendessen ist der Schlüssel zu einem stabilen Nüchternblutzucker am nächsten Morgen. Diese 30 Rezepte entlasten die Bauchspeicheldrüse, fördern die nächtliche Fettverbrennung und sorgen für einen tiefen Schlaf.</p>
             </section>
+            <style>
+                    .recipe-card:nth-child(odd) .recipe-title { color: #ffffff; }
+                    .recipe-card:nth-child(even) .recipe-title { color: #111111; }
+            </style>
 
                         <!-- Receita 1 -->
             <div class="recipe-card">
@@ -14937,6 +15001,10 @@
                 <h2 class="chapter-title">Mittagessen</h2>
                 <p class="chapter-subtitle">Proteinreiche Mittagsmahlzeiten halten lange satt, schützen die Muskelmasse und unterstützen die aktive Fettverbrennung durch einen hohen thermogenen Effekt.</p>
             </section>
+            <style>
+                    .recipe-card:nth-child(odd) .recipe-title { color: #ffffff; }
+                    .recipe-card:nth-child(even) .recipe-title { color: #111111; }
+            </style>
 
 
             <!-- Receita 1 -->
@@ -16561,6 +16629,10 @@
                 <h2 class="chapter-title">Snacks & Zwischenmahlzeiten</h2>
                 <p class="chapter-subtitle">Clevere Snacks verhindern Heißhungerattacken, liefern schnelle Energie für das Gehirn und halten den Stoffwechsel zwischen den Hauptmahlzeiten aktiv.</p>
             </section>
+            <style>
+                    .recipe-card:nth-child(odd) .recipe-title { color: #ffffff; }
+                    .recipe-card:nth-child(even) .recipe-title { color: #111111; }
+            </style>
 
             <!-- Receita 1 -->
             <div class="recipe-card">
@@ -18107,6 +18179,10 @@
                 <h2 class="chapter-title">Abendessen</h2>
                 <p class="chapter-subtitle">Leichte, kohlenhydratarme Gerichte am Abend entlasten die Verdauung, fördern einen tiefen und erholsamen Schlaf und maximieren die nächtliche Fettverbrennung.</p>
             </section>
+            <style>
+                    .recipe-card:nth-child(odd) .recipe-title { color: #ffffff; }
+                    .recipe-card:nth-child(even) .recipe-title { color: #111111; }
+            </style>
 
 
 
@@ -21311,11 +21387,15 @@
 
              <section class="chapter-cover">
                 <div class="chapter-icon"><i class="fa-solid fa-utensils"></i></div>
-                <div class="chapter-number">KAPITEL 4</div>
+                <div class="chapter-number">Kapitel 4</div>
                 <h2 class="chapter-title">Mittagessen</h2>
                 <p class="chapter-subtitle">Proteinreiche Mittagsmahlzeiten halten lange satt, schützen die Muskelmasse und unterstützen die aktive Fettverbrennung durch einen hohen thermogenen Effekt.</p>
             </section>
 
+            <style>
+                    .recipe-card:nth-child(odd) .recipe-title { color: #ffffff; }
+                    .recipe-card:nth-child(even) .recipe-title { color: #111111; }
+            </style>
 
 
 
@@ -22937,7 +23017,10 @@
                 <h2 class="chapter-title">Snacks & Zwischenmahlzeiten</h2>
                 <p class="chapter-subtitle">Clevere Snacks verhindern Heißhungerattacken, liefern schnelle Energie für das Gehirn und halten den Stoffwechsel zwischen den Hauptmahlzeiten aktiv.</p>
             </section>
-
+            <style>
+                    .recipe-card:nth-child(odd) .recipe-title { color: #ffffff; }
+                    .recipe-card:nth-child(even) .recipe-title { color: #111111; }
+            </style>
 
 
             <!-- Receita 1 -->
@@ -24477,13 +24560,16 @@
 
             <section class="chapter-cover">
                 <div class="chapter-icon"><i class="fa-solid fa-moon"></i></div>
-                <div class="chapter-number">KAPITEL 4</div>
+                <div class="chapter-number">Kapitel 4</div>
                 <h2 class="chapter-title">Abendessen</h2>
                 <p class="chapter-subtitle">Leichte, kohlenhydratarme Gerichte am Abend entlasten die Verdauung, fördern einen tiefen und erholsamen Schlaf und maximieren die nächtliche Fettverbrennung.</p>
             </section>
 
 
-
+            <style>
+                    .recipe-card:nth-child(odd) .recipe-title { color: #ffffff; }
+                    .recipe-card:nth-child(even) .recipe-title { color: #111111; }
+            </style>
 
             <!-- Receita 1 -->
             <div class="recipe-card">
