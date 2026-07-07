@@ -1,0 +1,1281 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interaktives E-Book: Abnehmrezepte (Premium Layout)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <style>
+        :root {
+            --gamma-dark: #CFE3D1; /* Marrom escuro café */
+            --gamma-light: #F28C82;
+            --text-on-dark: #333333;
+            --text-on-light: #333333;
+            --border-dark: rgba(255, 255, 255, 0.15); 
+            --border-light: rgba(0, 0, 0, 0.15);      
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background-color: #f0eae1;
+            font-family: 'DM Sans', sans-serif;
+            line-height: 1.6;
+        }
+
+        /* ==========================================================================
+           1. CABEÇALHO WEB (Oculto no PDF)
+           ========================================================================== */
+        header {
+            padding: 40px;
+            text-align: center;
+            background-color: var(--gamma-light);
+            border-bottom: 1px solid var(--border-light);
+        }
+        header h1 { font-family: 'Merriweather', serif; color: var(--gamma-dark); font-size: 32px; margin-bottom: 10px; }
+        .print-btn {
+            background-color: var(--gamma-dark); color: white; border: none; padding: 12px 25px;
+            border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 15px; font-size: 15px;
+        }
+
+        /* ==========================================================================
+           2. ESTILO GAMMA - DUAS COLUNAS (2 RECEITAS POR PÁGINA)
+           ========================================================================== */
+        .ebook-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            background: var(--gamma-light);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .recipe-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+        }
+
+        .recipe-card {
+            padding: 50px 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            position: relative;
+        }
+
+        /* ==========================================================================
+           LADOS, CORES E CAPAS DE CAPÍTULO
+           ========================================================================== */
+        /* LADO ESQUERDO (Ímpares) - Escuro */
+        .recipe-card:nth-of-type(odd) { background-color: var(--gamma-dark); color: var(--text-on-dark); }
+        
+        /* LADO DIREITO (Pares) - Claro */
+        .recipe-card:nth-of-type(even) { background-color: var(--gamma-light); color: var(--text-on-light); }
+
+        /* Estilo da Página de Capa (Ocupa as duas colunas) */
+        .chapter-cover {
+            grid-column: 1 / -1; /* Força a ocupar a largura total */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #2a1a17 0%, var(--gamma-dark) 100%);
+            color: #ffffff;
+            text-align: center;
+            padding: 40px;
+        }
+        .chapter-icon {
+            font-size: 60px;
+            color: #C97A53; /* Cor Terracota Elegante */
+            margin-bottom: 25px;
+        }
+        .chapter-number {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 18px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: #C97A53;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+        .chapter-title {
+            font-family: 'Merriweather', serif;
+            font-size: 55px;
+            margin-bottom: 25px;
+            line-height: 1.2;
+        }
+        .chapter-subtitle {
+            font-size: 18px;
+            max-width: 600px;
+            opacity: 0.85;
+            line-height: 1.6;
+        }
+
+        /* ==========================================================================
+           MODO IMPRESSÃO (A4)
+           ========================================================================== */
+        @media print {
+            @page { size: A4 portrait; margin: 0; }
+            body { margin: 0; padding: 0; background-color: #ffffff; }
+            header { display: none !important; }
+            .ebook-container { max-width: 100%; margin: 0; box-shadow: none; border: none; }
+
+            .recipe-grid {
+                display: grid;
+                grid-template-columns: 50% 50%;
+                width: 100%;
+            }
+
+            .recipe-card {
+                break-inside: avoid;
+                height: 297mm !important; 
+                padding: 25mm 20mm !important; 
+                overflow: hidden;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            /* Quebra de página a cada 2 receitas */
+            .recipe-card:nth-of-type(2n) {
+                break-after: page;
+            }
+
+            /* Configuração da Capa no PDF (1 Capa = 1 Página A4 inteira) */
+            .chapter-cover {
+                height: 297mm !important;
+                break-after: page !important; /* Força quebra de página APÓS a capa */
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            /* Numeração de Páginas Limpa (A capa não ganha número visível) */
+            /* body { counter-reset: page_counter; }
+            .recipe-card:nth-of-type(2n)::after {
+                counter-increment: page_counter;
+                content: "Seite " counter(page_counter);
+                position: absolute;
+                bottom: 15mm;
+                right: 20mm;
+                color: #888888;
+                font-size: 12px;
+                font-weight: bold;
+            } */
+        }
+
+        /* ==========================================================================
+           3. TIPOGRAFIA AUMENTADA (Leitura Premium)
+           ========================================================================== */
+        .recipe-title {
+            font-family: 'Merriweather', serif;
+            font-size: 30px; /* Aumentado para preencher bem o espaço */
+            font-weight: 700;
+            margin-bottom: 25px;
+            line-height: 1.3;
+        }
+        
+        .recipe-card:nth-child(odd) .recipe-title { color: #333333; }
+        .recipe-card:nth-child(even) .recipe-title { color: #111111; }
+
+        .recipe-meta { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 35px; }
+        .meta-box {
+            font-size: 12px; 
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            padding: 6px 12px;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
+        .recipe-card:nth-child(odd) .meta-box { border: 1px solid var(--border-dark); }
+        .recipe-card:nth-child(even) .meta-box { border: 1px solid var(--border-light); }
+
+        /* Listas e Tutoriais */
+        .section-title {
+            font-family: 'Merriweather', serif;
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.8;
+        }
+
+        .ingredients-list {
+            margin-bottom: 40px;
+            font-size: 14px; 
+            line-height: 1.8;
+        }
+        .ingredients-list ul { display: inline; padding: 0; margin: 0; list-style: none; }
+        .ingredients-list li { display: inline; }
+        .ingredients-list li::after { content: " · "; font-weight: bold; margin: 0 5px; opacity: 0.5; }
+        .ingredients-list li:last-child::after { content: ""; }
+
+        .steps-list ol { padding-left: 20px; margin: 0; }
+        .steps-list li {
+            margin-bottom: 20px;
+            font-size: 15px; /* Fonte bem legível para instruções detalhadas */
+            line-height: 1.7;
+            padding-left: 10px;
+        }
+        .steps-list li::marker { font-weight: 700; font-size: 16px; }
+
+
+
+
+
+        .main-book-cover {
+            grid-column: 1 / -1; /* Ocupa as duas colunas */
+            width: 100%;
+            height: auto;
+            background-color: #000;
+        }
+        .main-book-cover img {
+            width: 100%;
+            display: block;
+        }
+
+
+
+
+
+
+
+
+/* ==========================================================================
+           MODO IMPRESSÃO (A4)
+           ========================================================================== */
+        @media print {
+            @page { size: A4 portrait; margin: 0; }
+            body { margin: 0; padding: 0; background-color: #ffffff; }
+            header { display: none !important; }
+            .ebook-container { max-width: 100%; margin: 0; box-shadow: none; border: none; }
+
+            .recipe-grid {
+                display: grid;
+                grid-template-columns: 50% 50%;
+                width: 100%;
+            }
+
+            .recipe-card {
+                break-inside: avoid;
+                height: 297mm !important; 
+                padding: 25mm 10mm !important; 
+                overflow: hidden;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            /* Quebra de página a cada 2 receitas */
+            .recipe-card:nth-of-type(2n) {
+                break-after: page;
+            }
+
+            /* Configuração da Capa no PDF (1 Capa = 1 Página A4 inteira) */
+            .chapter-cover {
+                height: 297mm !important;
+                break-after: page !important; /* Força quebra de página APÓS a capa */
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            /* Numeração de Páginas Limpa (A capa não ganha número visível) */
+            body { 
+                counter-reset: page_counter; 
+            }
+
+            /* 1. FORÇA que as receitas não somem nada por padrão (Corrige o pulo de 2 em 2) */
+            .recipe-card {
+                counter-increment: none;
+            }
+
+            /* 2. Conta a capa como 1 página (número invisível) */
+            section.chapter-cover {
+                counter-increment: page_counter 1;
+            }
+
+            /* 3. Conta APENAS a receita da direita (pares) como 1 página */
+            .recipe-card:nth-of-type(even) {
+                counter-increment: page_counter 1;
+            }
+
+            /* 4. Mostra o texto "Seite X" APENAS na receita da direita */
+            .recipe-card:nth-of-type(even)::after {
+                content: "Seite " counter(page_counter);
+                position: absolute;
+                bottom: 15mm;
+                right: 20mm;
+                color: #888888;
+                font-size: 12px;
+                font-weight: bold;
+            }
+
+
+
+
+
+
+
+
+
+            .main-book-cover {
+                height: 297mm !important; /* Força altura A4 */
+                width: 210mm !important;
+                grid-column: 1 / -1;
+                break-after: page; /* Pula para a próxima página após a capa */
+                margin: 0;
+                padding: 0;
+            }
+
+            .main-book-cover img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover; /* Faz a foto preencher a folha sem distorcer */
+            }
+
+            /* GARANTE QUE A CONTAGEM COMECE APÓS A CAPA */
+            body { 
+                counter-reset: page_counter 0; 
+            }
+            
+            /* Esta regra garante que a seção da capa NÃO incremente o contador */
+            section.main-book-cover {
+                counter-increment: none !important;
+            }
+
+
+
+
+
+
+
+
+
+        }
+    </style>
+</head>
+<body>
+
+
+
+
+
+    <header>
+        <h1>Gesunde Gewichtsabnahme</h1>
+        <p>Premium Layout: 2 receitas por página (colunas inteiras). Fonte generosa e espaço para tutoriais ricos.</p>
+        <button class="print-btn" onclick="window.print()">
+            <i class="fa-solid fa-file-pdf"></i> Als PDF speichern
+        </button>
+    </header>
+
+
+
+
+
+
+    <section class="main-book-cover">
+        <img src="capadias.png" alt="Gesunde & Eiweißreiche Rezepte">
+    </section>
+
+
+<!-- <div class="recipe-card" style="padding: 30px 35px !important;"> -->
+                <!-- <div class="recipe-title" style="font-size: 22px !important; margin-bottom: 15px !important;"><i class="fa-solid fa-list" style="margin-right: 10px; color: #C97A53;"></i> Inhaltsverzeichnis</div>
+                <div class="recipe-meta" style="margin-bottom: 20px !important;">
+                    <div class="meta-box">Übersicht</div>
+                </div>
+                
+                <div class="steps-list" style="margin-top: 5px;">
+                    <h3 style="font-family: 'Merriweather', serif; font-size: 15px; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid var(--border-dark); padding-bottom: 5px; margin-bottom: 12px; color: #C97A53;">Kapitel 1</h3>
+                    <ul style="list-style: none; padding: 0; margin-bottom: 25px; font-size: 14px;">
+                        <li style="display: flex; justify-content: space-between; margin-bottom: 6px;"><span>☕ Frühstück</span><span style="font-weight: bold;">3</span></li>
+                        <li style="display: flex; justify-content: space-between; margin-bottom: 6px;"><span>🥗 Mittagessen</span><span style="font-weight: bold;">32</span></li>
+                        <li style="display: flex; justify-content: space-between; margin-bottom: 6px;"><span>🍎 Snacks & Zwischenmahlzeiten</span><span style="font-weight: bold;">63</span></li>
+                        <li style="display: flex; justify-content: space-between; margin-bottom: 6px;"><span>🌙 Abendessen</span><span style="font-weight: bold;">94</span></li>
+                    </ul>
+
+                    <h3 style="font-family: 'Merriweather', serif; font-size: 15px; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid var(--border-dark); padding-bottom: 5px; margin-bottom: 12px; color: #C97A53;">Kapitel 2</h3>
+                    <ul style="list-style: none; padding: 0; margin-bottom: 5px; font-size: 14px;">
+                        <li style="display: flex; justify-content: space-between; margin-bottom: 6px;"><span>☕ Frühstück</span><span style="font-weight: bold;">125</span></li>
+                        <li style="display: flex; justify-content: space-between; margin-bottom: 6px;"><span>🥗 Mittagessen</span><span style="font-weight: bold;">156</span></li>
+                        <li style="display: flex; justify-content: space-between; margin-bottom: 6px;"><span>🍎 Snacks & Zwischenmahlzeiten</span><span style="font-weight: bold;">187</span></li>
+                        <li style="display: flex; justify-content: space-between; margin-bottom: 6px;"><span>🌙 Abendessen</span><span style="font-weight: bold;">218</span></li>
+                    </ul>
+                    <h3 style="font-family: 'Merriweather', serif; font-size: 15px; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid var(--border-light); padding-bottom: 5px; margin-bottom: 12px; color: #C97A53;">Kapitel 3</h3>
+                    <ul style="list-style: none; padding: 0; margin-bottom: 25px; font-size: 14px;">
+                        <li style="display: flex; justify-content: space-between; margin-bottom: 6px;"><span>☕ Frühstück</span><span style="font-weight: bold;">249</span></li>
+                        <li style="display: flex; justify-content: space-between; margin-bottom: 6px;"><span>🥗 Mittagessen</span><span style="font-weight: bold;">xx</span></li>
+                        <li style="display: flex; justify-content: space-between; margin-bottom: 6px;"><span>🍎 Snacks & Zwischenmahlzeiten</span><span style="font-weight: bold;">xx</span></li>
+                        <li style="display: flex; justify-content: space-between; margin-bottom: 6px;"><span>🌙 Abendessen</span><span style="font-weight: bold;">xx</span></li>
+                    </ul>
+
+                    <h3 style="font-family: 'Merriweather', serif; font-size: 15px; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid var(--border-light); padding-bottom: 5px; margin-bottom: 12px; color: #C97A53;">Kapitel 4</h3>
+                    <ul style="list-style: none; padding: 0; margin-bottom: 25px; font-size: 14px;">
+                        <li style="display: flex; justify-content: space-between; margin-bottom: 6px;"><span>☕ Frühstück</span><span style="font-weight: bold;">xx</span></li>
+                        <li style="display: flex; justify-content: space-between; margin-bottom: 6px;"><span>🥗 Mittagessen</span><span style="font-weight: bold;">xx</span></li>
+                        <li style="display: flex; justify-content: space-between; margin-bottom: 6px;"><span>🍎 Snacks & Zwischenmahlzeiten</span><span style="font-weight: bold;">xx</span></li>
+                        <li style="display: flex; justify-content: space-between; margin-bottom: 6px;"><span>🌙 Abendessen</span><span style="font-weight: bold;">xx</span></li>
+                    </ul>
+                </div>
+            </div>
+
+
+        <div class="cover-title">Guia do Plano de Refeições<br>(Gids Maaltijdplan)</div>
+        <div class="cover-subtitle">Guia Completo com um Plano Alimentar para 7 Dias</div>
+        <div class="cover-divider"></div>
+        <div class="cover-meta">28 Gesunde und Traditionelle Deutsche Rezepte<br>Ein praktischer Ernährungsplan</div> -->
+
+
+
+    <section class="chapter-cover" style="background: linear-gradient(135deg, #2a1a17 0%, var(--gamma-dark) 100%);">
+                <div class="chapter-icon"><i class="fa-solid fa-weight-scale"></i></div>
+                <div class="chapter-number"></div>
+                <h2 class="chapter-title" style="font-size: 48px; margin-bottom: 20px;">Leitfaden für den Ernährungsplan</h2>
+                <p class="chapter-subtitle" style="font-size: 18px; max-width: 600px; opacity: 0.85; line-height: 1.6;">28 Gesunde und Traditionelle Deutsche Rezepte<br>Ein praktischer Ernährungsplan</p>
+    </section>
+
+
+    <section class="chapter-cover">
+                <div class="chapter-icon"><i class="fa-solid fa-mug-saucer"></i></div>
+                <div class="chapter-number">Tag 1</div>
+                <h2 class="chapter-title">Montag</h2>
+                <p class="chapter-subtitle"></p>
+    </section>
+    <div class="ebook-container">
+        <div class="recipe-grid">
+
+            <!-- ==========================================
+                 KAPITEL 1: GEWICHTSMANAGEMENT (RECEITAS 1 A 30)
+            =========================================== -->
+
+<!-- ==========================================
+                 KAPITEL 1: FRÜHSTÜCK FÜR DIE FETTVERBRENNUNG
+            =========================================== -->
+
+            <!-- Receita 1 -->
+
+   
+    <div class="recipe-card left-side">
+        <div class="recipe-title">1. Eiweiß-Omelett mit frischem Spinat</div>
+        <div class="recipe-meta">
+            <div class="meta-box">10 MIN</div>
+            <div class="meta-box">140 KCAL</div>
+            <div class="meta-box">P: 16G | K: 3G | F: 6G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>3 große Eiklar</li>
+                <li>1 Tasse frischer Babyspinat</li>
+                <li>1 TL natives Olivenöl extra</li>
+                <li>Meersalz und Pfeffer</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Erhitzen Sie das Olivenöl in einer beschichteten Pfanne bei mittlerer Hitze. Geben Sie den Spinat hinzu und dünsten Sie ihn unter Rühren für 1-2 Minuten, bis die Blätter weich zusammenfallen.</li>
+                <li>Verquirlen Sie das Eiklar in einer separaten Schüssel schaumig und würzen Sie es mit Meersalz sowie Pfeffer. Gießen Sie die Masse gleichmäßig über den Spinat in die heiße Pfanne.</li>
+                <li>Reduzieren Sie die Hitze leicht und lassen Sie das Omelett 3-4 Minuten ungestört stocken, bis die Ränder fest sind. Klappen Sie es in der Mitte zusammen und servieren Sie es sofort heiß.</li>
+            </ol>
+        </div>
+    </div>
+
+   
+    <div class="recipe-card right-side">
+        <div class="recipe-title">2. Vollkorn-Pasta mit mediterranem Pfannengemüse</div>
+        <div class="recipe-meta">
+            <div class="meta-box">20 MIN</div>
+            <div class="meta-box">380 KCAL</div>
+            <div class="meta-box">P: 14G | K: 58G | F: 9G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>70g Vollkorn-Penne</li>
+                <li>1/2 Zucchini (gewürfelt)</li>
+                <li>5 Kirschtomaten (halbiert)</li>
+                <li>1/2 rote Paprikaschote (in Streifen)</li>
+                <li>1 TL natives Olivenöl</li>
+                <li>Frische Basilikumblätter, Salz und Pfeffer</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Die Vollkorn-Penne in reichlich kochendem Salzwasser nach Packungsanleitung al dente garen, danach abgießen.</li>
+                <li>Parallel das Olivenöl in einer Pfanne erhitzen. Zucchini und Paprika darin bei mittlerer Hitze ca. 5 Minuten anbraten. Die Kirschtomaten in den letzten 2 Minuten hinzufügen.</li>
+                <li>Die abgetropfte Pasta direkt mit in die Pfanne geben, gut durchschwenken, mit Salz und Pfeffer abschmecken und mit frischem Basilikum servieren.</li>
+            </ol>
+        </div>
+    </div>
+
+
+    <div class="recipe-card left-side">
+        <div class="recipe-title">3. Thermogenes Hafer-Porridge</div>
+        <div class="recipe-meta">
+            <div class="meta-box">8 MIN</div>
+            <div class="meta-box">180 KCAL</div>
+            <div class="meta-box">P: 6G | K: 26G | F: 4G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>3 EL Haferkleie oder feine Haferflocken</li>
+                <li>150ml ungesüßte Mandelmilch</li>
+                <li>1 TL Chiasamen</li>
+                <li>1/2 TL Zimtpulver</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Geben Sie die Haferkleie, die Mandelmilch und die Chiasamen in einen kleinen Topf. Rühren Sie die Zutaten gut durch, damit sich keine Klümpchen bilden.</li>
+                <li>Erwärmen Sie die Mischung bei mittlerer bis niedriger Hitze. Unter ständigem Rühren für 4-5 Minuten sanft köcheln lassen, bis die Chiasamen quellen und eine dicke, cremige Konsistenz entsteht.</li>
+                <li>Nehmen Sie den Topf vom Herd und rühren Sie die Hälfte des Zimts ein, um das Aroma zu entfalten. Das Porridge in eine Schale füllen, mit dem restlichen Zimt bestreuen und warm genießen.</li>
+            </ol>
+        </div>
+    </div>
+
+
+    <div class="recipe-card right-side">
+        <div class="recipe-title">4. Gebackenes Lachsfilet mit Zitronen-Brokkoli</div>
+        <div class="recipe-meta">
+            <div class="meta-box">25 MIN</div>
+            <div class="meta-box">340 KCAL</div>
+            <div class="meta-box">P: 36G | K: 6G | F: 18G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>150g frisches Lachsfilet</li>
+                <li>200g Brokkoliröschen (frisch oder TK)</li>
+                <li>1 TL Olivenöl</li>
+                <li>Saft einer halben Zitrone</li>
+                <li>Salz, schwarzer Pfeffer und eine Prise Knoblauchpulver</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Den Ofen auf 200°C Ober-/Unterhitze vorheizen und ein Backblech mit Backpapier auslegen.</li>
+                <li>Das Lachsfilet abspülen, trocken tupfen, auf das Blech legen und mit der Hälfte des Zitronensafts, Salz und Pfeffer einreiben.</li>
+                <li>Die Brokkoliröschen um den Lachs verteilen, mit Olivenöl beträufeln und leicht salzen. Alles für ca. 15 Minuten im Ofen backen, bis der Lachs saftig gegart ist.</li>
+            </ol>
+        </div>
+    </div>
+
+
+    <section class="chapter-cover">
+                <div class="chapter-icon"><i class="fa-solid fa-mug-saucer"></i></div>
+                <div class="chapter-number">Tag 2</div>
+                <h2 class="chapter-title">Dienstag</h2>
+                <p class="chapter-subtitle"></p>
+    </section>
+
+
+    <div class="recipe-card left-side">
+        <div class="recipe-title">5. Low-Carb Avocado-Creme mit gekochtem Ei</div>
+        <div class="recipe-meta">
+            <div class="meta-box">5 MIN</div>
+            <div class="meta-box">290 KCAL</div>
+            <div class="meta-box">P: 11G | K: 7G | F: 24G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>1/2 reife Avocado (Hass)</li>
+                <li>1 hartgekochtes Ei (Größe M)</li>
+                <li>1 EL frisch gepresster Zitronensaft</li>
+                <li>Meersalz, frisch gemahlener Pfeffer</li>
+                <li>Frische Kresse zum Garnieren</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Das Fruchtfleisch der Avocadohälfte mit einer Gabel in einer kleinen Schüssel fein zerdrücken.</li>
+                <li>Den Zitronensaft unterrühren (das verhindert das Braunwerden) und mit Meersalz sowie Pfeffer abschmecken.</li>
+                <li>Das hartgekochte Ei pellen, in feine Scheiben schneiden, auf der Avocado-Creme anrichten und mit frischer Kresse bestreut servieren.</li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="recipe-card right-side">
+        <div class="recipe-title">6. Leichtes Putengeschnetzeltes mit Champignons</div>
+        <div class="recipe-meta">
+            <div class="meta-box">20 MIN</div>
+            <div class="meta-box">320 KCAL</div>
+            <div class="meta-box">P: 35G | K: 8G | F: 15G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>150g Putenbrustfilet (in dünne Streifen geschnitten)</li>
+                <li>150g frische braune Champignons (in Scheiben)</li>
+                <li>1 kleine Zwiebel (fein gewürfelt)</li>
+                <li>1 TL Rapsöl</li>
+                <li>2 EL saure Sahne (10% Fett)</li>
+                <li>Salz und Paprikapulver edelsüß</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Das Rapsöl in einer beschichteten Pfanne stark erhitzen und die Putenbruststreifen darin ca. 3 Minuten scharf anbraten. Aus der Pfanne nehmen und warm beiseite stellen.</li>
+                <li>Die Hitze reduzieren. Zwiebelwürfel und Champignons in dieselbe Pfanne geben und ca. 5 Minuten dünsten, bis das Pilzwasser verdampft ist.</li>
+                <li>Das Fleisch wieder hinzufügen, die saure Sahne einrühren, kurz aufwallen lassen und mit Salz und reichlich Paprikapulver abschmecken.</li>
+            </ol>
+        </div>
+    </div>
+
+
+    <div class="recipe-card left-side">
+        <div class="recipe-title">7. Fit Bananen-Pfannkuchen</div>
+        <div class="recipe-meta">
+            <div class="meta-box">10 MIN</div>
+            <div class="meta-box">160 KCAL</div>
+            <div class="meta-box">P: 7G | K: 22G | F: 5G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>1 kleine, sehr reife Banane</li>
+                <li>1 großes Ei</li>
+                <li>1 EL Haferkleie</li>
+                <li>Eine Prise Ceylon-Zimt</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Schälen Sie die Banane, legen Sie sie auf einen Teller und zerdrücken Sie sie mit einer Gabel so lange, bis ein feiner, fast flüssiger Brei ohne große Stücke entsteht.</li>
+                <li>Schlagen Sie das Ei direkt über dem Bananenbrei auf. Fügen Sie die Haferkleie und den Zimt hinzu. Schlagen Sie alles mit der Gabel kräftig durch, bis der Teig glatt ist.</li>
+                <li>Pinseln Sie eine beschichtete Pfanne mit einem Hauch Kokosöl aus. Gießen Sie den Teig hinein und lassen Sie den Pfannkuchen etwa 2-3 Minuten pro Seite goldbraun backen.</li>
+            </ol>
+        </div>
+    </div>
+
+
+    <div class="recipe-card right-side">
+        <div class="recipe-title">8. Klassische magere Kartoffelsuppe mit frischen Kräutern</div>
+        <div class="recipe-meta">
+            <div class="meta-box">25 MIN</div>
+            <div class="meta-box">220 KCAL</div>
+            <div class="meta-box">P: 5G | K: 38G | F: 3G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>200g mehligkochende Kartoffeln (geschält und gewürfelt)</li>
+                <li>1 kleine Möhre (in Scheiben)</li>
+                <li>1/4 Stange Lauch/Porree (in Ringe geschnitten)</li>
+                <li>400ml klare Gemüsebrühe</li>
+                <li>Salz, Pfeffer, eine Prise Muskatnuss</li>
+                <li>Frische glatte Petersilie (gehackt)</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Die vorbereiteten Kartoffeln, Möhren und Lauchringe zusammen mit der Gemüsebrühe in einen Topf geben und zum Kochen bringen.</li>
+                <li>Bei mittlerer Hitze zugedeckt ca. 15-20 Minuten sanft köcheln lassen, bis das Gemüse vollkommen weich ist.</li>
+                <li>Die Suppe mit dem Pürierstab cremig mixen. Mit Salz, Pfeffer und einer kräftigen Prise frisch geriebener Muskatnuss abschmecken. Mit Petersilie bestreuen.</li>
+            </ol>
+        </div>
+    </div>
+
+
+    <section class="chapter-cover">
+                <div class="chapter-icon"><i class="fa-solid fa-mug-saucer"></i></div>
+                <div class="chapter-number">Tag 3</div>
+                <h2 class="chapter-title">Mittwoch</h2>
+                <p class="chapter-subtitle"></p>
+    </section>
+
+
+    <div class="recipe-card left-side">
+        <div class="recipe-title">9. Thermogener Kaffee-Whey Shake</div>
+        <div class="recipe-meta">
+            <div class="meta-box">5 MIN</div>
+            <div class="meta-box">190 KCAL</div>
+            <div class="meta-box">P: 22G | K: 5G | F: 3G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>1 Scoop Vanille-Whey-Protein</li>
+                <li>100ml kalter Espresso</li>
+                <li>150ml kaltes Mineralwasser</li>
+                <li>1 TL Chiasamen</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Geben Sie den kalten Espresso, das Wasser, das Vanille-Whey-Protein und die Chiasamen in einen leistungsstarken Mixer oder einen großen Protein-Shaker.</li>
+                <li>Mixen oder schütteln Sie die Zutaten für etwa 45 bis 60 Sekunden kräftig durch, bis sich das Proteinpulver vollständig aufgelöst hat und der Shake leicht schaumig wird.</li>
+                <li>Gießen Sie den Shake in ein hohes Glas, fügen Sie nach Belieben ein paar Eiswürfel hinzu und genießen Sie ihn sofort als perfekten, aktivierenden Pre-Workout-Boost.</li>
+            </ol>
+        </div>
+    </div>
+
+
+    <div class="recipe-card right-side">
+        <div class="recipe-title">10. Gedünstetes Schollenfilet mit erfrischendem Gurkensalat</div>
+        <div class="recipe-meta">
+            <div class="meta-box">15 MIN</div>
+            <div class="meta-box">240 KCAL</div>
+            <div class="meta-box">P: 28G | K: 6G | F: 11G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>150g frisches Schollenfilet</li>
+                <li>1/2 Salatgurke (in hauchdünne Scheiben gehobelt)</li>
+                <li>1 TL Olivenöl</li>
+                <li>1 EL Weißweinessig</li>
+                <li>Viel frischer Dill (fein gehackt), Salz und weißer Pfeffer</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Das Schollenfilet kalt abspülen, trocken tupfen, dezent salzen und pfeffern. In einen Dämpfeinsatz legen und über kochendem Wasser abgedeckt 6-8 Minuten dämpfen.</li>
+                <li>Währenddessen die Gurkenscheiben mit Olivenöl, Essig, Salz, Pfeffer und dem frisch gehackten Dill in einer Schüssel zu einem Salat vermengen.</li>
+                <li>Den zarten, gedünsteten Fisch zusammen mit dem marinierten Gurkensalat auf einem flachen Teller anrichten.</li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="recipe-card left-side">
+        <div class="recipe-title">11. Schützende Papaya-Creme</div>
+        <div class="recipe-meta">
+            <div class="meta-box">5 MIN</div>
+            <div class="meta-box">150 KCAL</div>
+            <div class="meta-box">P: 8G | K: 19G | F: 4G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>1/2 kleine, reife Papaya</li>
+                <li>1/2 Becher fettarmer Naturjoghurt</li>
+                <li>1 EL Kürbiskerne</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Halbieren Sie die Papaya, entfernen Sie die schwarzen Kerne mit einem Löffel und kratzen Sie das weiche, süße Fruchtfleisch direkt in das Gefäß Ihres Mixers.</li>
+                <li>Fügen Sie den fettarmen Naturjoghurt hinzu und pürieren Sie beides auf mittlerer Stufe, bis eine homogene und samtige Creme ohne Stücke entsteht.</li>
+                <li>Füllen Sie die Creme in ein kleinem Glas oder eine Dessertschale um, streuen Sie die Kürbiskerne als knuspriges Topping darüber und servieren Sie sie am besten leicht gekühlt.</li>
+            </ol>
+        </div>
+    </div>
+
+
+    <div class="recipe-card right-side">
+        <div class="recipe-title">12. Großer bunter Blattsalat mit Hähnchenbruststreifen</div>
+        <div class="recipe-meta">
+            <div class="meta-box">15 MIN</div>
+            <div class="meta-box">280 KCAL</div>
+            <div class="meta-box">P: 32G | K: 8G | F: 12G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>120g Hähnchenbrustfilet</li>
+                <li>50g gemischter Blattsalat (z.B. Feld- und Eisbergsalat)</li>
+                <li>4 Kirschtomaten (halbiert)</li>
+                <li>1/2 gelbe Paprikaschote (gewürfelt)</li>
+                <li>1 TL Rapsöl zum Braten</li>
+                <li>1 EL Zitronensaft, Salz, Pfeffer, Kräuter der Provence</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Das Hähnchenbrustfilet in schmale Streifen schneiden. Das Rapsöl in einer Pfanne heiß werden lassen und das Fleisch darin ca. 5 Minuten goldbraun braten. Mit Salz und Kräutern würzen.</li>
+                <li>Den Blattsalat gründlich waschen, trocken schleudern und mit den Tomatenhälften sowie Paprikawürfeln in einer Schüssel anrichten.</li>
+                <li>Aus Zitronensaft, einem Esslöffel Wasser, Salz und Pfeffer ein leichtes Dressing rühren. Über den Salat geben und die noch warmen Hähnchenstreifen darauf anrichten.</li>
+            </ol>
+        </div>
+    </div>
+
+
+    <section class="chapter-cover">
+                <div class="chapter-icon"><i class="fa-solid fa-mug-saucer"></i></div>
+                <div class="chapter-number">Tag 4</div>
+                <h2 class="chapter-title">Donnerstag</h2>
+                <p class="chapter-subtitle"></p>
+    </section>
+
+    <div class="recipe-card left-side">
+        <div class="recipe-title">13. Süßkartoffel-Toast mit Ricotta</div>
+        <div class="recipe-meta">
+            <div class="meta-box">15 MIN</div>
+            <div class="meta-box">175 KCAL</div>
+            <div class="meta-box">P: 8G | K: 21G | F: 5G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>2 dünne Scheiben rohe Süßkartoffel</li>
+                <li>2 EL magerer Ricotta</li>
+                <li>1 Prise getrockneter Oregano</li>
+                <li>Ein kleiner Schuss Olivenöl</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Schneiden Sie die rohe, geschälte Süßkartoffel in etwa 0,5 cm dicke Scheiben. Geben Sie die Scheiben zweimal bei höchster Stufe in den Toaster, bis sie weich und leicht gebräunt sind.</li>
+                <li>Vermischen Sie in der Zwischenzeit den Ricotta in einer kleinen Schale mit etwas Salz, Pfeffer und einer Prise getrocknetem Oregano, bis er schön cremig und streichfähig ist.</li>
+                <li>Bestreichen Sie die heißen Süßkartoffel-Toasts gleichmäßig mit der gewürzten Ricotta-Mischung. Beträufeln Sie alles mit einem kleinen Schuss Olivenöl und servieren Sie es sofort.</li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="recipe-card right-side">
+        <div class="recipe-title">14. Traditioneller Linseneintopf mit feinem Suppengrün</div>
+        <div class="recipe-meta">
+            <div class="meta-box">30 MIN</div>
+            <div class="meta-box">310 KCAL</div>
+            <div class="meta-box">P: 18G | K: 44G | F: 4G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>60g braune Tellerlinsen (getrocknet)</li>
+                <li>100g frisches Suppengrün (Möhre, Sellerie, Porree kombiniert)</li>
+                <li>450ml klare Gemüsebrühe</li>
+                <li>1 TL getrockneter Majoran</li>
+                <li>1 TL Kräuteressig, Salz und Pfeffer</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Das Suppengrün waschen, putzen und in sehr feine, gleichmäßige Würfel schneiden.</li>
+                <li>Die Linsen zusammen mit dem gewürfelten Suppengrün und der Gemüsebrühe in einen ausreichend großen Topf geben. Aufkochen und ca. 25 Minuten abgedeckt köcheln lassen.</li>
+                <li>Sobald die Linsen weich sind, den Eintopf kräftig mit Majoran, Salz, Pfeffer und einem kleinen Spritzer Kräuteressig pikant abschmecken.</li>
+            </ol>
+        </div>
+    </div>
+
+
+    <div class="recipe-card left-side">
+        <div class="recipe-title">15. Cremiger Magerquark mit Beeren und Walnüssen</div>
+        <div class="recipe-meta">
+            <div class="meta-box">5 MIN</div>
+            <div class="meta-box">195 KCAL</div>
+            <div class="meta-box">P: 18G | K: 12G | F: 7G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>150g deutscher Magerquark</li>
+                <li>2 EL kohlensäurehaltiges Mineralwasser</li>
+                <li>50g frische Himbeeren oder Blaubeeren</li>
+                <li>3 Walnusskerne (grob gehackt)</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Den Magerquark zusammen mit dem Mineralwasser in einer Schüssel mit einem Löffel kräftig glattrühren, bis eine cremige Konsistenz entsteht.</li>
+                <li>Die Beeren vorsichtig waschen, trocken tupfen und gleichmäßig unter den Quark heben oder dekorativ auf der Oberfläche verteilen.</li>
+                <li>Das Ganze mit den grob gehackten Walnusskernen bestreuen und direkt als proteinreichen Snack genießen.</li>
+            </ol>
+        </div>
+    </div>
+
+
+    <div class="recipe-card right-side">
+        <div class="recipe-title">16. Ofen-Kabeljau auf buntem Gemüsebeet</div>
+        <div class="recipe-meta">
+            <div class="meta-box">25 MIN</div>
+            <div class="meta-box">260 KCAL</div>
+            <div class="meta-box">P: 26G | K: 12G | F: 10G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>150g frisches Kabeljaufilet</li>
+                <li>100g Zucchini (in Scheiben)</li>
+                <li>100g rote Paprikaschote (in mundgerechten Stücken)</li>
+                <li>1 TL Olivenöl</li>
+                <li>1 TL Kräuter der Provence, Salz und Pfeffer</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Den Backofen auf 180°C Ober-/Unterhitze vorheizen.</li>
+                <li>Zucchini und Paprika in eine kleine Auflaufform geben, mit dem Olivenöl beträufeln und mit den Kräutern der Provence, Salz sowie Pfeffer gut vermengen.</li>
+                <li>Das Kabeljaufilet leicht salzen und pfeffern, flach auf das Gemüsebeet setzen und die Form für ca. 20 Minuten im Ofen backen, bis der Fisch blättrig gegart ist.</li>
+            </ol>
+        </div>
+    </div>
+
+
+    <section class="chapter-cover">
+                <div class="chapter-icon"><i class="fa-solid fa-mug-saucer"></i></div>
+                <div class="chapter-number">Tag 5</div>
+                <h2 class="chapter-title">Freitag</h2>
+                <p class="chapter-subtitle"></p>
+    </section>
+
+    <div class="recipe-card left-side">
+        <div class="recipe-title">17. Echtes Vollkornbrot mit Hüttenkäse und Radieschen</div>
+        <div class="recipe-meta">
+            <div class="meta-box">5 MIN</div>
+            <div class="meta-box">210 KCAL</div>
+            <div class="meta-box">P: 14G | K: 24G | F: 5G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>1 dicke Scheibe deutsches Vollkornbrot (ca. 50g)</li>
+                <li>3 EL körniger Frischkäse / Hüttenkäse (Magerstufe)</li>
+                <li>3 frische Radieschen (in dünne Scheiben geschnitten)</li>
+                <li>Etwas frischer Schnittlauch (in feine Röllchen geschnitten)</li>
+                <li>Eine Prise Meersalz</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Die Scheibe Vollkornbrot flach hinlegen und gleichmäßig dick mit dem mageren körnigen Frischkäse bestreichen.</li>
+                <li>Die vorbereiteten Radieschenscheiben leicht überlappend wie ein Fächer auf dem Frischkäse arrangieren.</li>
+                <li>Das Brot mit den Schnittlauchröllchen und einer dezenten Prise Meersalz bestreuen und sofort servieren.</li>
+            </ol>
+        </div>
+    </div>
+
+
+    <div class="recipe-card right-side">
+        <div class="recipe-title">18. Herzhafte Hähnchen-Gemüse-Pfanne mit Gewürzen</div>
+        <div class="recipe-meta">
+            <div class="meta-box">20 MIN</div>
+            <div class="meta-box">295 KCAL</div>
+            <div class="meta-box">P: 34G | K: 9G | F: 12G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>150g Hähnchenbrustfilet (gewürfelt)</li>
+                <li>1 rote Paprikaschote (in kurzen Streifen)</li>
+                <li>1/2 Zucchini (in feine Scheiben geschnitten)</li>
+                <li>1 TL Olivenöl</li>
+                <li>Getrockneter Oregano, Salz und eine Spur Cayennepfeffer</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Das Olivenöl in einer beschichteten Pfanne erhitzen und die Hähnchenwürfel darin rundherum ca. 4 Minuten scharf anbraten.</li>
+                <li>Die Paprikastreifen und Zucchinischeiben mit in die Pfanne geben, die Hitze leicht reduzieren und das Gemüse ca. 7 Minuten bissfest mitgaren.</li>
+                <li>Das Gericht mit Salz, reichlich getrocknetem Oregano und einer kleinen Prise Cayennepfeffer feurig abschmecken.</li>
+            </ol>
+        </div>
+    </div>
+
+
+    <div class="recipe-card left-side">
+        <div class="recipe-title">19. Naturbelassene Mandeln und ein knackiger grüner Apfel</div>
+        <div class="recipe-meta">
+            <div class="meta-box">3 MIN</div>
+            <div class="meta-box">190 KCAL</div>
+            <div class="meta-box">P: 5G | K: 22G | F: 10G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>15g ungeröstete, ungesalzene Mandeln (mit Haut)</li>
+                <li>1 kleiner grüner Apfel (z.B. Sorte Granny Smith)</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Den grünen Apfel gründlich unter kaltem Wasser abwaschen, abtrocknen, vierteln und das Kerngehäuse sauber entfernen.</li>
+                <li>Die Apfelviertel in dünne, mundgerechte Spalten schneiden.</li>
+                <li>Die Apfelspalten zusammen mit den Mandeln auf einem kleinen Teller als schnellen, ballaststoffreichen Knabberspaß anrichten.</li>
+            </ol>
+        </div>
+    </div>
+
+
+    <div class="recipe-card right-side">
+        <div class="recipe-title">20. Sämige Kürbis-Ingwer-Suppe mit gerösteten Kürbiskernen</div>
+        <div class="recipe-meta">
+            <div class="meta-box">25 MIN</div>
+            <div class="meta-box">230 KCAL</div>
+            <div class="meta-box">P: 6G | K: 28G | F: 9G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>250g Hokkaido-Kürbis (frisch, gründlich gewaschen, mit Schale gewürfelt)</li>
+                <li>1 kleines Stück frischer Ingwer (ca. 1 cm, fein gehackt)</li>
+                <li>350ml klare Gemüsebrühe</li>
+                <li>1 TL wertvolles Kürbiskernöl</li>
+                <li>1 EL naturbelassene Kürbiskerne</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Die Hokkaido-Kürbiswürfel und den gehackten Ingwer zusammen mit der Gemüsebrühe in einen Topf geben und zum Kochen bringen. Bei mittlerer Hitze ca. 15 Minuten weich kochen.</li>
+                <li>Die Suppe direkt im Topf mit einem Pürierstab absolut cremig und stückchenfrei mixen. Nach Bedarf dezent mit Salz nachwürzen.</li>
+                <li>Die Suppe in eine tiefe Schale füllen, gleichmäßig mit dem Kürbiskernöl beträufeln und mit den Kürbiskernen garnieren.</li>
+            </ol>
+        </div>
+    </div>
+
+    <section class="chapter-cover">
+                <div class="chapter-icon"><i class="fa-solid fa-mug-saucer"></i></div>
+                <div class="chapter-number">Tag 6</div>
+                <h2 class="chapter-title">Samstag</h2>
+                <p class="chapter-subtitle"></p>
+    </section>
+
+
+    <div class="recipe-card left-side">
+        <div class="recipe-title">21. Herzhaftes Rührei mit Tomaten und frischem Schnittlauch</div>
+        <div class="recipe-meta">
+            <div class="meta-box">10 MIN</div>
+            <div class="meta-box">185 KCAL</div>
+            <div class="meta-box">P: 14G | K: 3G | F: 13G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>2 ganze Hühnereier (Größe M)</li>
+                <li>4 kleine Kirschtomaten (vollständig gewürfelt)</li>
+                <li>1 TL Rapsöl für die Pfanne</li>
+                <li>Frischer Schnittlauch (in feine Röllchen geschnitten)</li>
+                <li>Salz und frisch gemahlener schwarzer Pfeffer</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Die beiden Eier in einer kleinen Schüssel mit einer Gabel kräftig verquirlen und mit einer kleinen Prise Salz und Pfeffer würzen.</li>
+                <li>Das Rapsöl in einer beschichteten Pfanne erhitzen und die Tomatenwürfel darin für ca. 1-2 Minuten andünsten.</li>
+                <li>Die verquirlte Eimasse über die Tomaten gießen. Bei mittlerer Hitze unter sanftem Rühren mit dem Pfannenwender stocken lassen. Mit viel Schnittlauch bestreut anrichten.</li>
+            </ol>
+        </div>
+    </div>
+
+
+    <div class="recipe-card right-side">
+        <div class="recipe-title">22. Gebratenes Seelachsfilet mit Petersilienkartoffeln</div>
+        <div class="recipe-meta">
+            <div class="meta-box">20 MIN</div>
+            <div class="meta-box">310 KCAL</div>
+            <div class="meta-box">P: 29G | K: 32G | F: 6G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>150g frisches Seelachsfilet</li>
+                <li>150g festkochende Kartoffeln (geschält und gewürfelt)</li>
+                <li>1 TL Halbfettbutter</li>
+                <li>Viel frische krause Petersilie (fein gehackt)</li>
+                <li>1/2 Salatgurke (gehobelt), 1 EL Zitronensaft</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Die Kartoffelwürfel in kochendem Salzwasser ca. 15 Minuten garen, abgießen und sofort in der gehackten Petersilie schwenken.</li>
+                <li>Das Seelachsfilet mit etwas Zitronensaft beträufeln, salzen und in einer Pfanne mit der Butter von jeder Seite etwa 3 Minuten braten.</li>
+                <li>Die gehobelte Gurke mit restlichem Zitronensaft, Salz und Pfeffer zu einem leichten Salat anrichten und mit Fisch und Kartoffeln servieren.</li>
+            </ol>
+        </div>
+    </div>
+
+
+    <div class="recipe-card left-side">
+        <div class="recipe-title">23. Fruchtiger Chia-Pudding mit ungesüßter Mandelmilch</div>
+        <div class="recipe-meta">
+            <div class="meta-box">5 MIN</div>
+            <div class="meta-box">145 KCAL</div>
+            <div class="meta-box">P: 4G | K: 11G | F: 7G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>1,5 EL Chiasamen (ca. 15g)</li>
+                <li>120ml ungesüßte Mandelmilch</li>
+                <li>40g frische Himbeeren (oder TK, aufgetaut)</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Die Chiasamen zusammen mit der Mandelmilch in ein schönes Glas geben und mit einem kleinen Löffel sehr gründlich verrühren.</li>
+                <li>Nach etwa 10 Minuten Wartezeit die Mischung nochmals gut durchrühren, um lästige Klümpchenbildung effektiv zu vermeiden.</li>
+                <li>Das Glas abdecken und für mindestens 2 Stunden (optimal über Nacht) im Kühlschrank quellen lassen. Vor dem Essen die Himbeeren als Schicht daraufgeben.</li>
+            </ol>
+        </div>
+    </div>
+
+
+    <div class="recipe-card right-side">
+        <div class="recipe-title">24. Überbackene Zucchini-Schiffchen mit magerem Rinderhack</div>
+        <div class="recipe-meta">
+            <div class="meta-box">30 MIN</div>
+            <div class="meta-box">330 KCAL</div>
+            <div class="meta-box">P: 31G | K: 10G | F: 17G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>1 große, feste Zucchini</li>
+                <li>120g mageres Rinderhackfleisch (oder Schabefleisch)</li>
+                <li>1/2 kleine Zwiebel (fein gewürfelt)</li>
+                <li>2 EL passierte Tomaten (reine Tomate)</li>
+                <li>20g Reibekäse (fettreduziert, max. 15% Fett absolut)</li>
+                <li>Salz, schwarzer Pfeffer</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Den Ofen auf 200°C vorheizen. Die Zucchini der Länge nach halbieren und das wässrige Innere mit einem Teelöffel vorsichtig herausschaben (beiseite legen).</li>
+                <li>Das Rinderhackfleisch mit den Zwiebelwürfeln fettfrei in einer beschichteten Pfanne kräftig krümelig anbraten. Das gehackte Zucchini-Innere und die passierten Tomaten unterrühren und gut würzen.</li>
+                <li>Die Hackfleischmischung stabil in die ausgehöhlten Zucchini-Hälften füllen, mit dem fettreduzierten Reibekäse bestreuen und ca. 20 Minuten im Ofen backen, bis der Käse goldbraun schmilzt.</li>
+            </ol>
+        </div>
+    </div>
+
+
+    <section class="chapter-cover">
+                <div class="chapter-icon"><i class="fa-solid fa-mug-saucer"></i></div>
+                <div class="chapter-number">Tag 7</div>
+                <h2 class="chapter-title">Sonntag</h2>
+                <p class="chapter-subtitle"></p>
+    </section>
+
+
+    <div class="recipe-card left-side">
+        <div class="recipe-title">25. Protein-Haferflocken-Müsli mit geraspeltem Apfel</div>
+        <div class="recipe-meta">
+            <div class="meta-box">5 MIN</div>
+            <div class="meta-box">240 KCAL</div>
+            <div class="meta-box">P: 15G | K: 34G | F: 4G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>4 EL feine Haferflocken</li>
+                <li>100g deutscher Magerquark</li>
+                <li>50ml stilles Wasser</li>
+                <li>1/2 saftiger Apfel (frisch geraspelt, z.B. Elstar)</li>
+                <li>Eine kräftige Prise gemahlener Zimt</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Den Magerquark mit den 50ml Wasser in einer Müslischale mit einem Löffel cremig und geschmeidig rühren.</li>
+                <li>Die feinen Haferflocken und den frisch geraspelten Apfel (inklusive des austretenden Fruchtsafts) zügig unter den Quark mischen.</li>
+                <li>Das fertige Frühstücks-Müsli mit reichlich Zimt bestreuen und direkt frisch zubereitet genießen.</li>
+            </ol>
+        </div>
+    </div>
+
+
+    <div class="recipe-card right-side">
+        <div class="recipe-title">26. Leichtes Rindergulasch mit gedünstetem Rosenkohl</div>
+        <div class="recipe-meta">
+            <div class="meta-box">35 MIN</div>
+            <div class="meta-box">340 KCAL</div>
+            <div class="meta-box">P: 36G | K: 14G | F: 12G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>150g mageres Rindergulaschfleisch (gut pariert, fettarm)</li>
+                <li>1 große Zwiebel (in grobe Würfel geschnitten)</li>
+                <li>150ml kräftige Gemüsebrühe</li>
+                <li>150g frischer Rosenkohl (geputzt)</li>
+                <li>1 TL Rapsöl zum Schmoren</li>
+                <li>Edelsüßes Paprikapulver, Salz</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Das Rapsöl in einem kleinen Schmortopf heiß werden lassen und das Fleisch darin zusammen mit den Zwiebelwürfeln intensiv anbraten. Mit der Gemüsebrühe ablöschen.</li>
+                <li>Bei kleiner Hitze zugedeckt ca. 25-30 Minuten sanft schmoren lassen, bis das Rindfleisch wunderbar zart ist. Mit Salz und viel Paprikapulver sämig einkochen.</li>
+                <li>Parallel den geputzten Rosenkohl in kochendem Salzwasser ca. 12 Minuten bissfest garen, abgießen und als gesunde Beilage zum heißen Gulasch servieren.</li>
+            </ol>
+        </div>
+    </div>
+
+
+    <div class="recipe-card left-side">
+        <div class="recipe-title">27. Knackige Möhren-Sticks mit leichtem Kräuter-Quark-Dip</div>
+        <div class="recipe-meta">
+            <div class="meta-box">5 MIN</div>
+            <div class="meta-box">95 KCAL</div>
+            <div class="meta-box">P: 6G | K: 12G | F: 2G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>2 mittelgroße, frische Möhren / Karotten</li>
+                <li>3 EL deutscher Magerquark</li>
+                <li>1 EL spritziges Mineralwasser</li>
+                <li>Gemischte frische Kräuter (Schnittlauch, Petersilie, Dill), fein gehackt</li>
+                <li>Eine Prise Salz</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Die Möhren gründlich mit dem Sparschäler schälen, die Enden abschneiden und der Länge nach in dünne, handliche Knabber-Sticks zerteilen.</li>
+                <li>Den Magerquark mit dem Mineralwasser und den gehackten Kräutern in einer kleinen Schale verrühren, bis der Dip schön fluffig wird.</li>
+                <li>Den Kräuter-Dip dezent mit Salz abschmecken und dekorativ zusammen mit den knackigen Möhren-Sticks auf einem Teller zum Dippen anrichten.</li>
+            </ol>
+        </div>
+    </div>
+
+
+    <div class="recipe-card right-side">
+        <div class="recipe-title">28. Mediterran überbackener Fetakäse mit Tomaten und Oliven</div>
+        <div class="recipe-meta">
+            <div class="meta-box">20 MIN</div>
+            <div class="meta-box">290 KCAL</div>
+            <div class="meta-box">P: 16G | K: 5G | F: 23G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>100g Feta / Schafskäse (Leicht-Variante, ca. 9% Fett absolut)</li>
+                <li>5 kleine Kirschtomaten (vollständig halbiert)</li>
+                <li>4 schwarze Oliven (entsteint, in Ringe geschnitten)</li>
+                <li>1/2 TL gutes Olivenöl</li>
+                <li>Reichlich getrockneter Thymian oder Oregano</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Den Ofen auf 200°C Ober-/Unterhitze vorheizen. Den Feta-Block im Ganzen mittig in eine kleine ofenfeste Auflaufform legen.</li>
+                <li>Die halbierten Kirschtomaten und die Olivenringe gleichmäßig um und auf dem Schafskäse verteilen.</li>
+                <li>Das Olivenöl fein über das Gericht träufeln, alles üppig mit getrocknetem Thymian würzen und für ca. 15 Minuten im Ofen backen, bis der Käse weich und heiß ist.</li>
+            </ol>
+        </div>
+    </div>
+    
+    </div>
+</div>
+
+
+</body>
+</html>
