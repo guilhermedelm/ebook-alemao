@@ -1,0 +1,1501 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interaktives E-Book: Abnehmrezepte (Premium Layout)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <style>
+        :root {
+            --gamma-dark: #F4F9F9; /* Marrom escuro café */
+            --gamma-light: #FBF8F3;
+            --text-on-dark: #333333;
+            --text-on-light: #333333;
+            --border-dark: rgba(255, 255, 255, 0.15); 
+            --border-light: rgba(0, 0, 0, 0.15);      
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background-color: #f0eae1;
+            font-family: 'DM Sans', sans-serif;
+            line-height: 1.6;
+        }
+
+        /* ==========================================================================
+           1. CABEÇALHO WEB (Oculto no PDF)
+           ========================================================================== */
+        header {
+            padding: 40px;
+            text-align: center;
+            background-color: var(--gamma-light);
+            border-bottom: 1px solid var(--border-light);
+        }
+        header h1 { font-family: 'Merriweather', serif; color: var(--gamma-dark); font-size: 32px; margin-bottom: 10px; }
+        .print-btn {
+            background-color: var(--gamma-dark); color: white; border: none; padding: 12px 25px;
+            border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 15px; font-size: 15px;
+        }
+
+        /* ==========================================================================
+           2. ESTILO GAMMA - DUAS COLUNAS (2 RECEITAS POR PÁGINA)
+           ========================================================================== */
+        .ebook-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            background: var(--gamma-light);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .recipe-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+        }
+
+        .recipe-card {
+            padding: 50px 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            position: relative;
+        }
+
+        /* ==========================================================================
+           LADOS, CORES E CAPAS DE CAPÍTULO
+           ========================================================================== */
+        /* LADO ESQUERDO (Ímpares) - Escuro */
+        .recipe-card:nth-of-type(odd) { background-color: var(--gamma-dark); color: var(--text-on-dark); }
+        
+        /* LADO DIREITO (Pares) - Claro */
+        .recipe-card:nth-of-type(even) { background-color: var(--gamma-light); color: var(--text-on-light); }
+
+        /* Estilo da Página de Capa (Ocupa as duas colunas) */
+        .chapter-cover {
+            grid-column: 1 / -1; /* Força a ocupar a largura total */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #2a1a17 0%, var(--gamma-dark) 100%);
+            color: #ffffff;
+            text-align: center;
+            padding: 40px;
+        }
+        .chapter-icon {
+            font-size: 60px;
+            color: #C97A53; /* Cor Terracota Elegante */
+            margin-bottom: 25px;
+        }
+        .chapter-number {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 18px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: #C97A53;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+        .chapter-title {
+            font-family: 'Merriweather', serif;
+            font-size: 55px;
+            margin-bottom: 25px;
+            line-height: 1.2;
+        }
+        .chapter-subtitle {
+            font-size: 18px;
+            max-width: 600px;
+            opacity: 0.85;
+            line-height: 1.6;
+        }
+
+        /* ==========================================================================
+           MODO IMPRESSÃO (A4)
+           ========================================================================== */
+        @media print {
+            @page { size: A4 portrait; margin: 0; }
+            body { margin: 0; padding: 0; background-color: #ffffff; }
+            header { display: none !important; }
+            .ebook-container { max-width: 100%; margin: 0; box-shadow: none; border: none; }
+
+            .recipe-grid {
+                display: grid;
+                grid-template-columns: 50% 50%;
+                width: 100%;
+            }
+
+            .recipe-card {
+                break-inside: avoid;
+                height: 297mm !important; 
+                padding: 25mm 20mm !important; 
+                overflow: hidden;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            /* Quebra de página a cada 2 receitas */
+            .recipe-card:nth-of-type(2n) {
+                break-after: page;
+            }
+
+            /* Configuração da Capa no PDF (1 Capa = 1 Página A4 inteira) */
+            .chapter-cover {
+                height: 297mm !important;
+                break-after: page !important; /* Força quebra de página APÓS a capa */
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            /* Numeração de Páginas Limpa (A capa não ganha número visível) */
+            /* body { counter-reset: page_counter; }
+            .recipe-card:nth-of-type(2n)::after {
+                counter-increment: page_counter;
+                content: "Seite " counter(page_counter);
+                position: absolute;
+                bottom: 15mm;
+                right: 20mm;
+                color: #888888;
+                font-size: 12px;
+                font-weight: bold;
+            } */
+        }
+
+        /* ==========================================================================
+           3. TIPOGRAFIA AUMENTADA (Leitura Premium)
+           ========================================================================== */
+        .recipe-title {
+            font-family: 'Merriweather', serif;
+            font-size: 30px; /* Aumentado para preencher bem o espaço */
+            font-weight: 700;
+            margin-bottom: 25px;
+            line-height: 1.3;
+        }
+        
+        .recipe-card:nth-child(odd) .recipe-title { color: #333333; }
+        .recipe-card:nth-child(even) .recipe-title { color: #111111; }
+
+        .recipe-meta { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 35px; }
+        .meta-box {
+            font-size: 12px; 
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            padding: 6px 12px;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
+        .recipe-card:nth-child(odd) .meta-box { border: 1px solid var(--border-dark); }
+        .recipe-card:nth-child(even) .meta-box { border: 1px solid var(--border-light); }
+
+        /* Listas e Tutoriais */
+        .section-title {
+            font-family: 'Merriweather', serif;
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.8;
+        }
+
+        .ingredients-list {
+            margin-bottom: 40px;
+            font-size: 14px; 
+            line-height: 1.8;
+        }
+        .ingredients-list ul { display: inline; padding: 0; margin: 0; list-style: none; }
+        .ingredients-list li { display: inline; }
+        .ingredients-list li::after { content: " · "; font-weight: bold; margin: 0 5px; opacity: 0.5; }
+        .ingredients-list li:last-child::after { content: ""; }
+
+        .steps-list ol { padding-left: 20px; margin: 0; }
+        .steps-list li {
+            margin-bottom: 20px;
+            font-size: 15px; /* Fonte bem legível para instruções detalhadas */
+            line-height: 1.7;
+            padding-left: 10px;
+        }
+        .steps-list li::marker { font-weight: 700; font-size: 16px; }
+
+
+
+
+
+        .main-book-cover {
+            grid-column: 1 / -1; /* Ocupa as duas colunas */
+            width: 100%;
+            height: auto;
+            background-color: #000;
+        }
+        .main-book-cover img {
+            width: 100%;
+            display: block;
+        }
+
+
+
+
+
+
+
+
+/* ==========================================================================
+           MODO IMPRESSÃO (A4)
+           ========================================================================== */
+        @media print {
+            @page { size: A4 portrait; margin: 0; }
+            body { margin: 0; padding: 0; background-color: #ffffff; }
+            header { display: none !important; }
+            .ebook-container { max-width: 100%; margin: 0; box-shadow: none; border: none; }
+
+            .recipe-grid {
+                display: grid;
+                grid-template-columns: 50% 50%;
+                width: 100%;
+            }
+
+            .recipe-card {
+                break-inside: avoid;
+                height: 297mm !important; 
+                padding: 25mm 10mm !important; 
+                overflow: hidden;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            /* Quebra de página a cada 2 receitas */
+            .recipe-card:nth-of-type(2n) {
+                break-after: page;
+            }
+
+            /* Configuração da Capa no PDF (1 Capa = 1 Página A4 inteira) */
+            .chapter-cover {
+                height: 297mm !important;
+                break-after: page !important; /* Força quebra de página APÓS a capa */
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            /* Numeração de Páginas Limpa (A capa não ganha número visível) */
+            body { 
+                counter-reset: page_counter; 
+            }
+
+            /* 1. FORÇA que as receitas não somem nada por padrão (Corrige o pulo de 2 em 2) */
+            .recipe-card {
+                counter-increment: none;
+            }
+
+            /* 2. Conta a capa como 1 página (número invisível) */
+            section.chapter-cover {
+                counter-increment: page_counter 1;
+            }
+
+            /* 3. Conta APENAS a receita da direita (pares) como 1 página */
+            .recipe-card:nth-of-type(even) {
+                counter-increment: page_counter 1;
+            }
+
+            /* 4. Mostra o texto "Seite X" APENAS na receita da direita */
+            .recipe-card:nth-of-type(even)::after {
+                content: "Seite " counter(page_counter);
+                position: absolute;
+                bottom: 15mm;
+                right: 20mm;
+                color: #888888;
+                font-size: 12px;
+                font-weight: bold;
+            }
+
+
+
+
+
+
+
+
+
+            .main-book-cover {
+                height: 297mm !important; /* Força altura A4 */
+                width: 210mm !important;
+                grid-column: 1 / -1;
+                break-after: page; /* Pula para a próxima página após a capa */
+                margin: 0;
+                padding: 0;
+            }
+
+            .main-book-cover img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover; /* Faz a foto preencher a folha sem distorcer */
+            }
+
+            /* GARANTE QUE A CONTAGEM COMECE APÓS A CAPA */
+            body { 
+                counter-reset: page_counter 0; 
+            }
+            
+            /* Esta regra garante que a seção da capa NÃO incremente o contador */
+            section.main-book-cover {
+                counter-increment: none !important;
+            }
+
+
+
+
+
+
+
+
+
+        }
+    </style>
+</head>
+<body>
+
+
+
+
+
+    <header>
+        <h1>Low-Carb-Rezepte für de Airfryer</h1>
+        <p>Leckere, ölfreie Low-Carb-Rezepte - schnell und einfach zubereitet.</p>
+        <button class="print-btn" onclick="window.print()">
+            <i class="fa-solid fa-file-pdf"></i> Als PDF speichern
+        </button>
+    </header>
+
+
+
+
+
+
+    <section class="main-book-cover">
+        <img src="capaairfryer.png" alt="Gesunde & Eiweißreiche Rezepte">
+    </section>
+
+
+    <section class="chapter-cover" style="background: linear-gradient(135deg, #2a1a17 0%, var(--gamma-dark) 100%);">
+                <div class="chapter-icon"><i class="fa-solid fa-weight-scale"></i></div>
+                <div class="chapter-number"></div>
+                <h2 class="chapter-title" style="font-size: 48px; margin-bottom: 20px;">Leitfaden für Low-Carb-Mahlzeiten</h2>
+                <p class="chapter-subtitle" style="font-size: 18px; max-width: 600px; opacity: 0.85; line-height: 1.6;">Optimieren Sie Ihre Zeit mit einer Schritt-für-Schritt-Vorbereitung für die besten Low-Carb-Gerichte.</p>
+    </section>
+
+
+
+    <div class="ebook-container">
+        <div class="recipe-grid">
+
+
+            <!-- Receita 1 -->
+    <div class="recipe-card left-side">
+        <div class="recipe-title">1. Knusprige Hähnchenbrust mit Kräuterkruste</div>
+        <div class="recipe-meta">
+            <div class="meta-box">20 MIN</div>
+            <div class="meta-box">240 KCAL</div>
+            <div class="meta-box">P: 38G | K: 1G | F: 8G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>150g Hähnchenbrustfilet</li><li>1 EL Olivenöl</li><li>1 EL gehackte Kräuter (Rosmarin, Thymian)</li><li>Salz und Pfeffer</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Die Hähnchenbrust trocken tupfen und mit Olivenöl einreiben.</li><li>Mit Salz, Pfeffer und den gehackten Kräutern von allen Seiten würzen.</li><li>Bei 180°C in der Airfryer für 15-18 Minuten garen, bis das Fleisch durch und knusprig ist.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 2 -->
+    <div class="recipe-card right-side">
+        <div class="recipe-title">2. Lachsfilet mit Zitronen-Dill-Note</div>
+        <div class="recipe-meta">
+            <div class="meta-box">12 MIN</div>
+            <div class="meta-box">290 KCAL</div>
+            <div class="meta-box">P: 30G | K: 1G | F: 18G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>150g frisches Lachsfilet</li><li>1/2 Zitrone (Saft und Scheiben)</li><li>1 TL Olivenöl</li><li>Frischer Dill, Salz</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Den Lachs auf der Hautseite mit Olivenöl bepinseln, die Fleischseite salzen.</li><li>Zitronensaft und frischen Dill auf das Filet geben.</li><li>Bei 180°C für 10-12 Minuten in der Airfryer garen.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 3 -->
+    <div class="recipe-card left-side">
+        <div class="recipe-title">3. Würzige Zucchini-Pommes</div>
+        <div class="recipe-meta">
+            <div class="meta-box">15 MIN</div>
+            <div class="meta-box">95 KCAL</div>
+            <div class="meta-box">P: 3G | K: 5G | F: 6G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>1 mittelgroße Zucchini</li><li>1 EL Olivenöl</li><li>2 EL geriebener Parmesan</li><li>Paprikapulver edelsüß, Salz</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Zucchini in pommesgroße Stifte schneiden.</li><li>In einer Schüssel mit Olivenöl, Gewürzen und Parmesan gründlich vermengen.</li><li>Bei 200°C für 12-15 Minuten knusprig frittieren, zwischendurch schütteln.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 4 -->
+    <div class="recipe-card right-side">
+        <div class="recipe-title">4. Klassische Frikadellen (Airfryer-Style)</div>
+        <div class="recipe-meta">
+            <div class="meta-box">18 MIN</div>
+            <div class="meta-box">310 KCAL</div>
+            <div class="meta-box">P: 28G | K: 2G | F: 21G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>150g mageres Rinderhackfleisch</li><li>1/2 kleine Zwiebel (fein gewürfelt)</li><li>1 Ei (Größe M)</li><li>Salz, Pfeffer, Senf</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Hackfleisch mit Zwiebel, Ei, einem TL Senf, Salz und Pfeffer gut verkneten.</li><li>Zwei oder drei gleich große Frikadellen formen.</li><li>In den Korb legen und bei 180°C ca. 15-18 Minuten garen, nach der Hälfte der Zeit wenden.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 5 -->
+    <div class="recipe-card left-side">
+        <div class="recipe-title">5. Gebackener Feta im Alupäckchen</div>
+        <div class="recipe-meta">
+            <div class="meta-box">15 MIN</div>
+            <div class="meta-box">280 KCAL</div>
+            <div class="meta-box">P: 16G | K: 3G | F: 23G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>100g Feta (Schafskäse, Leicht)</li><li>5 Kirschtomaten (halbiert)</li><li>1/2 TL Olivenöl</li><li>Getrockneter Oregano</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Den Feta auf ein Stück Alufolie oder Backpapier legen.</li><li>Tomatenhäfen darum verteilen, mit Olivenöl beträufeln und Oregano bestreuen.</li><li>Das Päckchen leicht schließen und bei 190°C für 15 Minuten in die Airfryer geben.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 6 -->
+    <div class="recipe-card right-side">
+        <div class="recipe-title">6. Knoblauch-Brokkoli-Röschen</div>
+        <div class="recipe-meta">
+            <div class="meta-box">10 MIN</div>
+            <div class="meta-box">85 KCAL</div>
+            <div class="meta-box">P: 4G | K: 6G | F: 5G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>150g Brokkoliröschen (frisch)</li><li>1 EL Olivenöl</li><li>1 Knoblauchzehe (gepresst)</li><li>Salz, Mandelbättchen (optional)</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Brokkoliröschen mit Olivenöl, Knoblauch und Salz in einer Schüssel mischen.</li><li>In den Airfryer-Korb geben.</li><li>Bei 180°C für 8-10 Minuten garen, bis die Spitzen leicht gebräunt sind.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 7 -->
+    <div class="recipe-card left-side">
+        <div class="recipe-title">7. Putenbrust-Spieße mit Paprika</div>
+        <div class="recipe-meta">
+            <div class="meta-box">15 MIN</div>
+            <div class="meta-box">210 KCAL</div>
+            <div class="meta-box">P: 34G | K: 4G | F: 6G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>150g Putenbrustfilet (gewürfelt)</li><li>1/2 rote Paprika (in Stücken)</li><li>1 TL Rapsöl</li><li>Paprikapulver, Salz</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Putenbrust und Paprika abwechselnd auf Holzspieße stecken.</li><li>Mit Rapsöl bepinseln und kräftig mit Paprika und Salz würzen.</li><li>Bei 190°C für 12-15 Minuten in der Airfryer goldbraun garen.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 8 -->
+    <div class="recipe-card right-side">
+        <div class="recipe-title">8. Saftiges Schweinekotelett ohne Panade</div>
+        <div class="recipe-meta">
+            <div class="meta-box">16 MIN</div>
+            <div class="meta-box">295 KCAL</div>
+            <div class="meta-box">P: 32G | K: 0G | F: 18G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>1 Schweinekotelett (ca. 160g)</li><li>1 TL Olivenöl</li><li>Knoblauchpulver, Salz, Pfeffer</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Das Kotelett trocken tupfen, mit Olivenöl einreiben und mit den Gewürzen versehen.</li><li>Den Airfryer auf 200°C vorheizen.</li><li>Das Fleisch für 14-16 Minuten garen, nach halber Zeit einmal wenden.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 9 -->
+    <div class="recipe-card left-side">
+        <div class="recipe-title">9. Kabeljaufilet mit Kräuterbutter-Topping</div>
+        <div class="recipe-meta">
+            <div class="meta-box">12 MIN</div>
+            <div class="meta-box">190 KCAL</div>
+            <div class="meta-box">P: 26G | K: 1G | F: 9G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>150g Kabeljaufilet</li><li>1 TL Kräuterbutter</li><li>1 Spritzer Zitronensaft</li><li>Salz, weißer Pfeffer</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Das Fischfilet salzen, pfeffern und mit Zitronensaft beträufeln.</li><li>In den Airfryer legen (am besten auf ein Stück Backpapier).</li><li>Bei 180°C für 10-12 Minuten garen, direkt nach dem Entnehmen mit Kräuterbutter verfeinern.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 10 -->
+    <div class="recipe-card right-side">
+        <div class="recipe-title">10. Würzige Blumenkohl-Steaks</div>
+        <div class="recipe-meta">
+            <div class="meta-box">18 MIN</div>
+            <div class="meta-box">110 KCAL</div>
+            <div class="meta-box">P: 4G | K: 8G | F: 7G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>1 dicke Scheibe Blumenkohl (aus der Mitte)</li><li>1 EL Olivenöl</li><li>1 TL Currypulver</li><li>Salz und Pfeffer</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Die Blumenkohlscheibe vorsichtig von beiden Seiten mit Olivenöl bestreichen.</li><li>Mit Currypulver, Salz und Pfeffer gleichmäßig würzen.</li><li>Bei 190°C für 15-18 Minuten garen, bis der Blumenkohl zart und am Rand knusprig ist.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 11 -->
+    <div class="recipe-card left-side">
+        <div class="recipe-title">11. Speck-umwickelter grüner Spargel</div>
+        <div class="recipe-meta">
+            <div class="meta-box">12 MIN</div>
+            <div class="meta-box">175 KCAL</div>
+            <div class="meta-box">P: 12G | K: 3G | F: 13G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>150g grüner Spargel</li><li>3 Scheiben Bacon / Frühstücksspeck</li><li>Schwarzer Pfeffer</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Die holzigen Enden des Spargels abschneiden.</li><li>Jeweils 3-4 Spargelstangen mit einer Scheibe Speck fest umwickeln.</li><li>In der Airfryer bei 190°C für 10-12 Minuten garen, bis der Speck knusprig ist.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 12 -->
+    <div class="recipe-card right-side">
+        <div class="recipe-title">12. Rindersteak-Streifen mit Rosmarin</div>
+        <div class="recipe-meta">
+            <div class="meta-box">10 MIN</div>
+            <div class="meta-box">260 KCAL</div>
+            <div class="meta-box">P: 34G | K: 0G | F: 13G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>150g Rumpsteak (in Streifen geschnitten)</li><li>1 TL Olivenöl</li><li>1 Zweig frischer Rosmarin</li><li>Grobkornsalz, Pfeffer</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Die Steakstreifen mit Olivenöl und den Rosmarinnadeln vermengen.</li><li>Die Airfryer auf 200°C vorheizen.</li><li>Die Streifen für 6-8 Minuten (je nach gewünschtem Gargrad) scharf garen, danach salzen und pfeffern.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 13 -->
+    <div class="recipe-card left-side">
+        <div class="recipe-title">13. Gefüllte Champignons mit Kräuter-Frischkäse</div>
+        <div class="recipe-meta">
+            <div class="meta-box">15 MIN</div>
+            <div class="meta-box">140 KCAL</div>
+            <div class="meta-box">P: 8G | K: 4G | F: 10G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>4 große Riesenchampignons</li><li>60g Frischkäse (Magerstufe)</li><li>Frische Kräuter (gehackt)</li><li>Salz, Pfeffer</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Die Pilze säubern, die Stiele vorsichtig herausbrechen.</li><li>Frischkäse mit den gehackten Kräutern, Salz und Pfeffer verrühren.</li><li>Die Masse in die Pilzköpfe füllen und bei 180°C für 12-15 Minuten in die Airfryer geben.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 14 -->
+    <div class="recipe-card right-side">
+        <div class="recipe-title">14. Knusprige Hähnchenschenkel</div>
+        <div class="recipe-meta">
+            <div class="meta-box">25 MIN</div>
+            <div class="meta-box">340 KCAL</div>
+            <div class="meta-box">P: 32G | K: 0G | F: 23G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>1 Hähnchenschenkel (mit Haut)</li><li>1 TL Pflanzenöl</li><li>1 TL Brathähnchen-Gewürzsalz</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Den Schenkel mit etwas Öl einreiben und rundherum mit dem Gewürzsalz einweihen.</li><li>Mit der Hautseite nach oben in den Korb legen.</li><li>Bei 180°C für 22-25 Minuten garen, bis die Haut extrem kross ist.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 15 -->
+    <div class="recipe-card left-side">
+        <div class="recipe-title">15. Auberginen-Scheiben mit Parmesan-Kruste</div>
+        <div class="recipe-meta">
+            <div class="meta-box">15 MIN</div>
+            <div class="meta-box">130 KCAL</div>
+            <div class="meta-box">P: 6G | K: 7G | F: 9G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>1/2 Aubergine</li><li>1 EL Olivenöl</li><li>2 EL geriebener Parmesan</li><li>Knoblauchsalz</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Aubergine in ca. 1 cm dicke Scheiben schneiden.</li><li>Mit Olivenöl bepinseln, mit Knoblauchsalz und Parmesan bestreuen.</li><li>Bei 190°C für 12-15 Minuten goldgelb garen.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 16 -->
+    <div class="recipe-card right-side">
+        <div class="recipe-title">16. Knoblauch-Garnelen-Spieße</div>
+        <div class="recipe-meta">
+            <div class="meta-box">8 MIN</div>
+            <div class="meta-box">160 KCAL</div>
+            <div class="meta-box">P: 24G | K: 2G | F: 6G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>150g geschälte Riesengarnelen</li><li>1 EL Olivenöl</li><li>1 Knoblauchzehe (fein gehackt)</li><li>Zitronensaft, Chili</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Garnelen in einer Schüssel mit Öl, Knoblauch und etwas Chili marinieren.</li><li>Auf Holzspieße stecken.</li><li>Bei 180°C für 6-8 Minuten garen, danach mit Zitronensaft beträufeln.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 17 -->
+    <div class="recipe-card left-side">
+        <div class="recipe-title">17. Gebackener Camembert (Low Carb)</div>
+        <div class="recipe-meta">
+            <div class="meta-box">12 MIN</div>
+            <div class="meta-box">290 KCAL</div>
+            <div class="meta-box">P: 19G | K: 1G | F: 23G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>1 kleiner Camembert (100g, max. 30% F.i.Tr.)</li><li>1 Prise Paprikapulver</li><li>Backpapier</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Den Camembert auf ein Stück passendes Backpapier in den Airfryer legen.</li><li>Die Oberfläche leicht kreuzweise einritzen und mit Paprika bestreuen.</li><li>Bei 180°C für 10-12 Minuten backen, bis der Kern flüssig wird.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 18 -->
+    <div class="recipe-card right-side">
+        <div class="recipe-title">18. Herzhafter Rosenkohl mit Speckwürfeln</div>
+        <div class="recipe-meta">
+            <div class="meta-box">15 MIN</div>
+            <div class="meta-box">160 KCAL</div>
+            <div class="meta-box">P: 8G | K: 8G | F: 10G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>150g Rosenkohl (frisch, halbiert)</li><li>30g magere Schinkenwürfel / Speck</li><li>1 TL Olivenöl</li><li>Muskatnuss</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Rosenkohl putzen, halbieren und mit Olivenöl und Muskatnuss vermengen.</li><li>Zusammen mit den Speckwürfeln in den Korb geben.</li><li>Bei 190°C für 12-15 Minuten rösten, ab und zu schütteln.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 19 -->
+    <div class="recipe-card left-side">
+        <div class="recipe-title">19. Spicy Chicken Wings</div>
+        <div class="recipe-meta">
+            <div class="meta-box">22 MIN</div>
+            <div class="meta-box">310 KCAL</div>
+            <div class="meta-box">P: 28G | K: 1G | F: 21G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>4 Hähnchenflügel (Wings)</li><li>1 TL Rapsöl</li><li>1/2 TL Chiliflocken</li><li>Paprikapulver scharf, Salz</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Die Wings trocken tupfen, mit Öl, Chili, Paprika und Salz marinieren.</li><li>In die Heißluftfritteuse schichten.</li><li>Bei 190°C für 20-22 Minuten garen, nach halber Zeit gut durchschütteln.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 20 -->
+    <div class="recipe-card right-side">
+        <div class="recipe-title">20. Mini-Paprika gefüllt mit Schafskäse</div>
+        <div class="recipe-meta">
+            <div class="meta-box">12 MIN</div>
+            <div class="meta-box">195 KCAL</div>
+            <div class="meta-box">P: 11G | K: 5G | F: 14G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>3 Mini-Paprikaschoten</li><li>60g Schafskäse (Feta, zerbröselt)</li><li>1 TL Kräuter der Provence</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Die Paprikaschoten längs halbieren und entkernen.</li><li>Mit dem zerbröselten Schafskäse füllen und Kräuter darüber streuen.</li><li>Bei 180°C für 10-12 Minuten backen, bis der Käse leicht bräunt.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 21 -->
+    <div class="recipe-card left-side">
+        <div class="recipe-title">21. Hackbällchen mit Feta-Kern</div>
+        <div class="recipe-meta">
+            <div class="meta-box">18 MIN</div>
+            <div class="meta-box">330 KCAL</div>
+            <div class="meta-box">P: 29G | K: 2G | F: 23G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>150g gemischtes Hackfleisch</li><li>30g Feta (in Würfel geschnitten)</li><li>Salz, Pfeffer, Paprika</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Das Hackfleisch mit Gewürzen vermengen und in Portionen teilen.</li><li>In die Mitte jeder Portion einen Würfel Feta legen und zu einem Ball schließen.</li><li>Bei 180°C für 15-18 Minuten in der Airfryer garen.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 22 -->
+    <div class="recipe-card right-side">
+        <div class="recipe-title">22. Zartes Forellenfilet aus der Airfryer</div>
+        <div class="recipe-meta">
+            <div class="meta-box">12 MIN</div>
+            <div class="meta-box">210 KCAL</div>
+            <div class="meta-box">P: 28G | K: 0G | F: 11G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>150g Forellenfilet (mit Haut)</li><li>1 TL Butter (geschmolzen)</li><li>Zitronensaft</li><li>Salz, weißer Pfeffer</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Das Forellenfilet mit Zitronensaft beträufeln, salzen und pfeffern.</li><li>Mit der Hautseite nach unten auf Backpapier in den Korb legen.</li><li>Mit geschmolzener Butter bestreichen und bei 180°C für 10-12 Minuten garen.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 23 -->
+    <div class="recipe-card left-side">
+        <div class="recipe-title">23. Knusprige Zucchini-Chips</div>
+        <div class="recipe-meta">
+            <div class="meta-box">20 MIN</div>
+            <div class="meta-box">75 KCAL</div>
+            <div class="meta-box">P: 2G | K: 5G | F: 5G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>1 kleine Zucchini (in dünne Scheiben gehobelt)</li><li>1/2 TL Olivenöl</li><li>Meersalz</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Die Zucchinischeiben auf Küchenpapier auslegen und leicht salzen, um Wasser zu entziehen; trocken tupfen.</li><li>Mit ganz wenig Olivenöl vermengen.</li><li>Bei 150°C für 18-20 Minuten dörren/backen, bis sie kross sind.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 24 -->
+    <div class="recipe-card right-side">
+        <div class="recipe-title">24. Knusprige Tofu-Würfel</div>
+        <div class="recipe-meta">
+            <div class="meta-box">15 MIN</div>
+            <div class="meta-box">165 KCAL</div>
+            <div class="meta-box">P: 14G | K: 2G | F: 11G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>150g Tofu (natur, fest)</li><li>1 EL Sojasauce (zuckerfrei)</li><li>1 TL Rapsöl</li><li>Knoblauchpulver</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Den Tofu gut auspressen und in gleichmäßige Würfel schneiden.</li><li>Mit Sojasauce, Öl und Knoblauchpulver für 10 Minuten marinieren.</li><li>Bei 200°C für 12-15 Minuten goldbraun und kross frittieren.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 25 -->
+    <div class="recipe-card left-side">
+        <div class="recipe-title">25. Puten-Medaillons mit frischem Rosmarin</div>
+        <div class="recipe-meta">
+            <div class="meta-box">15 MIN</div>
+            <div class="meta-box">220 KCAL</div>
+            <div class="meta-box">P: 36G | K: 1G | F: 8G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>2 kleine Putenmedaillons (ca. 150g)</li><li>1 TL Olivenöl</li><li>1 Rosmarinzweig</li><li>Salz und Pfeffer</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Die Medaillons salzen, pfeffern und mit Olivenöl einreiben.</li><li>Den Rosmarinzweig mit in den Airfryer-Korb legen.</li><li>Bei 185°C für 12-14 Minuten garen, nach der Hälfte der Zeit einmal wenden.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 26 -->
+    <div class="recipe-card right-side">
+        <div class="recipe-title">26. Gebackene Radieschen (Beilage)</div>
+        <div class="recipe-meta">
+            <div class="meta-box">15 MIN</div>
+            <div class="meta-box">60 KCAL</div>
+            <div class="meta-box">P: 1G | K: 3G | F: 5G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>1 Bund Radieschen (halbiert)</li><li>1 TL Olivenöl</li><li>Kräutersalz, Pfeffer</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Radieschen waschen, das Grün entfernen und halbieren.</li><li>In einer Schüssel mit Olivenöl und Kräutersalz vermengen.</li><li>Bei 190°C für 12-15 Minuten rösten (schmecken ähnlich wie milde Bratkartoffeln).</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 27 -->
+    <div class="recipe-card left-side">
+        <div class="recipe-title">27. Cabanossi- und Gemüse-Spieße</div>
+        <div class="recipe-meta">
+            <div class="meta-box">12 MIN</div>
+            <div class="meta-box">280 KCAL</div>
+            <div class="meta-box">P: 14G | K: 4G | F: 23G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>50g Cabanossi (in Scheiben)</li><li>1/2 Zucchini (in dicke Scheiben)</li><li>1 TL Olivenöl</li><li>Paprikapulver</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Cabanossi und Zucchinitaler abwechselnd auf Spieße stecken.</li><li>Zucchini leicht mit Öl bepinseln und würzen.</li><li>Bei 180°C für 10-12 Minuten grillen.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 28 -->
+    <div class="recipe-card right-side">
+        <div class="recipe-title">28. Seelachsfilet mit Senfkruste</div>
+        <div class="recipe-meta">
+            <div class="meta-box">14 MIN</div>
+            <div class="meta-box">210 KCAL</div>
+            <div class="meta-box">P: 28G | K: 2G | F: 10G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>150g Seelachsfilet</li><li>1 EL mittelscharfer Senf</li><li>1 TL saure Sahne</li><li>Salz, Dill</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Fischfilet salzen. Senf mit saurer Sahne und gehacktem Dill verrühren.</li><li>Die Paste gleichmäßig auf der Oberseite des Fisches verstreichen.</li><li>Bei 180°C auf Backpapier für 12-14 Minuten garen.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 29 -->
+    <div class="recipe-card left-side">
+        <div class="recipe-title">29. Schweinefilet im Speckmantel</div>
+        <div class="recipe-meta">
+            <div class="meta-box">20 MIN</div>
+            <div class="meta-box">340 KCAL</div>
+            <div class="meta-box">P: 35G | K: 1G | F: 21G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>150g Schweinefilet (am Stück)</li><li>3 Scheiben Bacon</li><li>Pfeffer, etwas Senf</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Schweinefilet pfeffern und dünn mit Senf bestreichen.</li><li>Fest mit den Baconscheiben umwickeln.</li><li>In den Korb legen und bei 180°C für 18-20 Minuten garen, bis der Speck kross ist.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 30 -->
+    <div class="recipe-card right-side">
+        <div class="recipe-title">30. Gefüllte Zucchini mit Rinderhackfleisch</div>
+        <div class="recipe-meta">
+            <div class="meta-box">20 MIN</div>
+            <div class="meta-box">295 KCAL</div>
+            <div class="meta-box">P: 26G | K: 6G | F: 18G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>1 kleine Zucchini</li><li>100g mageres Rinderhack</li><li>2 EL passierte Tomaten</li><li>Salz, Oregano</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Zucchini längs halbieren, das Innere ausschaben.</li><li>Hackfleisch roh mit Tomatensauce, Gewürzen und Zucchini-Innerem mischen.</li><li>In die Schiffchen füllen und bei 180°C für 20 Minuten backen.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 31 -->
+    <div class="recipe-card left-side">
+        <div class="recipe-title">31. Knuspriger Schweinebauch (Krustenbraten-Style)</div>
+        <div class="recipe-meta">
+            <div class="meta-box">35 MIN</div>
+            <div class="meta-box">420 KCAL</div>
+            <div class="meta-box">P: 22G | K: 0G | F: 38G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>150g Schweinebauch mit Schwarte</li><li>Grobkornsalz</li><li>Kümmel gemahlen</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Die Schwarte rautenförmig einschneiden (nicht ins Fleisch schneiden).</li><li>Die Schwarte dick mit Grobkornsalz einreiben, das Fleisch mit Kümmel und Salz würzen.</li><li>Zuerst 20 Min bei 160°C garen, dann 15 Min bei 200°C aufkrusten lassen.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 32 -->
+    <div class="recipe-card right-side">
+        <div class="recipe-title">32. Grüner Spargel mit Parmesan-Topping</div>
+        <div class="recipe-meta">
+            <div class="meta-box">10 MIN</div>
+            <div class="meta-box">110 KCAL</div>
+            <div class="meta-box">P: 6G | K: 3G | F: 8G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>150g frischer grüner Spargel</li><li>1 TL Olivenöl</li><li>2 EL Parmesan (gerieben)</li><li>Salz, Pfeffer</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Die holzigen Enden des Spargels abschneiden.</li><li>In der Airfryer mit Olivenöl, Salz und Pfeffer vermengen.</li><li>Bei 190°C für 8 Minuten garen, in den letzten 2 Minuten mit Parmesan bestreuen.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 33 -->
+    <div class="recipe-card left-side">
+        <div class="recipe-title">33. Würzige Sellerie-Pommes</div>
+        <div class="recipe-meta">
+            <div class="meta-box">20 MIN</div>
+            <div class="meta-box">120 KCAL</div>
+            <div class="meta-box">P: 3G | K: 7G | F: 9G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>200g Knollensellerie</li><li>1 EL Olivenöl</li><li>Paprikapulver edelsüß</li><li>Salz, Knoblauchpulver</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Knollensellerie schälen und in dünne Pommes-Stifte schneiden.</li><li>Mit Olivenöl und den Gewürzen in einer Schüssel kräftig durchmengen.</li><li>Bei 200°C für 18-20 Minuten kross garen, mehrfach kräftig schütteln.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 34 -->
+    <div class="recipe-card right-side">
+        <div class="recipe-title">34. Hähnchen-Nuggets mit Mandelmehl-Panade</div>
+        <div class="recipe-meta">
+            <div class="meta-box">15 MIN</div>
+            <div class="meta-box">265 KCAL</div>
+            <div class="meta-box">P: 36G | K: 3G | F: 12G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>150g Hähnchenbrustfilet (in Stücken)</li><li>1 Ei (verquirlt)</li><li>2 EL Mandelmehl (entölt)</li><li>Salz, Paprika</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Mandelmehl mit Salz und Paprika in einem tiefen Teller mischen.</li><li>Hähnchenstücke zuerst im Ei, dann in der Mandelmehl-Mischung wenden.</li><li>Bei 190°C für 12-15 Minuten goldbraun frittieren.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 35 -->
+    <div class="recipe-card left-side">
+        <div class="recipe-title">35. Gebackene Eier im Förmchen</div>
+        <div class="recipe-meta">
+            <div class="meta-box">10 MIN</div>
+            <div class="meta-box">160 KCAL</div>
+            <div class="meta-box">P: 13G | K: 1G | F: 11G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>2 ganze Eier</li><li>1 TL Halbfettbutter (zum Einfetten)</li><li>Schnittlauch</li><li>Salz, Pfeffer</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Zwei kleine ofenfeste Förmchen (Ramequins) mit etwas Butter einfetten.</li><li>In jedes Förmchen ein Ei hineinschlagen, salzen und pfeffern.</li><li>Bei 160°C für 8-10 Minuten in die Airfryer stellen, bis das Eiweiß fest ist.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 36 -->
+    <div class="recipe-card right-side">
+        <div class="recipe-title">36. Tomaten mit Mozzarella überbacken</div>
+        <div class="recipe-meta">
+            <div class="meta-box">10 MIN</div>
+            <div class="meta-box">195 KCAL</div>
+            <div class="meta-box">P: 14G | K: 4G | F: 14G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>2 große Strauchtomaten</li><li>60g Mozzarella (Leicht)</li><li>1/2 TL Olivenöl</li><li>Italienische Kräuter</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Den Deckel der Tomaten abschneiden und Tomaten leicht aushöhlen.</li><li>Mozzarella würfeln, mit Kräutern mischen und in die Tomaten füllen.</li><li>Mit Olivenöl beträufeln und bei 180°C für 8-10 Minuten überbacken.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 37 -->
+    <div class="recipe-card left-side">
+        <div class="recipe-title">37. Knusprige Kohlrabi-Pommes</div>
+        <div class="recipe-meta">
+            <div class="meta-box">18 MIN</div>
+            <div class="meta-box">90 KCAL</div>
+            <div class="meta-box">P: 3G | K: 6G | F: 5G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>1 großer Kohlrabi</li><li>1 TL Olivenöl</li><li>Kräutersalz</li><li>Paprikapulver</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Kohlrabi schälen und in gleichmäßige Stifte schneiden.</li><li>Mit Olivenöl und Gewürzen gründlich vermengen.</li><li>Bei 190°C für 15-18 Minuten garen, zwischendurch schütteln.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 38 -->
+    <div class="recipe-card right-side">
+        <div class="recipe-title">38. Rinder-Spieße mit grünem Gemüsemix</div>
+        <div class="recipe-meta">
+            <div class="meta-box">12 MIN</div>
+            <div class="meta-box">240 KCAL</div>
+            <div class="meta-box">P: 32G | K: 3G | F: 11G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>150g mageres Rindfleisch (gewürfelt)</li><li>1/2 grüne Paprika</li><li>1 TL Rapsöl</li><li>Steakgewürz</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Fleisch und Paprikastücke abwechselnd auf Spieße stecken.</li><li>Mit Öl bepinseln und mit Steakgewürz versehen.</li><li>Bei 200°C für 10-12 Minuten grillen.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 39 -->
+    <div class="recipe-card left-side">
+        <div class="recipe-title">39. Gebackener Curry-Blumenkohl</div>
+        <div class="recipe-meta">
+            <div class="meta-box">15 MIN</div>
+            <div class="meta-box">90 KCAL</div>
+            <div class="meta-box">P: 4G | K: 7G | F: 5G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>150g Blumenkohlröschen</li><li>1 TL Olivenöl</li><li>1 TL mildes Currypulver</li><li>Salz</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Die Blumenkohlröschen mit Olivenöl, Currypulver und Salz marinieren.</li><li>In den Korb geben.</li><li>Bei 190°C für 12-15 Minuten goldbraun rösten.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 40 -->
+    <div class="recipe-card right-side">
+        <div class="recipe-title">40. Lammkoteletts mit Thymian-Knoblauch-Note</div>
+        <div class="recipe-meta">
+            <div class="meta-box">14 MIN</div>
+            <div class="meta-box">285 KCAL</div>
+            <div class="meta-box">P: 28G | K: 1G | F: 19G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>2 kleine Lammkoteletts (ca. 150g)</li><li>1 TL Olivenöl</li><li>1 Knoblauchzehe (gehackt)</li><li>Frischer Thymian, Salz</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Koteletts mit Olivenöl, Knoblauch und Thymian einreiben.</li><li>Die Airfryer auf 200°C vorheizen.</li><li>Das Fleisch für 12-14 Minuten garen (nach halber Zeit wenden).</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 41 -->
+    <div class="recipe-card left-side">
+        <div class="recipe-title">41. Doradenfilet aus der Heißluftfritteuse</div>
+        <div class="recipe-meta">
+            <div class="meta-box">12 MIN</div>
+            <div class="meta-box">180 KCAL</div>
+            <div class="meta-box">P: 28G | K: 0G | F: 7G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>150g Doradenfilet (mit Haut)</li><li>1/2 TL Olivenöl</li><li>Zitronenscheiben</li><li>Meersalz, Pfeffer</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Das Filet waschen, trocken tupfen, salzen und pfeffern.</li><li>Mit der Hautseite nach unten auf Backpapier in den Korb legen, Zitronenscheiben darauf platzieren.</li><li>Bei 180°C für 10-12 Minuten zart garen.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 42 -->
+    <div class="recipe-card right-side">
+        <div class="recipe-title">42. Würzige Cabanossi-Chips (Snack)</div>
+        <div class="recipe-meta">
+            <div class="meta-box">8 MIN</div>
+            <div class="meta-box">190 KCAL</div>
+            <div class="meta-box">P: 10G | K: 1G | F: 16G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>50g Cabanossi (in hauchdünne Scheiben geschnitten)</li><li>Paprika edelsüß</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Die dünnen Wurstscheiben flach im Korb verteilen.</li><li>Mit einer Prise Paprikapulver bestreuen.</li><li>Bei 190°C für 6-8 Minuten rösten, bis sie kross wie Chips sind (auf Küchenpapier abtropfen lassen).</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 43 -->
+    <div class="recipe-card left-side">
+        <div class="recipe-title">43. Avocado mit Ei gebacken</div>
+        <div class="recipe-meta">
+            <div class="meta-box">15 MIN</div>
+            <div class="meta-box">245 KCAL</div>
+            <div class="meta-box">P: 8G | K: 4G | F: 22G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>1/2 reife Avocado</li><li>1 kleines Ei</li><li>Salz, Chiliflocken</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Aus der Avocadohälfte den Kern entfernen, die Mulde mit einem Löffel minimal vergrößern.</li><li>Die Avocado stabil in ein kleines Förmchen oder den Korb setzen.</li><li>Das Ei vorsichtig in die Mulde gleiten lassen, würzen und bei 170°C für 12-15 Minuten garen.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 44 -->
+    <div class="recipe-card right-side">
+        <div class="recipe-title">44. Hähnchenbrust gefüllt mit cremigem Spinat</div>
+        <div class="recipe-meta">
+            <div class="meta-box">22 MIN</div>
+            <div class="meta-box">280 KCAL</div>
+            <div class="meta-box">P: 40G | K: 2G | F: 12G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>150g Hähnchenbrustfilet</li><li>30g Blattspinat (gehackt)</li><li>1 EL Frischkäse</li><li>Salz, Zahnstocher</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>In die Hähnchenbrust seitlich eine Tasche einschneiden.</li><li>Spinat mit Frischkäse und Salz mischen, in die Tasche füllen und mit Zahnstochern fixieren.</li><li>Bei 180°C für 20-22 Minuten garen.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 45 -->
+    <div class="recipe-card left-side">
+        <div class="recipe-title">45. Bunte Pilz-Pfanne aus der Airfryer</div>
+        <div class="recipe-meta">
+            <div class="meta-box">12 MIN</div>
+            <div class="meta-box">95 KCAL</div>
+            <div class="meta-box">P: 5G | K: 4G | F: 7G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>150g gemischte Pilze (Champignons, Kräuterseitlinge)</li><li>1 TL Olivenöl</li><li>1/2 kleine Zwiebel</li><li>Petersilie, Salz</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Pilze vierteln, Zwiebel in feine Streifen schneiden.</li><li>Alles mit Olivenöl und Salz in einer Form vermengen, die in die Airfryer passt.</li><li>Bei 190°C für 10-12 Minuten garen, danach mit Petersilie bestreuen.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 46 -->
+    <div class="recipe-card right-side">
+        <div class="recipe-title">46. Low-Carb Fischstäbchen mit Kokos-Panade</div>
+        <div class="recipe-meta">
+            <div class="meta-box">15 MIN</div>
+            <div class="meta-box">240 KCAL</div>
+            <div class="meta-box">P: 26G | K: 3G | F: 14G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>150g festes Seelachsfilet (in Streifen)</li><li>1 Ei (verquirlt)</li><li>2 EL Kokosraspeln (ungesüßt)</li><li>Salz</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Fischstreifen salzen.</li><li>Zuerst im verquirlten Ei, dann in den Kokosraspeln wenden.</li><li>Bei 180°C für 12-15 Minuten goldbraun und knusprig garen.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 47 -->
+    <div class="recipe-card left-side">
+        <div class="recipe-title">47. Knusprige Entenbrust (Heißluft-Style)</div>
+        <div class="recipe-meta">
+            <div class="meta-box">25 MIN</div>
+            <div class="meta-box">360 KCAL</div>
+            <div class="meta-box">P: 30G | K: 0G | F: 26G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>150g Entenbrustfilet (mit Haut)</li><li>Salz, eine Prise Fünf-Gewürze-Pulver</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Die Haut der Entenbrust rautenförmig einschneiden und salzen.</li><li>Mit der Hautseite nach unten in den Korb legen.</li><li>15 Min bei 170°C garen, dann wenden und weitere 8-10 Min bei 200°C kross braten.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 48 -->
+    <div class="recipe-card right-side">
+        <div class="recipe-title">48. Gebackener Harzer Käse im Speckmantel</div>
+        <div class="recipe-meta">
+            <div class="meta-box">12 MIN</div>
+            <div class="meta-box">220 KCAL</div>
+            <div class="meta-box">P: 24G | K: 1G | F: 13G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>1 Rolle Harzer Käse (ca. 50g)</li><li>2 Scheiben Bacon / Speck</li><li>Kümmel (optional)</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Den Harzer Käse nach Wunsch mit etwas Kümmel bestreuen.</li><li>Fest mit den Baconscheiben umwickeln, sodass der Käse gut umschlossen ist.</li><li>Bei 190°C für 10-12 Minuten backen, bis der Speck perfekt kross ist.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 49 -->
+    <div class="recipe-card left-side">
+        <div class="recipe-title">49. Schinken-Lauch-Röllchen</div>
+        <div class="recipe-meta">
+            <div class="meta-box">15 MIN</div>
+            <div class="meta-box">180 KCAL</div>
+            <div class="meta-box">P: 16G | K: 5G | F: 11G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>1 kleine Stange Lauch (nur das Weiße/Hellgrüne)</li><li>3 Scheiben Kochschinken</li><li>1 EL Reibekäse (fettreduziert)</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Den Lauch in ca. 10 cm lange Stücke schneiden und 5 Minuten vorkochen; gut abtropfen lassen.</li><li>Jedes Lauchstück in eine Scheibe Kochschinken einrollen.</li><li>In eine kleine Form legen, mit Käse bestreuen und bei 180°C für 10 Minuten überbacken.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 50 -->
+    <div class="recipe-card right-side">
+        <div class="recipe-title">50. Hokkaido-Kürbisspalten (Low Carb Portion)</div>
+        <div class="recipe-meta">
+            <div class="meta-box">18 MIN</div>
+            <div class="meta-box">110 KCAL</div>
+            <div class="meta-box">P: 2G | K: 12G | F: 6G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>150g Hokkaido-Kürbis (mit Schale, entkernt)</li><li>1 TL Olivenöl</li><li>Salz, eine Prise Muskatnuss</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Den gewaschenen Hokkaido-Kürbis in schmale Spalten schneiden.</li><li>Mit Olivenöl, Salz und Muskatnuss in einer Schüssel marinieren.</li><li>In die Airfryer geben und bei 190°C für 15-18 Minuten garen, bis sie weich und leicht gebräunt sind.</li>
+            </ol>
+        </div>
+    </div>
+
+
+
+
+        </div>
+    </div>
+</body>
+</html>

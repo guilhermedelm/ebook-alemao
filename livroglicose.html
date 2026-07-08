@@ -1,0 +1,2578 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interaktives E-Book: Abnehmrezepte (Premium Layout)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <style>
+        :root {
+            --gamma-dark: #F4F9F9; /* Marrom escuro café */
+            --gamma-light: #FBF8F3;
+            --text-on-dark: #333333;
+            --text-on-light: #333333;
+            --border-dark: rgba(255, 255, 255, 0.15); 
+            --border-light: rgba(0, 0, 0, 0.15);      
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background-color: #f0eae1;
+            font-family: 'DM Sans', sans-serif;
+            line-height: 1.6;
+        }
+
+        /* ==========================================================================
+           1. CABEÇALHO WEB (Oculto no PDF)
+           ========================================================================== */
+        header {
+            padding: 40px;
+            text-align: center;
+            background-color: var(--gamma-light);
+            border-bottom: 1px solid var(--border-light);
+        }
+        header h1 { font-family: 'Merriweather', serif; color: var(--gamma-dark); font-size: 32px; margin-bottom: 10px; }
+        .print-btn {
+            background-color: var(--gamma-dark); color: white; border: none; padding: 12px 25px;
+            border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 15px; font-size: 15px;
+        }
+
+        /* ==========================================================================
+           2. ESTILO GAMMA - DUAS COLUNAS (2 RECEITAS POR PÁGINA)
+           ========================================================================== */
+        .ebook-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            background: var(--gamma-light);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .recipe-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+        }
+
+        .recipe-card {
+            padding: 50px 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            position: relative;
+        }
+
+        /* ==========================================================================
+           LADOS, CORES E CAPAS DE CAPÍTULO
+           ========================================================================== */
+        /* LADO ESQUERDO (Ímpares) - Escuro */
+        .recipe-card:nth-of-type(odd) { background-color: var(--gamma-dark); color: var(--text-on-dark); }
+        
+        /* LADO DIREITO (Pares) - Claro */
+        .recipe-card:nth-of-type(even) { background-color: var(--gamma-light); color: var(--text-on-light); }
+
+        /* Estilo da Página de Capa (Ocupa as duas colunas) */
+        .chapter-cover {
+            grid-column: 1 / -1; /* Força a ocupar a largura total */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #2a1a17 0%, var(--gamma-dark) 100%);
+            color: #ffffff;
+            text-align: center;
+            padding: 40px;
+        }
+        .chapter-icon {
+            font-size: 60px;
+            color: #C97A53; /* Cor Terracota Elegante */
+            margin-bottom: 25px;
+        }
+        .chapter-number {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 18px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: #C97A53;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+        .chapter-title {
+            font-family: 'Merriweather', serif;
+            font-size: 55px;
+            margin-bottom: 25px;
+            line-height: 1.2;
+        }
+        .chapter-subtitle {
+            font-size: 18px;
+            max-width: 600px;
+            opacity: 0.85;
+            line-height: 1.6;
+        }
+
+        /* ==========================================================================
+           MODO IMPRESSÃO (A4)
+           ========================================================================== */
+        @media print {
+            @page { size: A4 portrait; margin: 0; }
+            body { margin: 0; padding: 0; background-color: #ffffff; }
+            header { display: none !important; }
+            .ebook-container { max-width: 100%; margin: 0; box-shadow: none; border: none; }
+
+            .recipe-grid {
+                display: grid;
+                grid-template-columns: 50% 50%;
+                width: 100%;
+            }
+
+            .recipe-card {
+                break-inside: avoid;
+                height: 297mm !important; 
+                padding: 25mm 20mm !important; 
+                overflow: hidden;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            /* Quebra de página a cada 2 receitas */
+            .recipe-card:nth-of-type(2n) {
+                break-after: page;
+            }
+
+            /* Configuração da Capa no PDF (1 Capa = 1 Página A4 inteira) */
+            .chapter-cover {
+                height: 297mm !important;
+                break-after: page !important; /* Força quebra de página APÓS a capa */
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            /* Numeração de Páginas Limpa (A capa não ganha número visível) */
+            /* body { counter-reset: page_counter; }
+            .recipe-card:nth-of-type(2n)::after {
+                counter-increment: page_counter;
+                content: "Seite " counter(page_counter);
+                position: absolute;
+                bottom: 15mm;
+                right: 20mm;
+                color: #888888;
+                font-size: 12px;
+                font-weight: bold;
+            } */
+        }
+
+        /* ==========================================================================
+           3. TIPOGRAFIA AUMENTADA (Leitura Premium)
+           ========================================================================== */
+        .recipe-title {
+            font-family: 'Merriweather', serif;
+            font-size: 30px; /* Aumentado para preencher bem o espaço */
+            font-weight: 700;
+            margin-bottom: 25px;
+            line-height: 1.3;
+        }
+        
+        .recipe-card:nth-child(odd) .recipe-title { color: #333333; }
+        .recipe-card:nth-child(even) .recipe-title { color: #111111; }
+
+        .recipe-meta { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 35px; }
+        .meta-box {
+            font-size: 12px; 
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            padding: 6px 12px;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
+        .recipe-card:nth-child(odd) .meta-box { border: 1px solid var(--border-dark); }
+        .recipe-card:nth-child(even) .meta-box { border: 1px solid var(--border-light); }
+
+        /* Listas e Tutoriais */
+        .section-title {
+            font-family: 'Merriweather', serif;
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.8;
+        }
+
+        .ingredients-list {
+            margin-bottom: 40px;
+            font-size: 14px; 
+            line-height: 1.8;
+        }
+        .ingredients-list ul { display: inline; padding: 0; margin: 0; list-style: none; }
+        .ingredients-list li { display: inline; }
+        .ingredients-list li::after { content: " · "; font-weight: bold; margin: 0 5px; opacity: 0.5; }
+        .ingredients-list li:last-child::after { content: ""; }
+
+        .steps-list ol { padding-left: 20px; margin: 0; }
+        .steps-list li {
+            margin-bottom: 20px;
+            font-size: 15px; /* Fonte bem legível para instruções detalhadas */
+            line-height: 1.7;
+            padding-left: 10px;
+        }
+        .steps-list li::marker { font-weight: 700; font-size: 16px; }
+
+
+
+
+
+        .main-book-cover {
+            grid-column: 1 / -1; /* Ocupa as duas colunas */
+            width: 100%;
+            height: auto;
+            background-color: #000;
+        }
+        .main-book-cover img {
+            width: 100%;
+            display: block;
+        }
+
+
+
+
+
+
+
+
+/* ==========================================================================
+           MODO IMPRESSÃO (A4)
+           ========================================================================== */
+        @media print {
+            @page { size: A4 portrait; margin: 0; }
+            body { margin: 0; padding: 0; background-color: #ffffff; }
+            header { display: none !important; }
+            .ebook-container { max-width: 100%; margin: 0; box-shadow: none; border: none; }
+
+            .recipe-grid {
+                display: grid;
+                grid-template-columns: 50% 50%;
+                width: 100%;
+            }
+
+            .recipe-card {
+                break-inside: avoid;
+                height: 297mm !important; 
+                padding: 25mm 10mm !important; 
+                overflow: hidden;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            /* Quebra de página a cada 2 receitas */
+            .recipe-card:nth-of-type(2n) {
+                break-after: page;
+            }
+
+            /* Configuração da Capa no PDF (1 Capa = 1 Página A4 inteira) */
+            .chapter-cover {
+                height: 297mm !important;
+                break-after: page !important; /* Força quebra de página APÓS a capa */
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            /* Numeração de Páginas Limpa (A capa não ganha número visível) */
+            body { 
+                counter-reset: page_counter; 
+            }
+
+            /* 1. FORÇA que as receitas não somem nada por padrão (Corrige o pulo de 2 em 2) */
+            .recipe-card {
+                counter-increment: none;
+            }
+
+            /* 2. Conta a capa como 1 página (número invisível) */
+            section.chapter-cover {
+                counter-increment: page_counter 1;
+            }
+
+            /* 3. Conta APENAS a receita da direita (pares) como 1 página */
+            .recipe-card:nth-of-type(even) {
+                counter-increment: page_counter 1;
+            }
+
+            /* 4. Mostra o texto "Seite X" APENAS na receita da direita */
+            .recipe-card:nth-of-type(even)::after {
+                content: "Seite " counter(page_counter);
+                position: absolute;
+                bottom: 15mm;
+                right: 20mm;
+                color: #888888;
+                font-size: 12px;
+                font-weight: bold;
+            }
+
+
+
+
+
+
+
+
+
+            .main-book-cover {
+                height: 297mm !important; /* Força altura A4 */
+                width: 210mm !important;
+                grid-column: 1 / -1;
+                break-after: page; /* Pula para a próxima página após a capa */
+                margin: 0;
+                padding: 0;
+            }
+
+            .main-book-cover img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover; /* Faz a foto preencher a folha sem distorcer */
+            }
+
+            /* GARANTE QUE A CONTAGEM COMECE APÓS A CAPA */
+            body { 
+                counter-reset: page_counter 0; 
+            }
+            
+            /* Esta regra garante que a seção da capa NÃO incremente o contador */
+            section.main-book-cover {
+                counter-increment: none !important;
+            }
+
+
+
+
+
+
+
+
+
+        }
+    </style>
+</head>
+<body>
+
+
+
+
+
+    <header>
+        <h1>30 Getränkerezepte</h1>
+        <p>Shakes, Säfte, Smoothies und vieles mehr.</p>
+        <button class="print-btn" onclick="window.print()">
+            <i class="fa-solid fa-file-pdf"></i> Als PDF speichern
+        </button>
+    </header>
+
+
+
+
+
+
+    <section class="main-book-cover">
+        <img src="capaglicose.png" alt="Gesunde & Eiweißreiche Rezepte">
+    </section>
+
+
+    <section class="chapter-cover" style="background: linear-gradient(135deg, #2a1a17 0%, var(--gamma-dark) 100%);">
+                <div class="chapter-icon"><i class="fa-solid fa-weight-scale"></i></div>
+                <div class="chapter-number"></div>
+                <h2 class="chapter-title" style="font-size: 48px; margin-bottom: 20px;">Leitfaden für Low-Carb-Mahlzeiten</h2>
+                <p class="chapter-subtitle" style="font-size: 18px; max-width: 600px; opacity: 0.85; line-height: 1.6;">Optimieren Sie Ihre Zeit mit einer Schritt-für-Schritt-Vorbereitung für die besten Low-Carb-Gerichte.</p>
+    </section>
+
+
+
+    <div class="ebook-container">
+        <div class="recipe-grid">
+
+
+
+ <!-- Receita 1 -->
+    <div class="recipe-card left-side">
+        <div class="recipe-title">1. Gedämpfter Brokkoli mit Pinienkernen und Olivenöl</div>
+        <div class="recipe-meta">
+            <div class="meta-box">12 MIN</div>
+            <div class="meta-box">110 KCAL</div>
+            <div class="meta-box">P: 4G | K: 4G | F: 8G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>150g frische Brokkoliröschen</li><li>1 EL natives Olivenöl extra</li><li>10g Pinienkerne</li><li>Eine Prise Meersalz</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Die Brokkoliröschen in einem Dämpfeinsatz über kochendem Wasser für 6-8 Minuten bissfest dämpfen.</li><li>In der Zwischenzeit die Pinienkerne in einer Pfanne ohne Fett goldbraun anrösten.</li><li>Den warmen Brokkoli auf einem Teller anrichten, mit Olivenöl beträufeln und mit den Pinienkernen bestreuen.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 2 -->
+    <div class="recipe-card right-side">
+        <div class="recipe-title">2. Avocado-Salat mit Walnüssen und Zitrone</div>
+        <div class="recipe-meta">
+            <div class="meta-box">8 MIN</div>
+            <div class="meta-box">245 KCAL</div>
+            <div class="meta-box">P: 4G | K: 3G | F: 23G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>1/2 reife Avocado</li><li>15g Walnusskerne (grob gehackt)</li><li>1 EL frischer Zitronensaft</li><li>Salz und grober Pfeffer</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Das Fruchtfleisch der Avocado in gleichmäßige Würfel schneiden.</li><li>Sofort mit dem Zitronensaft beträufeln, um eine Oxidation zu verhindern.</li><li>Die gehackten Walnusskerne dazugeben, vorsichtig vermengen und mit Salz und Pfeffer abschmecken.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 3 -->
+    <div class="recipe-card left-side">
+        <div class="recipe-title">3. Chiasamen-Pudding mit ungesüßter Mandelmilch</div>
+        <div class="recipe-meta">
+            <div class="meta-box">5 MIN</div>
+            <div class="meta-box">130 KCAL</div>
+            <div class="meta-box">P: 5G | K: 2G | F: 9G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>2 EL Chiasamen (ca. 20g)</li><li>150ml ungesüßte Mandelmilch</li><li>1/4 TL gemahlener Zimt</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Die Chiasamen zusammen mit der Mandelmilch und dem Zimt in ein Glas geben.</li><li>Mit einem Löffel gründlich verrühren, damit sich keine Klümpchen bilden.</li><li>Abdecken und für mindestens 3 Stunden oder über Nacht im Kühlschrank quellen lassen.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 4 -->
+    <div class="recipe-card right-side">
+        <div class="recipe-title">4. Gebratenes Lachsfilet auf Spinatbett</div>
+        <div class="recipe-meta">
+            <div class="meta-box">20 MIN</div>
+            <div class="meta-box">310 KCAL</div>
+            <div class="meta-box">P: 32G | K: 2G | F: 19G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>150g frisches Lachsfilet</li><li>150g frischer Babyspinat</li><li>1 TL Olivenöl</li><li>1 Knoblauchzehe (fein gehackt)</li><li>Salz, Pfeffer</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Das Lachsfilet salzen, pfeffern und in einer Pfanne mit der Hälfte des Olivenöls von jeder Seite 3-4 Minuten braten.</li><li>In einer zweiten Pfanne das restliche Öl erhitzen, Knoblauch andünsten und den Spinat hinzufügen, bis er zusammenfällt.</li><li>Den Spinat mit Salz und Pfeffer würzen und das Lachsfilet darauf anrichten.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 5 -->
+    <div class="recipe-card left-side">
+        <div class="recipe-title">5. Rührei mit Tomaten und frischem Schnittlauch</div>
+        <div class="recipe-meta">
+            <div class="meta-box">10 MIN</div>
+            <div class="meta-box">185 KCAL</div>
+            <div class="meta-box">P: 14G | K: 3G | F: 13G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>2 ganze Hühnereier</li><li>4 kleine Kirschtomaten (gewürfelt)</li><li>1 TL Rapsöl</li><li>Frischer Schnittlauch</li><li>Salz, Pfeffer</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Die Eier in einer Schüssel verquirlen, mit einer Prise Salz und Pfeffer würzen.</li><li>Das Rapsöl in einer Pfanne erhitzen und die Tomatenwürfel darin 1-2 Minuten andünsten.</li><li>Die Eimasse hinzufügen und bei mittlerer Hitze unter sanftem Rühren stocken lassen; mit Schnittlauch garnieren.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 6 -->
+    <div class="recipe-card right-side">
+        <div class="recipe-title">6. Hüttenkäse mit Salatgurke und Leinsamen</div>
+        <div class="recipe-meta">
+            <div class="meta-box">5 MIN</div>
+            <div class="meta-box">160 KCAL</div>
+            <div class="meta-box">P: 24G | K: 4G | F: 5G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>200g körniger Frischkäse (Magerstufe)</li><li>1/3 Salatgurke (gewürfelt)</li><li>1 TL geschrotete Leinsamen</li><li>Kräutersalz</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Den körnigen Frischkäse in eine kleine Schüssel geben.</li><li>Die Gurkenwürfel und die geschroteten Leinsamen gleichmäßig unterrühren.</li><li>Mit etwas Kräutersalz abschmecken und direkt servieren.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 7 -->
+    <div class="recipe-card left-side">
+        <div class="recipe-title">7. Hähnchenbrustfilet mit gedünstetem Blumenkohl</div>
+        <div class="recipe-meta">
+            <div class="meta-box">22 MIN</div>
+            <div class="meta-box">260 KCAL</div>
+            <div class="meta-box">P: 38G | K: 5G | F: 8G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>150g Hähnchenbrustfilet</li><li>150g Blumenkohlröschen</li><li>1 TL Rapsöl</li><li>Paprikapulver edelsüß</li><li>Salz, Pfeffer</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Den Blumenkohl in kochendem Salzwasser ca. 8-10 Minuten bissfest garen.</li><li>Die Hähnchenbrust mit Paprikapulver, Salz und Pfeffer einreiben und im heißen Rapsöl von beiden Seiten ca. 5-6 Minuten braten.</li><li>Zusammen auf einem Teller anrichten und servieren.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 8 -->
+    <div class="recipe-card right-side">
+        <div class="recipe-title">8. Sellerie-Sticks mit ungesüßter Erdnussbutter</div>
+        <div class="recipe-meta">
+            <div class="meta-box">5 MIN</div>
+            <div class="meta-box">145 KCAL</div>
+            <div class="meta-box">P: 6G | K: 4G | F: 11G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>2 Stangen Staudensellerie</li><li>1 EL reine Erdnussbutter (100% Erdnüsse, ohne Zuckerzusatz)</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Den Staudensellerie gründlich waschen, die Fäden ziehen und in ca. 8 cm lange Stücke schneiden.</li><li>Die Erdnussbutter gleichmäßig in die Wölbung der Selleriestangen streichen.</li><li>Als ballaststoffreichen und blutzuckerschonenden Snack servieren.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 9 -->
+    <div class="recipe-card left-side">
+        <div class="recipe-title">9. Gebackener Feta mit Oliven und Tomaten</div>
+        <div class="recipe-meta">
+            <div class="meta-box">18 MIN</div>
+            <div class="meta-box">280 KCAL</div>
+            <div class="meta-box">P: 15G | K: 4G | F: 22G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>100g Feta (Leicht, 9% Fett absolut)</li><li>5 Kirschtomaten (halbiert)</li><li>4 schwarze Oliven (entsteint)</li><li>1/2 TL Olivenöl</li><li>Oregano</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Den Backofen auf 200°C vorheizen. Den Feta in eine kleine Auflaufform legen.</li><li>Die Tomatenhälften und Oliven um den Käse herum verteilen.</li><li>Mit Olivenöl beträufeln, mit getrocknetem Oregano bestreuen und 15 Minuten backen.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 10 -->
+    <div class="recipe-card right-side">
+        <div class="recipe-title">10. Thunfisch-Salat mit Zwiebeln und Olivenöl</div>
+        <div class="recipe-meta">
+            <div class="meta-box">5 MIN</div>
+            <div class="meta-box">220 KCAL</div>
+            <div class="meta-box">P: 28G | K: 1G | F: 11G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>1 Dose Thunfisch (im eigenen Saft, abgetropft)</li><li>1/2 kleine rote Zwiebel (in feinen Ringen)</li><li>1 EL natives Olivenöl extra</li><li>Zitronensaft, Pfeffer</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Den abgetropften Thunfisch mit einer Gabel in einer Schüssel grob zerteilen.</li><li>Die feinen Zwiebelringe dazugeben.</li><li>Olivenöl und einen Spritzer Zitronensaft unterrühren, mit Pfeffer abschmecken.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 11 -->
+    <div class="recipe-card left-side">
+        <div class="recipe-title">11. Rindfleisch-Streifen mit grünen Bohnen</div>
+        <div class="recipe-meta">
+            <div class="meta-box">20 MIN</div>
+            <div class="meta-box">295 KCAL</div>
+            <div class="meta-box">P: 34G | K: 5G | F: 14G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>150g mageres Rinderfilet oder Hüftsteak</li><li>150g grüne Bohnen (frisch oder TK)</li><li>1 TL Pflanzenöl</li><li>Bohnenkraut, Salz, Pfeffer</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Die grünen Bohnen in kochendem Salzwasser mit etwas Bohnenkraut ca. 8-10 Minuten garen, danach abgießen.</li><li>Das Rindfleisch in dünne Streifen schneiden.</li><li>Das Öl in einer Pfanne stark erhitzen, die Fleischstreifen darin ca. 3 Minuten scharf anbraten, mit Salz und Pfeffer würzen und mit den Bohnen mischen.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 12 -->
+    <div class="recipe-card right-side">
+        <div class="recipe-title">12. Mandeln und Walnüsse Mix (Naturbelassener Snack)</div>
+        <div class="recipe-meta">
+            <div class="meta-box">2 MIN</div>
+            <div class="meta-box">165 KCAL</div>
+            <div class="meta-box">P: 5G | K: 2G | F: 15G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>15g ungeröstete Mandeln (mit Haut)</li><li>10g Walnusskerne</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Die naturbelassenen Mandeln und Walnusskerne abwiegen.</li><li>In einer kleinen Schale mischen.</li><li>Langsam kauen; die gesunden Fette und Proteine stabilisieren den Blutzuckerspiegel hervorragend.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 13 -->
+    <div class="recipe-card left-side">
+        <div class="recipe-title">13. Omelett mit Champignons und Petersilie</div>
+        <div class="recipe-meta">
+            <div class="meta-box">12 MIN</div>
+            <div class="meta-box">190 KCAL</div>
+            <div class="meta-box">P: 15G | K: 2G | F: 13G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>2 ganze Eier</li><li>100g frische braune Champignons (in Scheiben)</li><li>1 TL Butter</li><li>Frische glatte Petersilie (gehackt)</li><li>Salz, Pfeffer</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Die Butter in einer beschichteten Pfanne schmelzen und die Pilzscheiben darin ca. 4 Minuten anbraten.</li><li>Eier verquirlen, salzen, pfeffern und die gehackte Petersilie untermischen.</li><li>Die Eiermasse gleichmäßig über die Pilze gießen, Hitze reduzieren und abgedeckt stocken lassen.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 14 -->
+    <div class="recipe-card right-side">
+        <div class="recipe-title">14. Zucchini-Nudeln mit Knoblauch und Olivenöl</div>
+        <div class="recipe-meta">
+            <div class="meta-box">10 MIN</div>
+            <div class="meta-box">120 KCAL</div>
+            <div class="meta-box">P: 3G | K: 5G | F: 10G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>1 große Zucchini</li><li>1 EL natives Olivenöl extra</li><li>1 Knoblauchzehe (fein gehackt)</li><li>Salz, Chiliflocken (optional)</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Die Zucchini mit einem Spiralschneider zu dünnen Spaghetti (Zoodles) verarbeiten.</li><li>Das Olivenöl in einer Pfanne erhitzen und den Knoblauch darin ganz leicht andünsten.</li><li>Die Zucchini-Nudeln hinzugeben und unter Rühren ca. 2-3 Minuten warm werden lassen; salzen und servieren.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 15 -->
+    <div class="recipe-card left-side">
+        <div class="recipe-title">15. Forellenfilet gedämpft mit frischem Dill</div>
+        <div class="recipe-meta">
+            <div class="meta-box">15 MIN</div>
+            <div class="meta-box">195 KCAL</div>
+            <div class="meta-box">P: 28G | K: 0G | F: 9G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>150g frisches Forellenfilet (ohne Haut)</li><li>Viel frischer Dill (gehackt)</li><li>1 EL Zitronensaft</li><li>Salz, weißer Pfeffer</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Das Forellenfilet kalt abspülen, trocken tupfen, mit Zitronensaft beträufeln und leicht salzen sowie pfeffern.</li><li>In einen Dämpfeinsatz legen und dicht mit dem frischen Dill bedecken.</li><li>Abgedeckt über kochendem Wasser ca. 6-8 Minuten dämpfen, bis der Fisch gar ist.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 16 -->
+    <div class="recipe-card right-side">
+        <div class="recipe-title">16. Tofu-Pfanne mit grünem Paprika und Sojasauce</div>
+        <div class="recipe-meta">
+            <div class="meta-box">15 MIN</div>
+            <div class="meta-box">180 KCAL</div>
+            <div class="meta-box">P: 16G | K: 4G | F: 10G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>150g fester Tofu (natur, gewürfelt)</li><li>1/2 grüne Paprikaschote (in Streifen)</li><li>1 TL Rapsöl</li><li>1 EL Sojasauce (zuckerfrei)</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Den Tofu gut trocken pressen und in Würfel schneiden.</li><li>Das Rapsöl in einer Pfanne erhitzen und den Tofu darin ca. 5 Minuten rundherum goldbraun anbraten.</li><li>Die Paprikastreifen hinzufügen, weitere 3 Minuten braten, mit der Sojasauce ablöschen und kurz einkochen lassen.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 17 -->
+    <div class="recipe-card left-side">
+        <div class="recipe-title">17. Putenbrust mit gebratenem Rosenkohl</div>
+        <div class="recipe-meta">
+            <div class="meta-box">20 MIN</div>
+            <div class="meta-box">270 KCAL</div>
+            <div class="meta-box">P: 35G | K: 6G | F: 11G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>150g Putenbrustfilet</li><li>150g frischer Rosenkohl (halbiert)</li><li>1 TL Olivenöl</li><li>Salz, Pfeffer, eine Prise Muskatnuss</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Den geputzten und halbierten Rosenkohl in kochendem Wasser 5 Minuten vorkochen und abgießen.</li><li>Putenbrust in Streifen schneiden und im Olivenöl ca. 5 Minuten braten, mit Salz und Pfeffer würzen.</li><li>Den Rosenkohl zum Fleisch in die Pfanne geben, weitere 4 Minuten braten und mit etwas Muskatnuss verfeinern.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 18 -->
+    <div class="recipe-card right-side">
+        <div class="recipe-title">18. Feldsalat mit Kürbiskernen und Essig-Öl-Dressing</div>
+        <div class="recipe-meta">
+            <div class="meta-box">8 MIN</div>
+            <div class="meta-box">130 KCAL</div>
+            <div class="meta-box">P: 4G | K: 2G | F: 11G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>80g Feldsalat (gründlich gewaschen)</li><li>1 EL Kürbiskerne</li><li>1 EL Walnussöl</li><li>1 EL Weißweinessig</li><li>Salz, Pfeffer</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Die Kürbiskerne kurz in einer Pfanne ohne Fett anrösten, bis sie duften; abkühlen lassen.</li><li>Aus Walnussöl, Essig, Salz und Pfeffer ein leichtes Dressing anrühren.</li><li>Den Feldsalat mit dem Dressing vermengen und mit den Kürbiskernen bestreuen.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 19 -->
+    <div class="recipe-card left-side">
+        <div class="recipe-title">19. Gekochte Eier mit Senf-Quark-Dip</div>
+        <div class="recipe-meta">
+            <div class="meta-box">10 MIN</div>
+            <div class="meta-box">190 KCAL</div>
+            <div class="meta-box">P: 18G | K: 3G | F: 12G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>2 ganze Eier</li><li>2 EL Magerquark</li><li>1 TL mittelscharfer Senf (zuckerfrei)</li><li>Frischer Schnittlauch</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Die Eier ca. 8 Minuten hart kochen, abschrecken und pellen.</li><li>Den Magerquark mit dem Senf und etwas Wasser cremig rühren, mit einer Prise Salz abschmecken.</li><li>Die Eier halbieren und zusammen mit dem Quark-Dip und feinen Schnittlauchröllchen servieren.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 20 -->
+    <div class="recipe-card right-side">
+        <div class="recipe-title">20. Tomaten-Gurken-Salat mit Schafskäse</div>
+        <div class="recipe-meta">
+            <div class="meta-box">10 MIN</div>
+            <div class="meta-box">210 KCAL</div>
+            <div class="meta-box">P: 11G | K: 5G | F: 16G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>1 große Tomate (gewürfelt)</li><li>1/3 Salatgurke (in Scheiben)</li><li>50g Feta (echter Schafskäse, Leicht)</li><li>1 TL Olivenöl</li><li>Getrocknete Minze oder Oregano</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Tomatenwürfel und Gurkenscheiben in einer Schüssel miteinander vermengen.</li><li>Den Schafskäse fein darüberbröseln.</li><li>Mit Olivenöl beträufeln und mit getrockneter Minze oder Oregano würzen.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 21 -->
+    <div class="recipe-card left-side">
+        <div class="recipe-title">21. Geschmorte Auberginen mit Knoblauch</div>
+        <div class="recipe-meta">
+            <div class="meta-box">18 MIN</div>
+            <div class="meta-box">95 KCAL</div>
+            <div class="meta-box">P: 2G | K: 5G | F: 7G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>1/2 Aubergine (gewürfelt)</li><li>1 Knoblauchzehe (fein gehackt)</li><li>1 TL Olivenöl</li><li>Salz, Kreuzkümmel</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Die Auberginenwürfel leicht salzen und 5 Minuten ziehen lassen, danach mit Küchenpapier trocken tupfen.</li><li>Das Olivenöl in einer Pfanne erhitzen und den Knoblauch ganz kurz anschwitzen.</li><li>Die Auberginenwürfel hinzufügen und bei mittlerer Hitze abgedeckt ca. 10 Minuten weich schmoren, mit Kreuzkümmel abschmecken.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 22 -->
+    <div class="recipe-card right-side">
+        <div class="recipe-title">22. Kabeljaufilet aus dem Ofen mit Kräutern</div>
+        <div class="recipe-meta">
+            <div class="meta-box">25 MIN</div>
+            <div class="meta-box">165 KCAL</div>
+            <div class="meta-box">P: 28G | K: 1G | F: 5G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>150g frisches Kabeljaufilet</li><li>1 TL Olivenöl</li><li>1 EL gemischte Kräuter (Petersilie, Thymian)</li><li>Salz, Pfeffer</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Den Backofen auf 180°C vorheizen.</li><li>Das Kabeljaufilet auf ein Stück Backpapier legen, salzen, pfeffern und mit Olivenöl bepinseln.</li><li>Mit den gehackten Kräutern bestreuen und im Ofen für ca. 15-18 Minuten garen.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 23 -->
+    <div class="recipe-card left-side">
+        <div class="recipe-title">23. Magerquark mit Leinsamen und Zimt</div>
+        <div class="recipe-meta">
+            <div class="meta-box">4 MIN</div>
+            <div class="meta-box">155 KCAL</div>
+            <div class="meta-box">P: 18G | K: 5G | F: 6G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>150g deutscher Magerquark</li><li>1 EL geschrotete Leinsamen (ca. 10g)</li><li>2 EL Wasser (sprudelnd)</li><li>1/2 TL Zimtpulver</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Den Magerquark mit dem Sprudelwasser in einer kleinen Schale absolut cremig schlagen.</li><li>Die geschroteten Leinsamen gleichmäßig unterrühren.</li><li>Großzügig mit Zimtpulver bestreuen und direkt genießen (Zimt unterstützt die Insulinsensitivität).</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 24 -->
+    <div class="recipe-card right-side">
+        <div class="recipe-title">24. Chicorée-Salat mit Walnuss-Dressing</div>
+        <div class="recipe-meta">
+            <div class="meta-box">10 MIN</div>
+            <div class="meta-box">140 KCAL</div>
+            <div class="meta-box">P: 3G | K: 4G | F: 12G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>1 großer Chicorée</li><li>10g Walnusskerne (gehackt)</li><li>1 EL Rapsöl mit Butteraroma</li><li>1 EL Apfelessig</li><li>Salz, Pfeffer</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Den Chicorée waschen, den harten Strunk entfernen und die Blätter in Streifen schneiden.</li><li>Aus Rapsöl, Apfelessig, Salz und Pfeffer ein homogenes Dressing mischen.</li><li>Die Chicoréestreifen mit dem Dressing vermengen und mit den Walnüssen dekorieren.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 25 -->
+    <div class="recipe-card left-side">
+        <div class="recipe-title">25. Garnelen-Pfanne mit grünem Spargel</div>
+        <div class="recipe-meta">
+            <div class="meta-box">15 MIN</div>
+            <div class="meta-box">210 KCAL</div>
+            <div class="meta-box">P: 26G | K: 3G | F: 10G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>120g verzehrfertige Riesengarnelen</li><li>150g frischer grüner Spargel</li><li>1 TL Olivenöl</li><li>Salz, Knoblauchpulver</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Vom grünen Spargel die holzigen Enden abschneiden und die Stangen in mundgerechte Stücke zerteilen.</li><li>Das Olivenöl in einer Pfanne erhitzen und den Spargel darin ca. 5 Minuten anbraten.</li><li>Die Garnelen hinzufügen, weitere 3-4 Minuten garen, mit Salz und etwas Knoblauchpulver abschmecken.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 26 -->
+    <div class="recipe-card right-side">
+        <div class="recipe-title">26. Blumenkohl-Suppe mit Muskat (ohne Kartoffeln)</div>
+        <div class="recipe-meta">
+            <div class="meta-box">20 MIN</div>
+            <div class="meta-box">95 KCAL</div>
+            <div class="meta-box">P: 4G | K: 6G | F: 5G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>200g Blumenkohlröschen</li><li>400ml klare Gemüsebrühe</li><li>1 TL Halbfettbutter</li><li>Salz, frisch geriebene Muskatnuss</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Die Blumenkohlröschen in der Gemüsebrühe aufkochen und ca. 12-15 Minuten garen, bis sie absolut weich sind.</li><li>Die Suppe mit dem Pürierstab cremig mixen.</li><li>Die Butter einrühren und die Suppe kräftig mit Salz und viel Muskatnuss abschmecken.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 27 -->
+    <div class="recipe-card left-side">
+        <div class="recipe-title">27. Spiegeleier auf gebratenem Mangold</div>
+        <div class="recipe-meta">
+            <div class="meta-box">12 MIN</div>
+            <div class="meta-box">220 KCAL</div>
+            <div class="meta-box">P: 15G | K: 3G | F: 16G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>2 frische Hühnereier</li><li>150g frischer Mangold (gewaschen)</li><li>1 TL Rapsöl</li><li>Salz, Pfeffer</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Den Mangold in breite Streifen schneiden (Stiele etwas feiner hacken).</li><li>Das Öl in einer Pfanne erhitzen, den Mangold darin ca. 4 Minuten dünsten, bis er zusammenfällt; mit Salz und Pfeffer würzen.</li><li>Zwei kleine Mulden formen, die Eier hineinschlagen und bei schwacher Hitze abgedeckt stocken lassen.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 28 -->
+    <div class="recipe-card right-side">
+        <div class="recipe-title">28. Sauerkraut-Salat mit Kümmel und Apfelessig</div>
+        <div class="recipe-meta">
+            <div class="meta-box">8 MIN</div>
+            <div class="meta-box">80 KCAL</div>
+            <div class="meta-box">P: 2G | K: 4G | F: 5G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>150g frisches Sauerkraut (roh, ungekocht)</li><li>1 TL Leinöl</li><li>1 EL Apfelessig</li><li>1/2 TL Kümmelsamen</li><li>Salz</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Das rohe Sauerkraut mit einer Gabel in einer Schüssel etwas auflockern.</li><li>Leinöl, Apfelessig und eine winzige Prise Salz hinzufügen.</li><li>Die Kümmelsamen unterrühren und den Salat vor dem Verzehr idealerweise 10 Minuten durchziehen lassen.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 29 -->
+    <div class="recipe-card left-side">
+        <div class="recipe-title">29. Puten-Medaillons mit gedünsteter Zucchini</div>
+        <div class="recipe-meta">
+            <div class="meta-box">18 MIN</div>
+            <div class="meta-box">240 KCAL</div>
+            <div class="meta-box">P: 35G | K: 4G | F: 8G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>150g Putenmedaillons</li><li>150g Zucchini (in dünnen Scheiben)</li><li>1 TL Pflanzenöl</li><li>Kräuter der Provence, Salz</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Die Putenmedaillons im heißen Öl von jeder Seite etwa 4 Minuten braten, salzen und beiseitestellen.</li><li>Die Zucchinischeiben in dieselbe Pfanne geben und bei mittlerer Hitze ca. 5 Minuten dünsten.</li><li>Mit Kräutern der Provence und Salz würzen und zusammen mit den Medaillons servieren.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 30 -->
+    <div class="recipe-card right-side">
+        <div class="recipe-title">30. Kürbiskerne geröstet (Knuspriger Snack)</div>
+        <div class="recipe-meta">
+            <div class="meta-box">5 MIN</div>
+            <div class="meta-box">115 KCAL</div>
+            <div class="meta-box">P: 6G | K: 2G | F: 9G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>20g naturbelassene Kürbiskerne</li><li>Eine kleine Prise Meersalz</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Eine kleine beschichtete Pfanne ohne Fett erhitzen.</li><li>Die Kürbiskerne hineingeben und unter ständigem Bewegen anrösten, bis sie anfangen zu knallen.</li><li>Vom Herd nehmen, mit einer minimalen Prise Meersalz bestreuen und abkühlen lassen.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 31 -->
+    <div class="recipe-card left-side">
+        <div class="recipe-title">31. Radieschen-Salat mit Schnittlauch-Dressing</div>
+        <div class="recipe-meta">
+            <div class="meta-box">10 MIN</div>
+            <div class="meta-box">75 KCAL</div>
+            <div class="meta-box">P: 1G | K: 3G | F: 6G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>1 Bund frische Radieschen</li><li>1 EL Olivenöl</li><li>1 EL weißer Essig</li><li>Frischer Schnittlauch (in Röllchen)</li><li>Salz</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Die Radieschen gründlich waschen, putzen und in hauchdünne Scheiben schneiden oder hobeln.</li><li>Aus Olivenöl, Essig und einer Prise Salz ein Dressing anrühren.</li><li>Die Radieschenscheiben und Schnittlauchröllchen mit dem Dressing vermengen.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 32 -->
+    <div class="recipe-card right-side">
+        <div class="recipe-title">32. Seelachsfilet mit schonender Zitronen-Butter-Sauce</div>
+        <div class="recipe-meta">
+            <div class="meta-box">15 MIN</div>
+            <div class="meta-box">210 KCAL</div>
+            <div class="meta-box">P: 28G | K: 0G | F: 10G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>150g Seelachsfilet</li><li>1 TL Butter</li><li>1 EL frisch gepresster Zitronensaft</li><li>Salz, weißer Pfeffer</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Das Seelachsfilet salzen, pfeffern und in einer beschichteten Pfanne fettfrei von jeder Seite 3 Minuten garen.</li><li>Den Fisch aus der Pfanne nehmen und warmhalten.</li><li>Die Pfanne von der Hitze nehmen, Butter und Zitronensaft hineingeben, durchschwenken und über den Fisch gießen.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 33 -->
+    <div class="recipe-card left-side">
+        <div class="recipe-title">33. Hähnchen-Spieße mit grünem Paprika</div>
+        <div class="recipe-meta">
+            <div class="meta-box">15 MIN</div>
+            <div class="meta-box">230 KCAL</div>
+            <div class="meta-box">P: 34G | K: 3G | F: 8G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>150g Hähnchenbrustfilet (gewürfelt)</li><li>1/2 grüne Paprikaschote (in Stücken)</li><li>1 TL Rapsöl</li><li>Steakgewürz (ohne Zucker)</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Hähnchenbrustwürfel und Paprikastücke abwechselnd auf Holzspieße stecken.</li><li>Die Spieße mit ganz wenig Rapsöl bepinseln und dezent mit zuckerfreiem Steakgewürz würzen.</li><li>In einer Pfanne oder auf dem Grill rundherum ca. 8-10 Minuten gut durchbraten.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 34 -->
+    <div class="recipe-card right-side">
+        <div class="recipe-title">34. Avocado-Creme mit Zitronensaft (Glukose-Dip)</div>
+        <div class="recipe-meta">
+            <div class="meta-box">5 MIN</div>
+            <div class="meta-box">165 KCAL</div>
+            <div class="meta-box">P: 2G | K: 2G | F: 16G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>1/2 reife Avocado</li><li>1 EL frisch gepresster Zitronensaft</li><li>Salz, eine Prise Knoblauchpulver</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Das Fruchtfleisch der Avocadohälfte mit einer Gabel in einer kleinen Schale vollkommen fein zerdrücken.</li><li>Sofort den Zitronensaft unterrühren, damit die Creme schön hellgrün bleibt.</li><li>Mit einer Prise Salz und minimal Knoblauchpulver abschmecken; perfekt zu Gurkensticks.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 35 -->
+    <div class="recipe-card left-side">
+        <div class="recipe-title">35. Linsensalat mit Essig und Kräutern</div>
+        <div class="recipe-meta">
+            <div class="meta-box">25 MIN</div>
+            <div class="meta-box">195 KCAL</div>
+            <div class="meta-box">P: 12G | K: 19G | F: 5G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>40g braune Tellerlinsen (getrocknet)</li><li>1 EL Olivenöl</li><li>1 EL Kräuteressig</li><li>Frische Petersilie</li><li>Salz, Pfeffer</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Die Linsen in ungesalzenem Wasser ca. 20 Minuten gar kochen, danach abgießen und abkühlen lassen.</li><li>Aus Olivenöl, Kräuteressig, Salz und Pfeffer ein Dressing herstellen.</li><li>Die abgekühlten Linsen mit dem Dressing und reichlich gehackter Petersilie vermengen (Linsen liefern blutzuckerstabilisierende Ballaststoffe).</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 36 -->
+    <div class="recipe-card right-side">
+        <div class="recipe-title">36. Rindersteak mit gedämpftem Brokkoli</div>
+        <div class="recipe-meta">
+            <div class="meta-box">20 MIN</div>
+            <div class="meta-box">340 KCAL</div>
+            <div class="meta-box">P: 38G | K: 4G | F: 18G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>150g Rinderhüftsteak</li><li>150g Brokkoliröschen</li><li>1 TL Rapsöl</li><li>Grobkornsalz, Pfeffer</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Den Brokkoli in einem Dämpftopf ca. 7 Minuten dämpfen, bis er gar aber noch knackig ist.</li><li>Das Rapsöl in einer Pfanne sehr stark erhitzen und das Steak von jeder Seite ca. 2-3 Minuten braten.</li><li>Das Fleisch vor dem Anschneiden kurz ruhen lassen, danach mit Salz und Pfeffer würzen und mit dem Brokkoli servieren.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 37 -->
+    <div class="recipe-card left-side">
+        <div class="recipe-title">37. Spinatsalat mit hartgekochtem Ei</div>
+        <div class="recipe-meta">
+            <div class="meta-box">10 MIN</div>
+            <div class="meta-box">145 KCAL</div>
+            <div class="meta-box">P: 9G | K: 2G | F: 11G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>100g frischer Babyspinat</li><li>1 hartgekochtes Ei (Größe M)</li><li>1 TL Rapsöl</li><li>1 EL Zitronensaft</li><li>Salz, Pfeffer</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Den Babyspinat waschen, trocken schleudern und in eine Salatschüssel geben.</li><li>Das hartgekochte Ei pellen und in feine Scheiben oder Würfel schneiden.</li><li>Dressing aus Öl, Zitronensaft, Salz e Pfeffer mischen, über den Spinat geben und mit dem Ei garnieren.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 38 -->
+    <div class="recipe-card right-side">
+        <div class="recipe-title">38. Gebackene Champignons mit Feta-Füllung</div>
+        <div class="recipe-meta">
+            <div class="meta-box">20 MIN</div>
+            <div class="meta-box">160 KCAL</div>
+            <div class="meta-box">P: 10G | K: 3G | F: 12G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>4 große Riesenchampignons</li><li>40g Feta (Leicht, zerbröselt)</li><li>1/2 TL Olivenöl</li><li>Getrockneter Thymian</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Die Champignons putzen und die Stiele vorsichtig herausbrechen.</li><li>Den zerbröselten Feta mit etwas Thymian mischen und fest in die Pilzköpfe drücken.</li><li>Die Pilze in eine Form setzen, mit den Tropfen Olivenöl beträufeln und bei 180°C für 15 Minuten backen.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 39 -->
+    <div class="recipe-card left-side">
+        <div class="recipe-title">39. Lupinen-Joghurt mit Chiasamen (Rein Pflanzlich)</div>
+        <div class="recipe-meta">
+            <div class="meta-box">5 MIN</div>
+            <div class="meta-box">120 KCAL</div>
+            <div class="meta-box">P: 9G | K: 2G | F: 7G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>150g Lupinen-Joghurtalternative (Natur, ungesüßt)</li><li>1 TL Chiasamen</li><li>1 Prise Bourbon-Vanillepulver</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Die ungesüßte Lupinen-Joghurtalternative in eine kleine Schale füllen.</li><li>Chiasamen und eine winzige Prise reines Vanillepulver hinzufügen.</li><li>Gründlich verrühren und vor dem Verzehr 5 Minuten quellen lassen; extrem kohlenhydratarm.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 40 -->
+    <div class="recipe-card right-side">
+        <div class="recipe-title">40. Schweinefilet mit grünen Bohnen</div>
+        <div class="recipe-meta">
+            <div class="meta-box">22 MIN</div>
+            <div class="meta-box">280 KCAL</div>
+            <div class="meta-box">P: 34G | K: 5G | F: 12G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>150g Schweinefilet (in Medaillons)</li><li>150g grüne Bohnen</li><li>1 TL Rapsöl</li><li>Salz, Bohnenkraut</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Die Bohnen in kochendem Wasser mit Bohnenkraut ca. 8-10 Minuten garen und abgießen.</li><li>Die Schweinefiletmedaillons im heißen Rapsöl von jeder Seite ca. 3-4 Minuten braten.</li><li>Alles mit einer Prise Salz würzen und zusammen auf einem flachen Teller anrichten.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 41 -->
+    <div class="recipe-card left-side">
+        <div class="recipe-title">41. Weißkohl-Salat mit Kümmel und Essig</div>
+        <div class="recipe-meta">
+            <div class="meta-box">10 MIN</div>
+            <div class="meta-box">70 KCAL</div>
+            <div class="meta-box">P: 2G | K: 4G | F: 5G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>150g Weißkohl (fein gehobelt)</li><li>1 TL Rapsöl</li><li>1 EL weißer Essig</li><li>1/2 TL Kümmel (ganz)</li><li>Salz</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Den fein gehobelten Weißkohl in einer Schüssel zusammen mit etwas Salz kräftig mit den Händen kneten, bis er weich wird.</li><li>Rapsöl und Essig hinzufügen.</li><li>Den Kümmel unterrühren und den Salat abgedeckt etwas ziehen lassen.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 42 -->
+    <div class="recipe-card right-side">
+        <div class="recipe-title">42. Makrelenfilet mit Meerrettich-Quark</div>
+        <div class="recipe-meta">
+            <div class="meta-box">10 MIN</div>
+            <div class="meta-box">290 KCAL</div>
+            <div class="meta-box">P: 30G | K: 2G | F: 18G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>100g geräuchertes Makrelenfilet</li><li>2 EL Magerquark</li><li>1 TL frischer Meerrettich (gerieben, ohne Zucker)</li><li>Salz</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Den Magerquark mit dem geriebenen Meerrettich und einer winzigen Prise Salz glattrühren.</li><li>Das Makrelenfilet auf einem Teller anrichten (Makrele liefert wertvolle Omega-3-Fettsäuren).</li><li>Zusammen mit dem scharfen Meerrettich-Quark kalt servieren.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 43 -->
+    <div class="recipe-card left-side">
+        <div class="recipe-title">43. Zucchini-Scheiben gebacken mit Parmesan</div>
+        <div class="recipe-meta">
+            <div class="meta-box">15 MIN</div>
+            <div class="meta-box">115 KCAL</div>
+            <div class="meta-box">P: 6G | K: 4G | F: 8G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>1 kleine Zucchini (in Scheiben)</li><li>1/2 TL Olivenöl</li><li>2 EL Parmesan (gerieben)</li><li>Knoblauchsalz</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Den Backofen auf 200°C vorheizen oder die Airfryer nutzen.</li><li>Die Zucchinischeiben mit ganz wenig Olivenöl und etwas Knoblauchsalz vermengen.</li><li>Auf ein Backblech legen, mit Parmesan bestreuen und ca. 12 Minuten goldbraun backen.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 44 -->
+    <div class="recipe-card right-side">
+        <div class="recipe-title">44. Kichererbsen-Schnittlauch-Salat (Ballaststoffreich)</div>
+        <div class="recipe-meta">
+            <div class="meta-box">10 MIN</div>
+            <div class="meta-box">180 KCAL</div>
+            <div class="meta-box">P: 9G | K: 18G | F: 6G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>80g Kichererbsen (aus der Dose, gut abgespült)</li><li>1 EL Olivenöl</li><li>1 EL Zitronensaft</li><li>Viel frischer Schnittlauch</li><li>Salz</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Die Kichererbsen in einem Sieb gründlich mit kaltem Wasser abspülen e abtropfen lassen.</li><li>In einer Schüssel mit Olivenöl, Zitronensaft und einer Prise Salz vermengen.</li><li>Den frischen Schnittlauch in feine Röllchen schneiden und großzügig unterheben.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 45 -->
+    <div class="recipe-card left-side">
+        <div class="recipe-title">45. Omelett mit frischem grünem Spargel</div>
+        <div class="recipe-meta">
+            <div class="meta-box">15 MIN</div>
+            <div class="meta-box">195 KCAL</div>
+            <div class="meta-box">P: 16G | K: 3G | F: 13G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>2 ganze Eier</li><li>3 Stangen grüner Spargel (in Stücken)</li><li>1 TL Halbfettbutter</li><li>Salz, Pfeffer</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Den grünen Spargel waschen und in ca. 2 cm lange Stücke schneiden.</li><li>Die Butter in einer Pfanne schmelzen und den Spargel darin ca. 4 Minuten andünsten.</li><li>Die Eier verquirlen, salzen, pfeffern, über den Spargel gießen und bei geringer Hitze stocken lassen.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 46 -->
+    <div class="recipe-card right-side">
+        <div class="recipe-title">46. Tofu gewürfelt mit Sesam und Brokkoli</div>
+        <div class="recipe-meta">
+            <div class="meta-box">18 MIN</div>
+            <div class="meta-box">190 KCAL</div>
+            <div class="meta-box">P: 16G | K: 5G | F: 11G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>120g Tofu (natur, gewürfelt)</li><li>100g Brokkoliröschen</li><li>1 TL Rapsöl</li><li>1 TL Sesamsamen</li><li>1 EL Sojasauce</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Den Brokkoli in ganz kleine Röschen teilen und 4 Minuten in kochendem Wasser blanchieren; abgießen.</li><li>Den gewürfelten Tofu im heißen Rapsöl ca. 5 Minuten anbraten.</li><li>Brokkoli und Sesamsamen hinzufügen, kurz mitbraten und mit der Sojasauce ablöschen.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 47 -->
+    <div class="recipe-card left-side">
+        <div class="recipe-title">47. Selleriesuppe cremig (Low-Carb)</div>
+        <div class="recipe-meta">
+            <div class="meta-box">22 MIN</div>
+            <div class="meta-box">110 KCAL</div>
+            <div class="meta-box">P: 3G | K: 6G | F: 8G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>150g Knollensellerie (gewürfelt)</li><li>350ml Gemüsebrühe</li><li>1 EL Sahne (flüssig)</li><li>Salz, weißer Pfeffer</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Die Selleriewürfel in der Gemüsebrühe ca. 15 Minuten weich kochen.</li><li>Die Suppe direkt im Topf mit einem Pürierstab absolut cremig mixen.</li><li>Die flüssige Sahne einrühren und mit Salz und weißem Pfeffer dezent abschmecken.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 48 -->
+    <div class="recipe-card right-side">
+        <div class="recipe-title">48. Hähnchen-Geschnetzeltes mit Champignons</div>
+        <div class="recipe-meta">
+            <div class="meta-box">15 MIN</div>
+            <div class="meta-box">250 KCAL</div>
+            <div class="meta-box">P: 36G | K: 2G | F: 10G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>150g Hähnchenbrustfilet (in Streifen)</li><li>100g Champignons (in Scheiben)</li><li>1 TL Rapsöl</li><li>Salz, Paprika edelsüß</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Das Rapsöl in einer Pfanne erhitzen und die Hähnchenbruststreifen ca. 4 Minuten scharf anbraten.</li><li>Die Pilzscheiben hinzufügen und weitere 4 Minuten mitgaren.</li><li>Mit Salz und edelsüßem Paprikapulver kräftig abschmecken.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 49 -->
+    <div class="recipe-card left-side">
+        <div class="recipe-title">49. Schollenfilet gedämpft auf Lauchgemüse</div>
+        <div class="recipe-meta">
+            <div class="meta-box">20 MIN</div>
+            <div class="meta-box">185 KCAL</div>
+            <div class="meta-box">P: 28G | K: 4G | F: 6G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>150g Schollenfilet</li><li>100g Lauch/Porree (in feinen Ringen)</li><li>1 TL Halbfettbutter</li><li>Salz, Zitronensaft</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Die Lauchringe in einer Pfanne mit der Butter und 2 EL Wasser ca. 5 Minuten dünsten.</li><li>Das Schollenfilet salzen, mit etwas Zitronensaft beträufeln und flach auf das Lauchgemüse legen.</li><li>Den Topf mit einem Deckel schließen und den Fisch bei geringer Hitze ca. 6-8 Minuten im Dampf garen.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 50 -->
+    <div class="recipe-card right-side">
+        <div class="recipe-title">50. Chia-Leinsamen-Kräcker (Glukose-Snack)</div>
+        <div class="recipe-meta">
+            <div class="meta-box">25 MIN</div>
+            <div class="meta-box">140 KCAL</div>
+            <div class="meta-box">P: 5G | K: 1G | F: 12G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>1 EL Chiasamen</li><li>1 EL geschrotete Leinsamen</li><li>3 EL warmes Wasser</li><li>Eine Prise Kräutersalz</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Chiasamen, Leinsamen, Kräutersalz und warmes Wasser in einer kleinen Tasse zu einem Teig verrühren.</li><li>Die Masse 5 Minuten quellen lassen, bis sie bindet.</li><li>Den Brei hauchdünn auf Backpapier streichen und im Ofen bei 160°C ca. 15-20 Minuten backen, bis er vollkommen trocken und knusprig ist; in Stücke brechen.</li>
+            </ol>
+
+        <!-- Receita 51 -->
+    <div class="recipe-card left-side">
+        <div class="recipe-title">51. Zucchini-Creme-Suppe</div>
+        <div class="recipe-meta">
+            <div class="meta-box">20 MIN</div>
+            <div class="meta-box">120 KCAL</div>
+            <div class="meta-box">P: 4G | K: 6G | F: 8G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>1 große Zucchini</li><li>300ml Gemüsebrühe</li><li>1 EL saure Sahne</li><li>Salz, Pfeffer, Muskat</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Die Zucchini würfeln und in der Gemüsebrühe ca. 15 Minuten weich kochen.</li><li>Mit einem Pürierstab fein pürieren.</li><li>Die saure Sahne unterrühren und mit Gewürzen abschmecken.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 52 -->
+    <div class="recipe-card right-side">
+        <div class="recipe-title">52. Hähnchenschenkel mit Selleriepüree</div>
+        <div class="recipe-meta">
+            <div class="meta-box">35 MIN</div>
+            <div class="meta-box">340 KCAL</div>
+            <div class="meta-box">P: 32G | K: 5G | F: 20G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>1 Hähnchenschenkel</li><li>200g Knollensellerie</li><li>1 TL Butter</li><li>Salz, Paprikapulver</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Hähnchenschenkel würzen und im Ofen bei 200°C ca. 30 Minuten knusprig backen.</li><li>Sellerie würfeln, weich kochen und mit Butter zu Püree verarbeiten.</li><li>Das Selleriepüree (kohlenhydratarme Kartoffelalternative) zum Hähnchen servieren.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 53 -->
+    <div class="recipe-card left-side">
+        <div class="recipe-title">53. Lachs-Ceviche mit Zitronen-Dressing</div>
+        <div class="recipe-meta">
+            <div class="meta-box">15 MIN</div>
+            <div class="meta-box">220 KCAL</div>
+            <div class="meta-box">P: 24G | K: 2G | F: 12G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>150g Lachsfilet (Sushi-Qualität)</li><li>Saft von 2 Zitronen</li><li>1/2 rote Zwiebel</li><li>Frischer Koriander</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Lachs in sehr feine Würfel schneiden.</li><li>Mit Zitronensaft, fein gehackter Zwiebel und Koriander vermengen.</li><li>Ca. 10 Minuten im Kühlschrank 'garen' lassen (die Säure denaturiert das Eiweiß).</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 54 -->
+    <div class="recipe-card right-side">
+        <div class="recipe-title">54. Tomaten-Paprika-Rührei</div>
+        <div class="recipe-meta">
+            <div class="meta-box">10 MIN</div>
+            <div class="meta-box">190 KCAL</div>
+            <div class="meta-box">P: 14G | K: 4G | F: 13G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>2 Eier</li><li>1/2 Paprika</li><li>1 Tomate</li><li>1 TL Olivenöl</li><li>Salz, Schnittlauch</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Paprika und Tomate würfeln und im Olivenöl anbraten.</li><li>Eier verquirlen und darübergießen.</li><li>Unter Rühren stocken lassen und mit Schnittlauch garnieren.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 55 -->
+    <div class="recipe-card left-side">
+        <div class="recipe-title">55. Leinsamen-Pancakes (Low Carb)</div>
+        <div class="recipe-meta">
+            <div class="meta-box">15 MIN</div>
+            <div class="meta-box">250 KCAL</div>
+            <div class="meta-box">P: 12G | K: 2G | F: 21G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>2 EL gemahlene Leinsamen</li><li>1 Ei</li><li>2 EL ungesüßte Mandelmilch</li><li>1 TL Kokosöl</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Leinsamen, Ei und Mandelmilch zu einem Teig verrühren.</li><li>5 Minuten quellen lassen.</li><li>In Kokosöl als kleine Pancakes beidseitig goldbraun ausbacken.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 56 -->
+    <div class="recipe-card right-side">
+        <div class="recipe-title">56. Thunfisch-Sticks mit Quark-Dip</div>
+        <div class="recipe-meta">
+            <div class="meta-box">15 MIN</div>
+            <div class="meta-box">210 KCAL</div>
+            <div class="meta-box">P: 30G | K: 1G | F: 8G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>1 Dose Thunfisch (im eigenen Saft)</li><li>1 Ei</li><li>2 EL Magerquark</li><li>Salz, Pfeffer, Dill</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Thunfisch abtropfen lassen und mit dem Ei sowie Gewürzen verkneten.</li><li>Kleine Sticks formen und in einer Pfanne fettfrei braten.</li><li>Magerquark mit Dill anrühren und als Dip servieren.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 57 -->
+    <div class="recipe-card left-side">
+        <div class="recipe-title">57. Auberginen-Lasagne (ohne Nudeln)</div>
+        <div class="recipe-meta">
+            <div class="meta-box">35 MIN</div>
+            <div class="meta-box">290 KCAL</div>
+            <div class="meta-box">P: 22G | K: 8G | F: 18G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>1 Aubergine (in Längsscheiben)</li><li>150g Rinderhack</li><li>100ml passierte Tomaten</li><li>30g geriebener Käse</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Auberginenscheiben salzen, Wasser ziehen lassen und abtupfen.</li><li>Hackfleisch in Tomatensauce anbraten.</li><li>Auberginenscheiben und Hack-Sauce schichten, mit Käse bestreuen und bei 200°C 20 Minuten backen.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 58 -->
+    <div class="recipe-card right-side">
+        <div class="recipe-title">58. Kräuterquark mit Gemüsesticks</div>
+        <div class="recipe-meta">
+            <div class="meta-box">5 MIN</div>
+            <div class="meta-box">130 KCAL</div>
+            <div class="meta-box">P: 18G | K: 6G | F: 1G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>150g Magerquark</li><li>1/2 Salatgurke</li><li>1/2 Paprika</li><li>Schnittlauch, Salz</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Magerquark mit einem Schuss Wasser und Schnittlauch cremig rühren, salzen.</li><li>Gurke und Paprika in handliche Sticks schneiden.</li><li>Gemüse in den blutzuckerfreundlichen Quark dippen.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 59 -->
+    <div class="recipe-card left-side">
+        <div class="recipe-title">59. Gebratener Tofu auf Pak Choi</div>
+        <div class="recipe-meta">
+            <div class="meta-box">15 MIN</div>
+            <div class="meta-box">195 KCAL</div>
+            <div class="meta-box">P: 18G | K: 4G | F: 11G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>150g Naturtofu</li><li>1 Kopf Pak Choi</li><li>1 EL Sojasauce</li><li>1 TL Sesamöl</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Tofu in Würfel schneiden und im Sesamöl kross anbraten.</li><li>Pak Choi in Streifen schneiden und kurz mitbraten, bis er leicht zusammenfällt.</li><li>Mit Sojasauce ablöschen.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 60 -->
+    <div class="recipe-card right-side">
+        <div class="recipe-title">60. Blumenkohl-Couscous mit Mandeln</div>
+        <div class="recipe-meta">
+            <div class="meta-box">15 MIN</div>
+            <div class="meta-box">160 KCAL</div>
+            <div class="meta-box">P: 6G | K: 5G | F: 12G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>150g Blumenkohl (geraspelt)</li><li>1 EL gehackte Mandeln</li><li>1 TL Olivenöl</li><li>Kurkuma, Salz</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Blumenkohl auf einer Reibe in couscous-ähnliche Krümel reiben.</li><li>In einer Pfanne mit Olivenöl und Kurkuma ca. 5 Minuten anbraten.</li><li>Mandeln unterheben und servieren.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 61 -->
+    <div class="recipe-card left-side">
+        <div class="recipe-title">61. Grünkohl-Eintopf mit Rinderhack</div>
+        <div class="recipe-meta">
+            <div class="meta-box">30 MIN</div>
+            <div class="meta-box">280 KCAL</div>
+            <div class="meta-box">P: 26G | K: 6G | F: 16G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>150g Grünkohl (frisch oder TK)</li><li>100g mageres Rinderhack</li><li>200ml Rinderbrühe</li><li>Salz, Senf</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Rinderhack in einem Topf krümelig braten.</li><li>Grünkohl und Brühe hinzugeben.</li><li>Abgedeckt 20 Minuten sanft köcheln lassen, mit Senf und Salz abschmecken.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 62 -->
+    <div class="recipe-card right-side">
+        <div class="recipe-title">62. Gedämpfter Lachs mit grünem Spargel</div>
+        <div class="recipe-meta">
+            <div class="meta-box">20 MIN</div>
+            <div class="meta-box">320 KCAL</div>
+            <div class="meta-box">P: 34G | K: 3G | F: 18G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>150g Lachsfilet</li><li>150g grüner Spargel</li><li>1 TL Butter</li><li>Zitronensaft</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Spargelenden abschneiden.</li><li>Lachs und Spargel in einen Dampfgarer geben und 10-12 Minuten dämpfen.</li><li>Mit etwas Butter und Zitronensaft verfeinern.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 63 -->
+    <div class="recipe-card left-side">
+        <div class="recipe-title">63. Harzer Käse mit Kümmel (Brotlose Brotzeit)</div>
+        <div class="recipe-meta">
+            <div class="meta-box">5 MIN</div>
+            <div class="meta-box">130 KCAL</div>
+            <div class="meta-box">P: 30G | K: 0G | F: 1G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>1 Rolle Harzer Käse (ca. 100g)</li><li>1/2 Zwiebel (in Ringen)</li><li>1 TL Essig</li><li>Kümmel</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Harzer Käse in Scheiben schneiden.</li><li>Mit Zwiebelringen, Essig und Kümmel anrichten.</li><li>Kurz ziehen lassen. Liefert extrem viel Protein bei 0g Kohlenhydraten.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 64 -->
+    <div class="recipe-card right-side">
+        <div class="recipe-title">64. Puten-Involtini mit Spinatfüllung</div>
+        <div class="recipe-meta">
+            <div class="meta-box">25 MIN</div>
+            <div class="meta-box">240 KCAL</div>
+            <div class="meta-box">P: 36G | K: 2G | F: 8G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>150g Putenbrustschnitzel (plattiert)</li><li>50g Babyspinat</li><li>1 EL Frischkäse</li><li>Salz, Pfeffer</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Putenbrust flachklopfen und mit Frischkäse bestreichen.</li><li>Mit Spinat belegen, aufrollen und mit einem Zahnstocher fixieren.</li><li>In einer Pfanne rundherum goldbraun braten.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 65 -->
+    <div class="recipe-card left-side">
+        <div class="recipe-title">65. Rucola-Salat mit gebratenen Champignons</div>
+        <div class="recipe-meta">
+            <div class="meta-box">10 MIN</div>
+            <div class="meta-box">150 KCAL</div>
+            <div class="meta-box">P: 6G | K: 3G | F: 12G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>80g Rucola</li><li>100g frische Champignons</li><li>1 EL Olivenöl</li><li>1 EL Balsamico</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Champignons in Scheiben schneiden und in der Hälfte des Olivenöls anbraten.</li><li>Rucola waschen und in eine Schale geben.</li><li>Pilze auf dem Salat anrichten und mit restlichem Öl und Balsamico beträufeln.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 66 -->
+    <div class="recipe-card right-side">
+        <div class="recipe-title">66. Falscher Kartoffelsalat (aus Kohlrabi)</div>
+        <div class="recipe-meta">
+            <div class="meta-box">25 MIN</div>
+            <div class="meta-box">160 KCAL</div>
+            <div class="meta-box">P: 4G | K: 8G | F: 12G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>1 großer Kohlrabi</li><li>1 EL Mayonnaise (zuckerfrei)</li><li>1 TL Senf</li><li>1 Gewürzgurke</li><li>Schnittlauch</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Kohlrabi schälen, in Würfel schneiden und in Salzwasser weich kochen; abkühlen lassen.</li><li>Gewürzgurke fein würfeln.</li><li>Mayo, Senf und Gurkenwürfel zum Kohlrabi geben und gut vermengen.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 67 -->
+    <div class="recipe-card left-side">
+        <div class="recipe-title">67. Forelle aus dem Ofen mit Rosmarin</div>
+        <div class="recipe-meta">
+            <div class="meta-box">30 MIN</div>
+            <div class="meta-box">260 KCAL</div>
+            <div class="meta-box">P: 35G | K: 0G | F: 12G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>1 ausgenommene Forelle</li><li>2 Zweige Rosmarin</li><li>1 EL Olivenöl</li><li>Grobe Meersalz-Flocken</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Forelle waschen und trocken tupfen.</li><li>Rosmarin in die Bauchhöhle legen, den Fisch mit Olivenöl einreiben und salzen.</li><li>Bei 200°C im Ofen für 20-25 Minuten backen.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 68 -->
+    <div class="recipe-card right-side">
+        <div class="recipe-title">68. Mandelporridge mit Zimt</div>
+        <div class="recipe-meta">
+            <div class="meta-box">5 MIN</div>
+            <div class="meta-box">210 KCAL</div>
+            <div class="meta-box">P: 8G | K: 3G | F: 18G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>3 EL gemahlene Mandeln</li><li>100ml ungesüßte Mandelmilch</li><li>1 TL Chiasamen</li><li>Zimtpulver</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Gemahlene Mandeln und Chiasamen in einem kleinen Topf mit der Mandelmilch verrühren.</li><li>Unter Rühren erwärmen, bis ein dicker Brei entsteht.</li><li>Mit reichlich Zimt bestreuen (ideal zur Senkung des Nüchternblutzuckers).</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 69 -->
+    <div class="recipe-card left-side">
+        <div class="recipe-title">69. Rindercarpaccio mit Parmesan und Rucola</div>
+        <div class="recipe-meta">
+            <div class="meta-box">5 MIN</div>
+            <div class="meta-box">240 KCAL</div>
+            <div class="meta-box">P: 28G | K: 1G | F: 14G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>100g Rinderfilet (hauchdünn geschnitten, roh)</li><li>20g Parmesan (gehobelt)</li><li>Eine Handvoll Rucola</li><li>1 EL Olivenöl</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Das Rindfleisch auf einem flachen Teller auslegen.</li><li>Rucola mittig darauf platzieren.</li><li>Mit Olivenöl beträufeln und Parmesan darüberhobeln.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 70 -->
+    <div class="recipe-card right-side">
+        <div class="recipe-title">70. Radieschen-Gurken-Salat mit Dill</div>
+        <div class="recipe-meta">
+            <div class="meta-box">10 MIN</div>
+            <div class="meta-box">80 KCAL</div>
+            <div class="meta-box">P: 2G | K: 4G | F: 6G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>1/2 Salatgurke</li><li>1/2 Bund Radieschen</li><li>1 EL Olivenöl</li><li>1 EL Essig</li><li>Frischer Dill</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Gurke und Radieschen in hauchdünne Scheiben hobeln.</li><li>Essig, Öl, Salz und gehackten Dill zu einem Dressing rühren.</li><li>Gemüse untermischen und kurz ziehen lassen.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 71 -->
+    <div class="recipe-card left-side">
+        <div class="recipe-title">71. Paprika gefüllt mit Hüttenkäse</div>
+        <div class="recipe-meta">
+            <div class="meta-box">10 MIN</div>
+            <div class="meta-box">150 KCAL</div>
+            <div class="meta-box">P: 18G | K: 6G | F: 5G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>1 große Paprika</li><li>150g körniger Frischkäse</li><li>Salz, Pfeffer, Kräuter der Provence</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Die Paprika längs halbieren und Kerne entfernen.</li><li>Hüttenkäse mit Gewürzen mischen.</li><li>Die Hälften füllen und als frischen Low-GI-Snack roh essen.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 72 -->
+    <div class="recipe-card right-side">
+        <div class="recipe-title">72. Gebratene Zucchini mit Knoblauch</div>
+        <div class="recipe-meta">
+            <div class="meta-box">10 MIN</div>
+            <div class="meta-box">110 KCAL</div>
+            <div class="meta-box">P: 3G | K: 5G | F: 9G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>1 mittelgroße Zucchini</li><li>1 EL Olivenöl</li><li>1 Knoblauchzehe</li><li>Salz</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Zucchini in Scheiben schneiden.</li><li>In einer Pfanne mit Olivenöl und Knoblauch goldbraun braten.</li><li>Mit Salz abschmecken.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 73 -->
+    <div class="recipe-card left-side">
+        <div class="recipe-title">73. Blumenkohl-Püree mit Muskat</div>
+        <div class="recipe-meta">
+            <div class="meta-box">15 MIN</div>
+            <div class="meta-box">90 KCAL</div>
+            <div class="meta-box">P: 4G | K: 6G | F: 5G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>200g Blumenkohlröschen</li><li>1 TL Butter</li><li>Salz, geriebene Muskatnuss</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Blumenkohl in wenig Wasser sehr weich kochen und abgießen.</li><li>Mit Butter, Salz und Muskatnuss pürieren.</li><li>Hervorragender, blutzuckerfreundlicher Ersatz für Kartoffelpüree.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 74 -->
+    <div class="recipe-card right-side">
+        <div class="recipe-title">74. Scharfe Hähnchen-Pfanne mit Brokkoli</div>
+        <div class="recipe-meta">
+            <div class="meta-box">20 MIN</div>
+            <div class="meta-box">260 KCAL</div>
+            <div class="meta-box">P: 36G | K: 5G | F: 9G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>150g Hähnchenbrust</li><li>150g Brokkoli</li><li>1 TL Kokosöl</li><li>Chiliflocken, Salz</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Hähnchenbrust würfeln, Brokkoli in feine Röschen teilen.</li><li>Hähnchen im Kokosöl scharf anbraten.</li><li>Brokkoli und Chili dazugeben, kurz mitdünsten und salzen.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 75 -->
+    <div class="recipe-card left-side">
+        <div class="recipe-title">75. Linseneintopf mit Essig (kleine Portion)</div>
+        <div class="recipe-meta">
+            <div class="meta-box">30 MIN</div>
+            <div class="meta-box">180 KCAL</div>
+            <div class="meta-box">P: 12G | K: 20G | F: 4G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>40g Berglinsen (getrocknet)</li><li>100g Suppengemüse (fein gewürfelt)</li><li>200ml Brühe</li><li>1 Spritzer Essig</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Linsen und Gemüse in der Brühe ca. 25 Minuten weich kochen.</li><li>Mit einem kräftigen Spritzer Essig abschmecken.</li><li>Linsen sind komplexe Kohlenhydrate, die den Zucker nur extrem langsam ansteigen lassen.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 76 -->
+    <div class="recipe-card right-side">
+        <div class="recipe-title">76. Spinat-Feta-Omelett</div>
+        <div class="recipe-meta">
+            <div class="meta-box">10 MIN</div>
+            <div class="meta-box">220 KCAL</div>
+            <div class="meta-box">P: 18G | K: 3G | F: 15G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>2 Eier</li><li>50g Blattspinat</li><li>30g Feta</li><li>1 TL Rapsöl</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Spinat im Öl kurz anbraten.</li><li>Eier verquirlen, darübergießen.</li><li>Feta zerkrümeln, darüberstreuen und stocken lassen.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 77 -->
+    <div class="recipe-card left-side">
+        <div class="recipe-title">77. Gegrillter Halloumi auf Tomaten</div>
+        <div class="recipe-meta">
+            <div class="meta-box">12 MIN</div>
+            <div class="meta-box">310 KCAL</div>
+            <div class="meta-box">P: 22G | K: 4G | F: 23G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>100g Halloumi-Käse</li><li>1 große Tomate</li><li>1 TL Olivenöl</li><li>Oregano</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Tomate in dicke Scheiben schneiden und auf einem Teller anrichten.</li><li>Halloumi in Scheiben schneiden und in der Pfanne ohne Fett goldbraun grillen.</li><li>Auf die Tomaten legen, mit Olivenöl und Oregano verfeinern.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 78 -->
+    <div class="recipe-card right-side">
+        <div class="recipe-title">78. Avocado-Boote mit Ei</div>
+        <div class="recipe-meta">
+            <div class="meta-box">20 MIN</div>
+            <div class="meta-box">250 KCAL</div>
+            <div class="meta-box">P: 9G | K: 3G | F: 22G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>1/2 Avocado</li><li>1 kleines Ei</li><li>Salz, Pfeffer</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Avocado entkernen und Mulde etwas vergrößern.</li><li>Das Ei in die Mulde schlagen.</li><li>Bei 180°C im Ofen ca. 15 Minuten backen, bis das Ei stockt.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 79 -->
+    <div class="recipe-card left-side">
+        <div class="recipe-title">79. Zanderfilet auf Spinat</div>
+        <div class="recipe-meta">
+            <div class="meta-box">20 MIN</div>
+            <div class="meta-box">200 KCAL</div>
+            <div class="meta-box">P: 32G | K: 2G | F: 6G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>150g Zanderfilet</li><li>150g Blattspinat</li><li>1 TL Butter</li><li>Salz, Zitrone</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Spinat in der Butter dünsten und würzen.</li><li>Zanderfilet salzen und auf der Hautseite in einer Pfanne braten, bis es durchgezogen ist.</li><li>Mit Zitronensaft beträufeln und auf dem Spinat servieren.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 80 -->
+    <div class="recipe-card right-side">
+        <div class="recipe-title">80. Sellerie-Schnitzel paniert in Mandeln</div>
+        <div class="recipe-meta">
+            <div class="meta-box">20 MIN</div>
+            <div class="meta-box">180 KCAL</div>
+            <div class="meta-box">P: 6G | K: 6G | F: 14G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>1 dicke Scheibe Knollensellerie</li><li>1 Ei (verquirlt)</li><li>2 EL gemahlene Mandeln</li><li>Salz</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Selleriescheibe 5 Minuten in Wasser vorkochen, abtropfen lassen.</li><li>In verquirltem Ei und dann in gemahlenen Mandeln wenden.</li><li>In der Pfanne goldbraun braten.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 81 -->
+    <div class="recipe-card left-side">
+        <div class="recipe-title">81. Oliven-Snack mit Schafskäse</div>
+        <div class="recipe-meta">
+            <div class="meta-box">3 MIN</div>
+            <div class="meta-box">210 KCAL</div>
+            <div class="meta-box">P: 10G | K: 2G | F: 18G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>15 schwarze Oliven (entsteint)</li><li>50g Feta-Käse (gewürfelt)</li><li>Ein Spritzer Olivenöl</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Oliven und Feta-Würfel in einer kleinen Schale mischen.</li><li>Mit etwas Olivenöl verfeinern.</li><li>Genießen als herzhaften, blutzuckerneutralen Snack.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 82 -->
+    <div class="recipe-card right-side">
+        <div class="recipe-title">82. Rindfleischsuppe mit Gemüseeinlage</div>
+        <div class="recipe-meta">
+            <div class="meta-box">30 MIN</div>
+            <div class="meta-box">210 KCAL</div>
+            <div class="meta-box">P: 22G | K: 5G | F: 11G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>100g Suppenfleisch (Rind)</li><li>300ml Brühe</li><li>50g Lauch</li><li>50g Karotte</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Fleisch in der Brühe weich kochen (am besten schon vorbereitet).</li><li>Lauch und Karotte in feine Streifen schneiden.</li><li>Die letzten 10 Minuten in der Brühe mitkochen lassen.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 83 -->
+    <div class="recipe-card left-side">
+        <div class="recipe-title">83. Grüne Bohnen-Salat mit Bohnenkraut</div>
+        <div class="recipe-meta">
+            <div class="meta-box">15 MIN</div>
+            <div class="meta-box">120 KCAL</div>
+            <div class="meta-box">P: 4G | K: 6G | F: 9G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>150g grüne Bohnen</li><li>1 EL Olivenöl</li><li>1 EL Weißweinessig</li><li>Bohnenkraut, Salz</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Bohnen in Salzwasser bissfest kochen, eiskalt abschrecken.</li><li>Aus Öl, Essig, Bohnenkraut und Salz ein Dressing mixen.</li><li>Bohnen unterheben und marinieren lassen.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 84 -->
+    <div class="recipe-card right-side">
+        <div class="recipe-title">84. Kefir mit Leinöl und Zimt</div>
+        <div class="recipe-meta">
+            <div class="meta-box">3 MIN</div>
+            <div class="meta-box">160 KCAL</div>
+            <div class="meta-box">P: 8G | K: 10G | F: 10G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>200ml reiner Natur-Kefir</li><li>1 TL hochwertiges Leinöl</li><li>1/2 TL Zimtpulver</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Das kalte Leinöl sorgfältig in den Kefir einrühren.</li><li>Mit Zimtpulver bestreuen.</li><li>Dieses Getränk liefert Probiotika und Omega-3-Fettsäuren, exzellent für den Stoffwechsel.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 85 -->
+    <div class="recipe-card left-side">
+        <div class="recipe-title">85. Puten-Bratwurst mit Sauerkraut</div>
+        <div class="recipe-meta">
+            <div class="meta-box">15 MIN</div>
+            <div class="meta-box">290 KCAL</div>
+            <div class="meta-box">P: 25G | K: 5G | F: 18G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>1 Puten-Bratwurst (kohlenhydratfrei)</li><li>150g Sauerkraut</li><li>1 TL Öl</li><li>Senf (zuckerfrei)</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Die Wurst im Öl braten.</li><li>Das Sauerkraut separat in einem Topf erwärmen.</li><li>Zusammen mit etwas Senf anrichten.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 86 -->
+    <div class="recipe-card right-side">
+        <div class="recipe-title">86. Mandel-Kekse (ohne Zucker)</div>
+        <div class="recipe-meta">
+            <div class="meta-box">20 MIN</div>
+            <div class="meta-box">180 KCAL</div>
+            <div class="meta-box">P: 6G | K: 2G | F: 16G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>3 EL gemahlene Mandeln</li><li>1 Eiweiß</li><li>1 TL Erythrit</li><li>Vanillearoma</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Eiweiß steif schlagen.</li><li>Mandeln, Erythrit und Vanille vorsichtig unterheben.</li><li>Kleine Häufchen auf Backpapier setzen und bei 150°C ca. 15 Minuten backen.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 87 -->
+    <div class="recipe-card left-side">
+        <div class="recipe-title">87. Tomatensuppe mit Basilikum</div>
+        <div class="recipe-meta">
+            <div class="meta-box">15 MIN</div>
+            <div class="meta-box">90 KCAL</div>
+            <div class="meta-box">P: 3G | K: 8G | F: 4G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>200ml passierte Tomaten (reine Tomate)</li><li>100ml Brühe</li><li>1 TL Olivenöl</li><li>Frisches Basilikum</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Tomaten und Brühe aufkochen.</li><li>Olivenöl einrühren, mit Salz und Pfeffer abschmecken.</li><li>Mit frischem, gehacktem Basilikum servieren.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 88 -->
+    <div class="recipe-card right-side">
+        <div class="recipe-title">88. Gurken-Lachs-Röllchen</div>
+        <div class="recipe-meta">
+            <div class="meta-box">10 MIN</div>
+            <div class="meta-box">140 KCAL</div>
+            <div class="meta-box">P: 12G | K: 2G | F: 9G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>1/2 Salatgurke</li><li>50g Räucherlachs</li><li>1 EL Frischkäse</li><li>Dill</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Gurke längs in sehr dünne Scheiben hobeln.</li><li>Jede Scheibe dünn mit Frischkäse bestreichen.</li><li>Mit Räucherlachs belegen, aufrollen und mit einem Zahnstocher fixieren.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 89 -->
+    <div class="recipe-card left-side">
+        <div class="recipe-title">89. Spiegelei auf Ratatouille-Gemüse</div>
+        <div class="recipe-meta">
+            <div class="meta-box">20 MIN</div>
+            <div class="meta-box">220 KCAL</div>
+            <div class="meta-box">P: 10G | K: 8G | F: 15G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>1 Ei</li><li>100g Gemüse-Mix (Zucchini, Paprika, Aubergine)</li><li>1 TL Olivenöl</li><li>Kräuter der Provence</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Gemüse im Olivenöl weich schmoren, würzen.</li><li>Das Ei in einer separaten Pfanne als Spiegelei braten.</li><li>Spiegelei auf dem Gemüsebeet anrichten.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 90 -->
+    <div class="recipe-card right-side">
+        <div class="recipe-title">90. Hähnchen-Spieße mit Zucchini</div>
+        <div class="recipe-meta">
+            <div class="meta-box">15 MIN</div>
+            <div class="meta-box">210 KCAL</div>
+            <div class="meta-box">P: 34G | K: 3G | F: 6G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>150g Hähnchenbrust (gewürfelt)</li><li>1/2 Zucchini (in dicken Scheiben)</li><li>1 TL Rapsöl</li><li>Geflügelgewürz</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Hähnchen und Zucchini abwechselnd auf Spieße stecken.</li><li>Rundum mit Öl und Gewürz bestreichen.</li><li>In der Pfanne oder auf dem Grill ca. 10 Minuten durchgaren.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 91 -->
+    <div class="recipe-card left-side">
+        <div class="recipe-title">91. Endiviensalat mit Essig-Öl</div>
+        <div class="recipe-meta">
+            <div class="meta-box">10 MIN</div>
+            <div class="meta-box">110 KCAL</div>
+            <div class="meta-box">P: 2G | K: 3G | F: 10G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>100g Endiviensalat</li><li>1 EL Olivenöl</li><li>1 EL Apfelessig</li><li>Salz, Pfeffer</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Endivie waschen und in ganz feine Streifen schneiden.</li><li>Dressing aus Öl, Essig, Salz und Pfeffer anrühren.</li><li>Salat mit dem Dressing mischen (Die Bitterstoffe der Endivie sind extrem gut für die Leber und Blutzucker).</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 92 -->
+    <div class="recipe-card right-side">
+        <div class="recipe-title">92. Rinderhack-Pfanne mit Lauch</div>
+        <div class="recipe-meta">
+            <div class="meta-box">15 MIN</div>
+            <div class="meta-box">310 KCAL</div>
+            <div class="meta-box">P: 26G | K: 5G | F: 20G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>100g Rinderhackfleisch</li><li>1 Stange Lauch (in Ringen)</li><li>1 TL Rapsöl</li><li>Salz, Kümmelpulver</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Das Rinderhack im Öl krümelig braten.</li><li>Die Lauchringe zugeben und 5 Minuten weich dünsten.</li><li>Mit Salz und einer Prise Kümmel abschmecken.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 93 -->
+    <div class="recipe-card left-side">
+        <div class="recipe-title">93. Quark-Dessert mit Kakaopulver</div>
+        <div class="recipe-meta">
+            <div class="meta-box">5 MIN</div>
+            <div class="meta-box">130 KCAL</div>
+            <div class="meta-box">P: 18G | K: 6G | F: 1G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>150g Magerquark</li><li>1 TL ungesüßtes Kakaopulver</li><li>1 TL Erythrit</li><li>Ein Schuss Mineralwasser</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Magerquark, Mineralwasser und Erythrit glattrühren.</li><li>Das Kakaopulver vorsichtig unterheben.</li><li>Sofort als schokoladiges, blutzuckerfreundliches Dessert genießen.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 94 -->
+    <div class="recipe-card right-side">
+        <div class="recipe-title">94. Gebratener Spargel mit Olivenöl</div>
+        <div class="recipe-meta">
+            <div class="meta-box">15 MIN</div>
+            <div class="meta-box">115 KCAL</div>
+            <div class="meta-box">P: 4G | K: 3G | F: 9G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>150g grüner Spargel</li><li>1 EL Olivenöl</li><li>Meersalz</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Holzige Enden des Spargels abschneiden.</li><li>In einer Pfanne mit Olivenöl bei mittlerer Hitze braten, bis der Spargel Biss hat und leicht gebräunt ist.</li><li>Mit grobem Meersalz bestreuen.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 95 -->
+    <div class="recipe-card left-side">
+        <div class="recipe-title">95. Kabeljaufilet mit Senf-Soße</div>
+        <div class="recipe-meta">
+            <div class="meta-box">20 MIN</div>
+            <div class="meta-box">190 KCAL</div>
+            <div class="meta-box">P: 28G | K: 2G | F: 7G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>150g Kabeljaufilet</li><li>1 TL Butter</li><li>1 EL zuckerfreier Senf</li><li>1 EL Wasser</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Den Kabeljau schonend dämpfen oder braten.</li><li>Butter in einem Topf schmelzen, Senf und Wasser einrühren und kurz erwärmen.</li><li>Die Senf-Soße über den Fisch geben.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 96 -->
+    <div class="recipe-card right-side">
+        <div class="recipe-title">96. Walnuss-Snack geröstet</div>
+        <div class="recipe-meta">
+            <div class="meta-box">10 MIN</div>
+            <div class="meta-box">200 KCAL</div>
+            <div class="meta-box">P: 4G | K: 2G | F: 19G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>30g Walnusskerne</li><li>1 Prise Salz</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Die Walnusskerne in einer Pfanne ohne Fett bei mittlerer Hitze vorsichtig anrösten.</li><li>Dabei ständig rühren, damit sie nicht verbrennen.</li><li>Mit einer kleinen Prise Salz bestreuen und abkühlen lassen.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 97 -->
+    <div class="recipe-card left-side">
+        <div class="recipe-title">97. Rote-Bete-Salat mit Walnüssen</div>
+        <div class="recipe-meta">
+            <div class="meta-box">10 MIN</div>
+            <div class="meta-box">150 KCAL</div>
+            <div class="meta-box">P: 4G | K: 8G | F: 11G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>100g gekochte Rote Bete</li><li>10g Walnüsse</li><li>1 TL Balsamico-Essig</li><li>1 TL Olivenöl</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Die gekochte Rote Bete in dünne Scheiben oder Würfel schneiden.</li><li>Aus Balsamico und Olivenöl ein Dressing rühren.</li><li>Über die Rote Bete geben und mit grob gehackten Walnüssen bestreuen.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 98 -->
+    <div class="recipe-card right-side">
+        <div class="recipe-title">98. Käse-Lauch-Suppe mit Hackfleisch</div>
+        <div class="recipe-meta">
+            <div class="meta-box">20 MIN</div>
+            <div class="meta-box">340 KCAL</div>
+            <div class="meta-box">P: 24G | K: 6G | F: 24G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>100g gemischtes Hackfleisch</li><li>50g Lauch (Ringe)</li><li>30g Schmelzkäse</li><li>250ml Brühe</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Hackfleisch im Topf anbraten.</li><li>Lauch zugeben und andünsten.</li><li>Mit Brühe ablöschen, Schmelzkäse einrühren und 10 Minuten köcheln lassen.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Receita 99 -->
+    <div class="recipe-card left-side">
+        <div class="recipe-title">99. Ingwer-Zitronen-Wasser (heiß)</div>
+        <div class="recipe-meta">
+            <div class="meta-box">5 MIN</div>
+            <div class="meta-box">5 KCAL</div>
+            <div class="meta-box">P: 0G | K: 1G | F: 0G</div>
+        </div>
+        <div class="section-title">Zutaten</div>
+        <div class="ingredients-list">
+            <ul>
+                <li>2-3 dünne Scheiben frischer Ingwer</li><li>1 Schnitz frische Bio-Zitrone</li><li>300ml kochendes Wasser</li>
+            </ul>
+        </div>
+        <div class="section-title">Zubereitung</div>
+        <div class="steps-list">
+            <ol>
+                <li>Ingwerscheiben und Zitrone in eine große Tasse geben.</li><li>Mit kochendem Wasser übergießen.</li><li>5 Minuten ziehen lassen. Ideal am Morgen, um den Stoffwechsel anzuregen und den Blutzucker zu stabilisieren.</li>
+            </ol>
+
+
+
+
+            
+
+        </div>
+    </div>
+</body>
+</html>
